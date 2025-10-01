@@ -1,0 +1,12 @@
+{
+  "version": 10,
+  "cmakeMinimumRequired": {
+    "major": 4,
+    "minor": 0,
+    "patch": 0
+  },
+  "include": [
+    "./cmake/presets/CMakeLinuxPresets.json",
+    "./cmake/presets/CMakeWindowsPresets.json"
+  ]
+}

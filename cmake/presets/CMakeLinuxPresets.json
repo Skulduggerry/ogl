@@ -1,0 +1,165 @@
+{
+  "version": 10,
+  "cmakeMinimumRequired": {
+    "major": 4,
+    "minor": 0,
+    "patch": 0
+  },
+  "include": [
+    "./CMakeCommonPresets.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "conf-linux-common",
+      "description": "Linux settings for gcc and clang toolchains",
+      "hidden": true,
+      "inherits": "conf-common",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
+          "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
+        }
+      }
+    },
+    {
+      "name": "linux-gcc-debug",
+      "displayName": "gcc Debug",
+      "description": "Targets Linux with gcc compiler, debug build type",
+      "inherits": "conf-linux-common",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "FEATURE_DEVELOPER_MODE": true,
+        "FEATURE_TESTS": true,
+        "FEATURE_DOCS": false
+      }
+    },
+    {
+      "name": "linux-gcc-release",
+      "displayName": "gcc Release",
+      "description": "Targets Linux with gcc compiler, release build type",
+      "inherits": "conf-linux-common",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc",
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-clang-debug",
+      "displayName": "clang Debug",
+      "description": "Targets Linux with clang compiler, debug build type",
+      "inherits": "conf-linux-common",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "FEATURE_DEVELOPER_MODE": true,
+        "FEATURE_TESTS": true,
+        "FEATURE_DOCS": false
+      }
+    },
+    {
+      "name": "linux-clang-release",
+      "displayName": "clang Release",
+      "description": "Targets Linux with clang compiler, release build type",
+      "inherits": "conf-linux-common",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "linux-gcc-debug",
+      "displayName": "Strict",
+      "description": "Enable output and stop on failure",
+      "inherits": "test-common",
+      "configurePreset": "linux-gcc-debug"
+    },
+    {
+      "name": "linux-clang-debug",
+      "displayName": "Strict",
+      "description": "Enable output and stop on failure",
+      "inherits": "test-common",
+      "configurePreset": "linux-clang-debug"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-gcc-release",
+      "configurePreset": "linux-gcc-release"
+    },
+    {
+      "name": "linux-gcc-install-docs",
+      "configurePreset": "linux-gcc-release",
+      "targets": [
+        "install",
+        "doxygen-docs"
+      ]
+    },
+    {
+      "name": "linux-gcc-debug",
+      "configurePreset": "linux-gcc-debug"
+    },
+    {
+      "name": "linux-clang-release",
+      "configurePreset": "linux-clang-release"
+    },
+    {
+      "name": "linux-clang-install-docs",
+      "configurePreset": "linux-clang-release",
+      "targets": [
+        "install",
+        "doxygen-docs"
+      ]
+    },
+    {
+      "name": "linux-clang-debug",
+      "configurePreset": "linux-clang-debug"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "linux-gcc-debug",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-debug"
+        },
+        {
+          "type": "build",
+          "name": "linux-gcc-debug"
+        },
+        {
+          "type": "test",
+          "name": "linux-gcc-debug"
+        }
+      ]
+    },
+    {
+      "name": "linux-clang-debug",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-clang-debug"
+        },
+        {
+          "type": "build",
+          "name": "linux-clang-debug"
+        },
+        {
+          "type": "test",
+          "name": "linux-clang-debug"
+        }
+      ]
+    }
+  ]
+}

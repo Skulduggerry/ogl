@@ -1,0 +1,18 @@
+{
+  "name" : "my-project",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "0d9d4684352ba8de70bdf251c6fc9a3c464fa12b",
+  "dependencies" : [ {
+    "name" : "fmt",
+    "version>=" : "12.0.0"
+  } ],
+  "features": {
+    "tests":{
+      "description": "Build the tests of the package's tests",
+      "dependencies": [{
+        "name": "catch2",
+        "version>=": "3.10.0"
+      }]
+    }
+  }
+}
