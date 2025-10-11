@@ -5,14 +5,26 @@
   "dependencies" : [ {
     "name" : "fmt",
     "version>=" : "12.0.0"
+  }, {
+    "name" : "glm",
+    "version>=" : "1.0.1#3"
+  }, {
+    "name" : "glfw3",
+    "version>=" : "3.4#1"
+  }, {
+    "name" : "glad",
+    "version>=" : "0.1.36"
+  }, {
+    "name" : "stb",
+    "version>=" : "2024-07-29#1"
   } ],
-  "features": {
-    "tests":{
-      "description": "Build the tests of the package's tests",
-      "dependencies": [{
-        "name": "catch2",
-        "version>=": "3.10.0"
-      }]
+  "features" : {
+    "tests" : {
+      "description" : "Build the tests of the package's tests",
+      "dependencies" : [ {
+        "name" : "catch2",
+        "version>=" : "3.10.0"
+      } ]
     }
   }
 }

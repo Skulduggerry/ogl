@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 4.0.0)
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(FetchContent)
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
@@ -28,10 +29,10 @@ run_vcpkg(
         VCPKG_DIR "${CMAKE_SOURCE_DIR}/.vcpkg"
         ENABLE_VCPKG_UPDATE)
 
-project(my_project
+project(ogl
         VERSION 1.0.0
         LANGUAGES CXX
-        DESCRIPTION "My simple project.")
+        DESCRIPTION "The rest of the learnopengl.com projects")
 
 if (FEATURE_DEVELOPER_MODE OR FEATURE_TESTS)
     # enable sanitizers and analyzers if running in developer mode
@@ -65,7 +66,7 @@ endif()
 
 project_options(
         # defines my_project_options/my_project_warnings
-        PREFIX "my"
+        PREFIX "ogl"
         ENABLE_CACHE
         ${ENABLE_CPPCHECK}
         ${ENABLE_CLANG_TIDY}
@@ -96,8 +97,8 @@ project_options(
         # CONAN_PROFILE ${profile_path}
 )
 
-add_subdirectory(libs/my_lib)
-add_subdirectory(apps/my_exe)
+add_subdirectory(libs/ogl)
+add_subdirectory(apps/csm)
 
 # set the startup project for the "play" button in MSVC
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT my_exe)
