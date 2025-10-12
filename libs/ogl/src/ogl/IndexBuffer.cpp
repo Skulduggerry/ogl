@@ -2,14 +2,14 @@
 #include "ogl/Logging.hpp"
 #include <utility>
 
-GLuint genIndexBuffer()
+GLuint createIndexBuffer()
 {
   GLuint id = 0;
   GLCall(glCreateBuffers(1, &id));
   return id;
 }
 
-IndexBuffer::IndexBuffer() : m_id(genIndexBuffer()) {}
+IndexBuffer::IndexBuffer() : m_id(createIndexBuffer()) {}
 
 IndexBuffer::~IndexBuffer() { GLCall(glDeleteBuffers(1, &m_id)); }
 

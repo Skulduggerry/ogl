@@ -3,14 +3,14 @@
 #include "ogl/VertexBuffer.hpp"
 #include <utility>
 
-GLuint genVertexArrayId()
+GLuint createVertexArrayId()
 {
   GLuint id = 0;
   GLCall(glCreateVertexArrays(1, &id));
   return id;
 }
 
-VertexArray::VertexArray() : m_id(genVertexArrayId()) {}
+VertexArray::VertexArray() : m_id(createVertexArrayId()) {}
 
 VertexArray::~VertexArray() { GLCall(glDeleteVertexArrays(1, &m_id)); }
 

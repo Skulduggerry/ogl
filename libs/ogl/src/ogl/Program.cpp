@@ -1,0 +1,189 @@
+#include "ogl/Program.hpp"
+#include "ogl/Logging.hpp"
+#include "ogl/Shader.hpp"
+#include <glm/gtc/type_ptr.hpp>
+#include <utility>
+
+GLuint createProgram()
+{
+  GLCall(const GLuint id = glCreateProgram());
+  return id;
+}
+
+Program::Program(const std::string &vertexPath, const std::string &fragmentPath) : m_id(createProgram())
+{
+  // create shaders and attach to program
+  const Shader vertexShader{ vertexPath, Shader::Types::VERTEX };
+  const Shader fragmentShader{ fragmentPath, Shader::Types::FRAGMENT };
+
+  GLCall(glAttachShader(m_id, vertexShader.m_id));
+  GLCall(glAttachShader(m_id, fragmentShader.m_id));
+
+  // link the program, check for errors
+  GLCall(glLinkProgram(m_id));
+  GLint result;
+  GLCall(glGetProgramiv(m_id, GL_LINK_STATUS, &result));
+  if (GL_FALSE == result) {
+    GLint length;
+    GLCall(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
+
+    std::string infoLog(length, 0);
+    GLCall(glGetProgramInfoLog(m_id, length, &length, infoLog.data()));
+
+    fmt::println(stderr, "[Program Error]: Failed to link program!");
+    fmt::println(stderr, "{}", infoLog);
+  }
+}
+
+Program::Program(Program &&other) noexcept
+  : m_id(std::exchange(other.m_id, 0)), uniformLocationCache(std::exchange(other.uniformLocationCache, {}))
+{}
+
+Program &Program::operator=(Program &&other) noexcept
+{
+  if (this == &other) { return *this; }
+  using std::swap;
+  swap(m_id, other.m_id);
+  swap(uniformLocationCache, other.uniformLocationCache);
+  return *this;
+}
+
+Program::~Program() { GLCall(glDeleteProgram(m_id)); }
+
+void Program::bind() const
+{
+  if (currentlyBoundProgram == m_id) { return; }
+  GLCall(glUseProgram(m_id));
+  currentlyBoundProgram = m_id;
+}
+
+void Program::unbind()
+{
+  GLCall(glUseProgram(0));
+  currentlyBoundProgram = 0;
+}
+
+void Program::setBool(const std::string &name, const GLboolean value) const
+{
+  GLCall(glProgramUniform1i(m_id, getUniformLocation(name), value));
+}
+
+void Program::setInt(const std::string &name, const GLint value) const
+{
+  GLCall(glProgramUniform1i(m_id, getUniformLocation(name), value));
+}
+
+void Program::setUnsigned(const std::string &name, const GLuint value) const
+{
+  GLCall(glProgramUniform1ui(m_id, getUniformLocation(name), value));
+}
+
+void Program::setFloat(const std::string &name, const GLfloat value) const
+{
+  GLCall(glProgramUniform1f(m_id, getUniformLocation(name), value));
+}
+
+void Program::setVec2(const std::string &name, const glm::vec2 &value) const
+{
+  GLCall(glProgramUniform2fv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setVec3(const std::string &name, const glm::vec3 &value) const
+{
+  GLCall(glProgramUniform3fv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setVec4(const std::string &name, const glm::vec4 &value) const
+{
+  GLCall(glProgramUniform4fv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setIVec2(const std::string &name, const glm::ivec2 &value) const
+{
+  GLCall(glProgramUniform2iv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setIVec3(const std::string &name, const glm::ivec3 &value) const
+{
+  GLCall(glProgramUniform3iv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setIVec4(const std::string &name, const glm::ivec4 &value) const
+{
+  GLCall(glProgramUniform4iv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setUVec2(const std::string &name, const glm::uvec2 &value) const
+{
+  GLCall(glProgramUniform2uiv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setUVec3(const std::string &name, const glm::uvec3 &value) const
+{
+  GLCall(glProgramUniform3uiv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setUVec4(const std::string &name, const glm::uvec4 &value) const
+{
+  GLCall(glProgramUniform4uiv(m_id, getUniformLocation(name), 1, glm::value_ptr(value)));
+}
+
+void Program::setMat2(const std::string &name, const glm::mat2 &value) const
+{
+  GLCall(glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void Program::setMat3(const std::string &name, const glm::mat3 &value) const
+{
+  GLCall(glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void Program::setMat4(const std::string &name, const glm::mat4 &value) const
+{
+  GLCall(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void Program::setMat2x3(const std::string &name, const glm::mat2x3 &value) const
+{
+  GLCall(glUniformMatrix2x3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void Program::setMat3x2(const std::string &name, const glm::mat3x2 &value) const
+{
+  GLCall(glUniformMatrix3x2fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void Program::setMat2x4(const std::string &name, const glm::mat2x4 &value) const
+{
+  GLCall(glUniformMatrix2x4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void Program::setMat4x2(const std::string &name, const glm::mat4x2 &value) const
+{
+  GLCall(glUniformMatrix4x2fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void Program::setMat3x4(const std::string &name, const glm::mat3x4 &value) const
+{
+  GLCall(glUniformMatrix3x4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+void Program::setMat4x3(const std::string &name, const glm::mat4x3 &value) const
+{
+  GLCall(glUniformMatrix4x3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+}
+
+
+GLint Program::getUniformLocation(const std::string &name) const
+{
+  if (const auto location = uniformLocationCache.find(name); uniformLocationCache.end() != location) {
+    return location->second;
+  }
+
+  GLCall(GLint location = glGetUniformLocation(m_id, name.c_str()));
+
+  if (-1 == location) { fmt::println(stderr, "Warning: uniform '{}' does not exist!", name); }
+
+  uniformLocationCache.insert({ name, location });
+  return location;
+}

@@ -1,4 +1,5 @@
 #include "glad/glad.h"
+#include "ogl/Program.hpp"
 #include "ogl/VertexBuffer.hpp"
 #include <vector>
 

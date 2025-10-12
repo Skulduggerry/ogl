@@ -2,14 +2,14 @@
 #include "ogl/Logging.hpp"
 #include <utility>
 
-GLuint genVertexBufferId()
+GLuint createVertexBufferId()
 {
   GLuint id = 0;
   GLCall(glCreateBuffers(1, &id));
   return id;
 }
 
-VertexBuffer::VertexBuffer() : m_id(genVertexBufferId()) {}
+VertexBuffer::VertexBuffer() : m_id(createVertexBufferId()) {}
 
 VertexBuffer::~VertexBuffer() { GLCall(glDeleteBuffers(1, &m_id)); }
 
