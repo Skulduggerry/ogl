@@ -27,3 +27,8 @@ Framebuffer &Framebuffer::operator=(Framebuffer &&other) noexcept
 void Framebuffer::bind() const { GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_id)); }
 
 void Framebuffer::unbind() { GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
+
+bool Framebuffer::isComplete() const
+{
+  return glCheckNamedFramebufferStatus(m_id, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+}

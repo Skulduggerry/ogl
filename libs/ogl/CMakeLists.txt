@@ -1,4 +1,13 @@
-add_library(ogl "src/ogl/VertexBuffer.cpp" "src/ogl/VertexArray.cpp" "src/ogl/IndexBuffer.cpp" "src/ogl/Camera.cpp" "src/ogl/Shader.cpp" "src/ogl/Program.cpp" "src/ogl/Framebuffer.cpp" "src/ogl/Renderbuffer.cpp")
+add_library(ogl
+        "src/ogl/VertexBuffer.cpp"
+        "src/ogl/VertexArray.cpp"
+        "src/ogl/IndexBuffer.cpp"
+        "src/ogl/Camera.cpp"
+        "src/ogl/Shader.cpp"
+        "src/ogl/Program.cpp"
+        "src/ogl/Framebuffer.cpp"
+        "src/ogl/Renderbuffer.cpp"
+)
 
 # link project_options/warnings
 target_link_libraries(ogl INTERFACE ogl_project_options ogl_project_warnings)

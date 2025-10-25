@@ -17,6 +17,8 @@ public:
 
   void bind() const;
   static void unbind();
+
+  [[nodiscard]] bool isComplete() const;
 };
 
 #endif
