@@ -10,7 +10,6 @@ class Program
   // the program id
   GLuint m_id;
   // used for optimization
-  static inline GLuint currentlyBoundProgram = 0;
   mutable std::unordered_map<std::string, GLint> uniformLocationCache;
 
 public:
