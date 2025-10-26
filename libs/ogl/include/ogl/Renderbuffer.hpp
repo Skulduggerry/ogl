@@ -33,7 +33,6 @@ public:
   [[nodiscard]] GLsizei getWidth() const { return m_width; }
   [[nodiscard]] GLsizei getHeight() const { return m_height; }
 
-private:
   friend class Framebuffer;
 };
 

@@ -33,6 +33,22 @@ void Framebuffer::drawBuffer(ColorBuffer buffer) const
   GLCall(glNamedFramebufferDrawBuffer(m_id, static_cast<GLenum>(buffer)));
 }
 
+void Framebuffer::renderbuffer(const Renderbuffer &renderbuffer) const
+{
+  GLenum attachment;
+  switch (renderbuffer.getFormat()) {
+  case StorageFormats::DEPTH_COMPONENT32F:
+    attachment = GL_DEPTH_COMPONENT;
+    break;
+  case StorageFormats::DEPTH24_STENCIL8:
+    attachment = GL_DEPTH_STENCIL_ATTACHMENT;
+    break;
+  }
+
+  GLCall(glNamedFramebufferRenderbuffer(m_id, attachment, GL_RENDERBUFFER, renderbuffer.m_id));
+}
+
+
 bool Framebuffer::isComplete() const
 {
   return glCheckNamedFramebufferStatus(m_id, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;

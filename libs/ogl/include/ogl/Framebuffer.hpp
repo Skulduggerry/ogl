@@ -1,6 +1,7 @@
 #ifndef OGL_FRAMEBUFFER_HPP
 #define OGL_FRAMEBUFFER_HPP
 #include "Logging.hpp"
+#include "Renderbuffer.hpp"
 
 #include <array>
 #include <glad/glad.h>
@@ -36,6 +37,8 @@ public:
     using namespace std::ranges;
     GLCall(glNamedFramebufferDrawBuffers(m_id, size(buffer), reinterpret_cast<const GLenum *>(data(buffer))));
   }
+
+  void renderbuffer(const Renderbuffer &renderbuffer) const;
 
   [[nodiscard]] bool isComplete() const;
 };
