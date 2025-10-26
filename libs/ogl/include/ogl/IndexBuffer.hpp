@@ -1,8 +1,9 @@
 #ifndef OGL_INDEXBUFFER_HPP
 #define OGL_INDEXBUFFER_HPP
 #include "Logging.hpp"
-#include "ogl/Concepts.hpp"
+
 #include <glad/glad.h>
+#include <ranges>
 
 class IndexBuffer
 {
@@ -19,10 +20,10 @@ public:
 
   void bind() const;
 
-  template<Container C> void bufferData(const C &data, const GLenum usage) const
+  template<std::ranges::random_access_range R> void bufferData(const R &buffer, const GLenum usage) const
   {
-    GLCall(glNamedBufferData(
-      m_id, static_cast<GLsizeiptr>(data.size() * sizeof(typename C::value_type)), data.data(), usage));
+    using namespace std::ranges;
+    GLCall(glNamedBufferData(m_id, static_cast<GLsizeiptr>(size(buffer) * sizeof(range_value_t<R>)), data(buffer), usage));
   }
 };
 
