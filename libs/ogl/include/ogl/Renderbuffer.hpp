@@ -4,7 +4,8 @@
 
 class Framebuffer;
 
-enum struct StorageFormats {
+// TODO: put into external file
+enum struct StorageFormats: GLenum {
   DEPTH_COMPONENT32F = GL_DEPTH_COMPONENT32F,
   DEPTH24_STENCIL8 = GL_DEPTH24_STENCIL8,
 };
