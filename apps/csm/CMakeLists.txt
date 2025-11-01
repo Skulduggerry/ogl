@@ -14,6 +14,6 @@ target_link_libraries(csm PRIVATE ogl)
 
 # set compile definitions
 target_compile_definitions(csm PRIVATE RESOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources")
-if(${FEATURE_DEVELOPER_MODE})
+if (${FEATURE_DEVELOPER_MODE})
     target_compile_definitions(csm PRIVATE DEVELOPER_BUILD)
 endif ()

@@ -50,14 +50,9 @@ Program &Program::operator=(Program &&other) noexcept
 
 Program::~Program() { GLCall(glDeleteProgram(m_id)); }
 
-void Program::bind() const
-{
-  GLCall(glUseProgram(m_id));
-}
+void Program::bind() const { GLCall(glUseProgram(m_id)); }
 
-void Program::unbind() {
-  GLCall(glUseProgram(0));
-}
+void Program::unbind() { GLCall(glUseProgram(0)); }
 
 void Program::setBool(const std::string &name, const GLboolean value) const
 {

@@ -61,4 +61,3 @@ Shader &Shader::operator=(Shader &&other) noexcept
   swap(m_id, other.m_id);
   return *this;
 }
-

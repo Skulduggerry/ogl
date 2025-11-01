@@ -1,8 +1,8 @@
 #ifndef OGL_CAMERA_HPP
 #define OGL_CAMERA_HPP
 #include <cstdint>
-#include <glm/glm.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/glm.hpp>
 
 class Camera
 {

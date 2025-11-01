@@ -21,7 +21,8 @@ public:
   template<std::ranges::random_access_range R> void bufferData(const R &buffer, const GLenum usage) const
   {
     using namespace std::ranges;
-    GLCall(glNamedBufferData(m_id, static_cast<GLsizeiptr>(size(buffer) * sizeof(range_value_t<R>)), data(buffer), usage));
+    GLCall(
+      glNamedBufferData(m_id, static_cast<GLsizeiptr>(size(buffer) * sizeof(range_value_t<R>)), data(buffer), usage));
   }
 
   friend class VertexArray;
