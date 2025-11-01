@@ -12,7 +12,7 @@ GLuint createRenderbuffer()
 
 Renderbuffer::Renderbuffer() : m_id(createRenderbuffer()) {}
 
-Renderbuffer::Renderbuffer(const StorageFormats format, const GLsizei width, const GLsizei height) : Renderbuffer{}
+Renderbuffer::Renderbuffer(const InternalFormat format, const GLsizei width, const GLsizei height) : Renderbuffer{}
 {
   storage(format, width, height);
 }
@@ -29,7 +29,7 @@ Renderbuffer &Renderbuffer::operator=(Renderbuffer &&other) noexcept
   return *this;
 }
 
-void Renderbuffer::storage(const StorageFormats format, const GLsizei width, const GLsizei height)
+void Renderbuffer::storage(const InternalFormat format, const GLsizei width, const GLsizei height)
 {
   m_format = format;
   m_width = width;
