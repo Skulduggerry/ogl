@@ -7,7 +7,7 @@ class Framebuffer;
 
 class Renderbuffer
 {
-  GLuint m_id = 0;
+  GLuint m_id;
 
   InternalFormat m_format = InternalFormat::DEPTH_COMPONENT32F;
   GLsizei m_width = 0;
