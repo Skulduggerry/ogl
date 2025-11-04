@@ -5,6 +5,13 @@
 #include <glad/glad.h>
 #include <ranges>
 
+enum struct IndexType: GLenum
+{
+  UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+  UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+  UNSIGNED_INT = GL_UNSIGNED_INT,
+};
+
 class IndexBuffer
 {
   GLuint m_id;
@@ -25,6 +32,7 @@ public:
     using namespace std::ranges;
     GLCall(
       glNamedBufferData(m_id, static_cast<GLsizeiptr>(size(buffer) * sizeof(range_value_t<R>)), data(buffer), usage));
+    // TODO: store the type of indices
   }
 };
 

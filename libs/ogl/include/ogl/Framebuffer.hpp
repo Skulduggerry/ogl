@@ -3,7 +3,6 @@
 #include "Logging.hpp"
 #include "Renderbuffer.hpp"
 
-#include <array>
 #include <glad/glad.h>
 #include <ranges>
 

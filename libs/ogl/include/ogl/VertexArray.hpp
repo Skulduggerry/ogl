@@ -16,6 +16,7 @@ public:
   VertexArray &operator=(const VertexArray &other) = delete;
   VertexArray &operator=(VertexArray &&other) noexcept;
 
+  // TODO add class VertexBufferLayout to store the layout of a buffer
   void vertexBuffer(GLuint bindingIndex, const VertexBuffer &buffer, GLintptr offset, GLsizei stride) const;
   VertexArray &enableAttrib(GLuint index);
   VertexArray &attribFormat(GLuint attribIndex, GLint size, GLenum type, GLboolean normalized, GLuint relativeOffset);
