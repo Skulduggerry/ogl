@@ -45,7 +45,7 @@ void Framebuffer::renderbuffer(const Renderbuffer &renderbuffer) const
     break;
   }
 
-  // todo: attachment can just be read from renderbuffer
+  // todo: there are now more possible values
   static_assert(false);
 
   GLCall(glNamedFramebufferRenderbuffer(m_id, attachment, GL_RENDERBUFFER, renderbuffer.m_id));
