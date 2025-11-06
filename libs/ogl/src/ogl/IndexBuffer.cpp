@@ -20,6 +20,7 @@ IndexBuffer &IndexBuffer::operator=(IndexBuffer &&other) noexcept
   if (this == &other) { return *this; }
   using std::swap;
   swap(m_id, other.m_id);
+  swap(type, other.type);
   return *this;
 }
 

@@ -5,8 +5,7 @@
 #include <glad/glad.h>
 #include <ranges>
 
-enum struct IndexType: GLenum
-{
+enum struct IndexType : GLenum {
   UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
   UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
   UNSIGNED_INT = GL_UNSIGNED_INT,
@@ -15,6 +14,7 @@ enum struct IndexType: GLenum
 class IndexBuffer
 {
   GLuint m_id;
+  IndexType type = IndexType::UNSIGNED_INT;
 
 public:
   IndexBuffer();
@@ -27,12 +27,21 @@ public:
 
   void bind() const;
 
-  template<std::ranges::random_access_range R> void bufferData(const R &buffer, const GLenum usage) const
+  template<std::ranges::random_access_range R> void bufferData(const R &buffer, const GLenum usage)
   {
     using namespace std::ranges;
     GLCall(
       glNamedBufferData(m_id, static_cast<GLsizeiptr>(size(buffer) * sizeof(range_value_t<R>)), data(buffer), usage));
-    // TODO: store the type of indices
+
+    if constexpr (std::same_as<GLubyte, range_value_t<R>>) {
+      type = IndexType::UNSIGNED_BYTE;
+    } else if constexpr (std::same_as<GLushort, range_value_t<R>>) {
+      type = IndexType::UNSIGNED_SHORT;
+    } else if constexpr (std::same_as<GLuint, range_value_t<R>>) {
+      type = IndexType::UNSIGNED_INT;
+    } else {
+      static_assert(false, "Unsupported type: Please make sure your container stores GLubyte, GLushort or GLuint!");
+    }
   }
 };
 

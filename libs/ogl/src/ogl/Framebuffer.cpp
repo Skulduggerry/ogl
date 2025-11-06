@@ -37,10 +37,10 @@ void Framebuffer::renderbuffer(const Renderbuffer &renderbuffer) const
 {
   GLenum attachment;
   switch (renderbuffer.getFormat()) {
-  case StorageFormats::DEPTH_COMPONENT32F:
+  case InternalFormat::DEPTH_COMPONENT32F:
     attachment = GL_DEPTH_COMPONENT;
     break;
-  case StorageFormats::DEPTH24_STENCIL8:
+  case InternalFormat::DEPTH24_STENCIL8:
     attachment = GL_DEPTH_STENCIL_ATTACHMENT;
     break;
   }
