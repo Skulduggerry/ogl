@@ -46,6 +46,8 @@ void Framebuffer::renderbuffer(const Renderbuffer &renderbuffer) const
   }
 
   // todo: there are now more possible values
+  // todo: we might also want a function to detach a framebuffer or texture from an attachment point
+  // therefor we should have two maps storing attachment points and pointers to textures/renderbuffers
   static_assert(false);
 
   GLCall(glNamedFramebufferRenderbuffer(m_id, attachment, GL_RENDERBUFFER, renderbuffer.m_id));
