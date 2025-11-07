@@ -28,29 +28,19 @@ void Framebuffer::bind() const { GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_id))
 
 void Framebuffer::unbind() { GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
 
-void Framebuffer::drawBuffer(ColorBuffer buffer) const
+void Framebuffer::drawBuffer(Attachment buffer) const
 {
   GLCall(glNamedFramebufferDrawBuffer(m_id, static_cast<GLenum>(buffer)));
 }
 
-void Framebuffer::renderbuffer(const Renderbuffer &renderbuffer) const
+void Framebuffer::attach(const Renderbuffer &renderbuffer, Attachment attachment) const
 {
-  GLenum attachment;
-  switch (renderbuffer.getFormat()) {
-  case InternalFormat::DEPTH_COMPONENT32F:
-    attachment = GL_DEPTH_COMPONENT;
-    break;
-  case InternalFormat::DEPTH24_STENCIL8:
-    attachment = GL_DEPTH_STENCIL_ATTACHMENT;
-    break;
-  }
+  GLCall(glNamedFramebufferRenderbuffer(m_id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.m_id));
+}
 
-  // todo: there are now more possible values
-  // todo: we might also want a function to detach a framebuffer or texture from an attachment point
-  // therefor we should have two maps storing attachment points and pointers to textures/renderbuffers
-  static_assert(false);
-
-  GLCall(glNamedFramebufferRenderbuffer(m_id, attachment, GL_RENDERBUFFER, renderbuffer.m_id));
+void Framebuffer::detach(Attachment attachment) const
+{
+  glNamedFramebufferTexture(m_id, static_cast<GLenum>(attachment), 0, 0);
 }
 
 
