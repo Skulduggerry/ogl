@@ -3,6 +3,25 @@
 
 #include <utility>
 
+// FramebufferBase implementation
+// ==============================
+FramebufferBase::FramebufferBase(const GLuint id) : m_id(id) {}
+
+void FramebufferBase::bind() const { GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_id)); }
+
+// DefaultFramebuffer implementation
+// =================================
+DefaultFramebuffer::DefaultFramebuffer() : FramebufferBase(0) {}
+
+DefaultFramebuffer &DefaultFramebuffer::getInstance()
+{
+  static DefaultFramebuffer f;
+  return f;
+}
+
+// Framebuffer implementation
+// =================================
+
 GLuint createFramebuffer()
 {
   GLuint id = 0;
@@ -10,11 +29,11 @@ GLuint createFramebuffer()
   return id;
 }
 
-Framebuffer::Framebuffer() : m_id(createFramebuffer()) {}
+Framebuffer::Framebuffer() : FramebufferBase(createFramebuffer()) {}
 
 Framebuffer::~Framebuffer() { GLCall(glDeleteFramebuffers(1, &m_id)); }
 
-Framebuffer::Framebuffer(Framebuffer &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}
+Framebuffer::Framebuffer(Framebuffer &&other) noexcept : FramebufferBase(std::exchange(other.m_id, 0)) {}
 
 Framebuffer &Framebuffer::operator=(Framebuffer &&other) noexcept
 {
@@ -23,10 +42,6 @@ Framebuffer &Framebuffer::operator=(Framebuffer &&other) noexcept
   swap(m_id, other.m_id);
   return *this;
 }
-
-void Framebuffer::bind() const { GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_id)); }
-
-void Framebuffer::unbind() { GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0)); }
 
 void Framebuffer::drawBuffer(Attachment buffer) const
 {

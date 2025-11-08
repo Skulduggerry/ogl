@@ -1,3 +1,4 @@
+#include "ogl/Framebuffer.hpp"
 #include "ogl/VertexBuffer.hpp"
 
 #include <algorithm>

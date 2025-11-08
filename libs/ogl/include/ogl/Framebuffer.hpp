@@ -17,21 +17,50 @@ enum struct Attachment : GLenum {
   DEPTH_STENCIL_ATTACHMENT = GL_DEPTH_STENCIL_ATTACHMENT,
 };
 
-class Framebuffer
+class FramebufferBase
+{
+protected:
+  GLuint m_id;
+
+  // don't allow construction of this base class
+  explicit FramebufferBase(GLuint id);
+
+public:
+  // Base class needs virtual destructor
+  virtual ~FramebufferBase() = default;
+
+  // prevent slicing and direct instantiation
+  FramebufferBase(const FramebufferBase &other) = delete;
+  FramebufferBase(FramebufferBase &&other) = delete;
+  FramebufferBase &operator=(const FramebufferBase &other) = delete;
+  FramebufferBase &operator=(FramebufferBase &&other) = delete;
+
+  // bind the framebuffer to the GL_FRAMEBUFFER target
+  void bind() const;
+};
+
+class DefaultFramebuffer final : public FramebufferBase
+{
+  // don't allow creation of this class
+  DefaultFramebuffer();
+  ~DefaultFramebuffer() override = default;
+
+public:
+  static DefaultFramebuffer &getInstance();
+};
+
+class Framebuffer final : public FramebufferBase
 {
   GLuint m_id = 0;
 
 public:
   Framebuffer();
-  ~Framebuffer();
+  ~Framebuffer() override;
   Framebuffer(const Framebuffer &other) = delete;
   Framebuffer(Framebuffer &&other) noexcept;
 
   Framebuffer &operator=(const Framebuffer &other) = delete;
   Framebuffer &operator=(Framebuffer &&other) noexcept;
-
-  void bind() const;
-  static void unbind();
 
   void drawBuffer(Attachment buffer) const;
   template<std::ranges::random_access_range R> void drawBuffers(const R &buffer) const
