@@ -1,22 +1,24 @@
 #ifndef OGL_TEXTURE_HPP
 #define OGL_TEXTURE_HPP
-#include "InternalFormats.hpp"
 #include <glad/glad.h>
-
-// TODO: think about cleaner way to implement
 
 class Framebuffer;
 
 enum struct TextureTarget : GLenum {
-  TEXTURE_1D = GL_TEXTURE_1D,
   TEXTURE_2D = GL_TEXTURE_2D,
-  TEXTURE_3D = GL_TEXTURE_3D,
-  TEXTURE_1D_ARRAY = GL_TEXTURE_1D_ARRAY,
   TEXTURE_2D_ARRAY = GL_TEXTURE_2D_ARRAY,
   TEXTURE_CUBE_MAP = GL_TEXTURE_CUBE_MAP,
-  TEXTURE_CUBE_MAP_ARRAY = GL_TEXTURE_CUBE_MAP_ARRAY,
-  TEXTURE_2D_MULTISAMPLE = GL_TEXTURE_2D_MULTISAMPLE,
-  TEXTURE_2D_MULTISAMPLE_ARRAY = GL_TEXTURE_2D_MULTISAMPLE_ARRAY,
+};
+
+enum struct TextureParameter: GLenum
+{
+  DEPTH_STENCIL_TEXTURE_MODE = GL_DEPTH_STENCIL_TEXTURE_MODE,
+
+};
+
+enum struct TextureParameterValues: GLenum
+{
+
 };
 
 class TextureBase
@@ -38,8 +40,23 @@ public:
   TextureBase &operator=(const TextureBase &other) = delete;
   TextureBase &operator=(TextureBase &&other) = delete;
 
-  // TODO add more genereal methods
+  // TODO add more general methods
+  void bindTextureUnit(GLuint unit);
+  void generateTextureMipmap();
 
+  friend class Framebuffer;
+};
+
+class Texture2D final : TextureBase
+{
+public:
+  Texture2D();
+  ~Texture2D() override;
+  Texture2D(const Texture2D &other) = delete;
+  Texture2D(Texture2D &&other) noexcept;
+
+  Texture2D &operator=(const Texture2D &other) = delete;
+  Texture2D &operator=(Texture2D &&other) noexcept;
 };
 
 #endif
