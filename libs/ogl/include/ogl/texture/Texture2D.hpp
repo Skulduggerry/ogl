@@ -7,7 +7,7 @@
 class Texture2D final : TextureBase
 {
   InternalFormat m_format = InternalFormat::RGB16F;
-  GLsizei m_levels = 0;
+  GLsizei m_mipLevelCount = 0;
   GLsizei m_width = 0, m_height = 0;
 
 public:
@@ -19,8 +19,9 @@ public:
   Texture2D &operator=(const Texture2D &other) = delete;
   Texture2D &operator=(Texture2D &&other) noexcept;
 
-  void storage(GLsizei levels, InternalFormat format, GLsizei width, GLsizei height);
-  void subImage(GLint level,
+  void storage(InternalFormat format, GLsizei width, GLsizei height);
+  void storage(GLsizei mipLevelCount, InternalFormat format, GLsizei width, GLsizei height);
+  void subImage(GLint mipLevel,
     GLint xOffset,
     GLint yOffset,
     GLsizei width,

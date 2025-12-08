@@ -1,0 +1,33 @@
+#include "ogl/texture/Texture2DArray.hpp"
+
+#include "ogl/Logging.hpp"
+
+#include <utility>
+
+GLuint createTexture()
+{
+  GLuint id = 0;
+  GLCall(glCreateTextures(GL_TEXTURE_2D_ARRAY, 1, &id));
+  return id;
+}
+
+Texture2DArray::Texture2DArray() : TextureBase(createTexture()) {}
+
+Texture2DArray::Texture2DArray(Texture2DArray &&other) noexcept
+  : TextureBase(std::exchange(other.m_id, 0)), m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount),
+    m_width(other.m_width), m_height(other.m_height), m_layerCount(other.m_layerCount)
+{}
+
+Texture2DArray &Texture2DArray::operator=(Texture2DArray &&other) noexcept
+{
+  if (this == &other) { return *this; }
+  using std::swap;
+  swap(m_id, other.m_id);
+  swap(m_format, other.m_format);
+  swap(m_mipLevelCount, other.m_mipLevelCount);
+  swap(m_width, other.m_width);
+  swap(m_height, other.m_height);
+  swap(m_layerCount, other.m_layerCount);
+
+  return *this;
+}

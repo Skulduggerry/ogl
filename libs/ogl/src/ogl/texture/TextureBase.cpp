@@ -2,6 +2,10 @@
 
 #include "ogl/Logging.hpp"
 
+#include <glm/common.hpp>
+#include <glm/exponential.hpp>
+#include <glm/gtc/integer.hpp>
+
 TextureBase::TextureBase(const GLuint id) : m_id(id) {}
 
 TextureBase::~TextureBase() { GLCall(glDeleteTextures(1, &m_id)); }
@@ -36,4 +40,9 @@ void TextureBase::textureWrapT(TextureWrap t) const
 void TextureBase::textureWrapR(TextureWrap r) const
 {
   GLCall(glTextureParameteri(m_id, GL_TEXTURE_WRAP_R, static_cast<GLint>(r)));
+}
+
+GLsizei TextureBase::calculateMipLevels(const GLsizei width, const GLsizei height)
+{
+  return static_cast<GLsizei>(floor(log2(std::max(width, height)))) + 1;
 }

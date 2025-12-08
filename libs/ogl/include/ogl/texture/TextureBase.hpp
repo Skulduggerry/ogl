@@ -56,6 +56,9 @@ public:
   void textureWrapR(TextureWrap r) const;
 
   friend class Framebuffer;
+
+protected:
+  static GLsizei calculateMipLevels(GLsizei width, GLsizei height);
 };
 
 #endif
