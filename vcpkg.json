@@ -1,10 +1,10 @@
 {
   "name" : "my-project",
   "version-string" : "1.0.0",
-  "builtin-baseline" : "e3ed41868d5034bc608eaaa58383cd6ecdbb5ffb",
+  "builtin-baseline" : "5dfa11cf88a8da8877b54fcbc5f6db78bc13f75a",
   "dependencies" : [ {
     "name" : "fmt",
-    "version>=" : "12.0.0#0"
+    "version>=" : "12.1.0#0"
   }, {
     "name" : "glm",
     "version>=" : "1.0.2#0"
