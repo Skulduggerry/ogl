@@ -51,8 +51,6 @@ public:
 
 class Framebuffer final : public FramebufferBase
 {
-  GLuint m_id = 0;
-
 public:
   Framebuffer();
   ~Framebuffer() override;

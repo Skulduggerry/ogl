@@ -1,6 +1,6 @@
 #ifndef OGL_RENDERBUFFER_HPP
 #define OGL_RENDERBUFFER_HPP
-#include "InternalFormats.hpp"
+#include "ImageInformation.hpp"
 #include <glad/glad.h>
 
 class Framebuffer;

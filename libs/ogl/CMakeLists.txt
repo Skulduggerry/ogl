@@ -7,6 +7,8 @@ add_library(ogl
         "src/ogl/Program.cpp"
         "src/ogl/Framebuffer.cpp"
         "src/ogl/Renderbuffer.cpp"
+        "src/ogl/texture/TextureBase.cpp"
+        "src/ogl/texture/Texture2D.cpp"
 )
 
 # link project_options/warnings
