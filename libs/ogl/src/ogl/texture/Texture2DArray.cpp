@@ -31,3 +31,48 @@ Texture2DArray &Texture2DArray::operator=(Texture2DArray &&other) noexcept
 
   return *this;
 }
+
+void Texture2DArray::storage(const InternalFormat format,
+  const GLsizei width,
+  const GLsizei height,
+  const GLsizei layerCount)
+{ storage(calculateMipLevels(width, height), format, width, height, layerCount); }
+
+void Texture2DArray::storage(const GLsizei mipLevelCount,
+  InternalFormat format,
+  const GLsizei width,
+  const GLsizei height,
+  const GLsizei layerCount)
+{
+  m_format = format;
+  m_mipLevelCount = mipLevelCount;
+  m_width = width;
+  m_height = height;
+  m_layerCount = layerCount;
+
+  GLCall(glTextureStorage3D(m_id, mipLevelCount, static_cast<GLenum>(format), width, height, layerCount));
+}
+
+void Texture2DArray::subImage(const GLint mipLevel,
+  const GLint xOffset,
+  const GLint yOffset,
+  const GLint layerIndexOffset,
+  const GLsizei width,
+  const GLsizei height,
+  const GLsizei layerCount,
+  Format format,
+  DataType type,
+  const void *pixels) const
+{
+  GLCall(glTextureSubImage3D(m_id,
+    mipLevel,
+    xOffset,
+    yOffset,
+    layerIndexOffset,
+    width,
+    height,
+    layerCount,
+    static_cast<GLenum>(format),
+    static_cast<GLenum>(type),
+    pixels));
+}

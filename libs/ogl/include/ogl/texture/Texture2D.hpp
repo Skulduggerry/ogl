@@ -2,7 +2,8 @@
 #define OGL_TEXTURE2D_HPP
 
 #include "TextureBase.hpp"
-#include "ogl/ImageInformation.hpp"
+#include "ogl/DataType.hpp"
+#include "ogl/ImageFormats.hpp"
 
 class Texture2D final : TextureBase
 {
