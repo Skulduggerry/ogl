@@ -2,8 +2,8 @@
 #define OGL_TEXTURE2DARRAY_HPP
 
 #include "TextureBase.hpp"
-#include "ogl/ImageFormats.hpp"
 #include "ogl/DataType.hpp"
+#include "ogl/ImageFormats.hpp"
 
 class Texture2DArray final : TextureBase
 {
@@ -30,7 +30,7 @@ public:
     GLsizei height,
     GLsizei layerCount,
     Format format,
-    DataType type,
+    ImageDataType type,
     const void *pixels) const;
 };
 

@@ -35,8 +35,10 @@ Program::Program(const std::string &vertexPath, const std::string &fragmentPath)
   }
 }
 
+Program::~Program() { GLCall(glDeleteProgram(m_id)); }
+
 Program::Program(Program &&other) noexcept
-  : m_id(std::exchange(other.m_id, 0)), uniformLocationCache(std::exchange(other.uniformLocationCache, {}))
+  : m_id(std::exchange(other.m_id, 0)), m_uniformLocationCache(std::move(other.m_uniformLocationCache))
 {}
 
 Program &Program::operator=(Program &&other) noexcept
@@ -44,11 +46,9 @@ Program &Program::operator=(Program &&other) noexcept
   if (this == &other) { return *this; }
   using std::swap;
   swap(m_id, other.m_id);
-  swap(uniformLocationCache, other.uniformLocationCache);
+  m_uniformLocationCache = std::move(other.m_uniformLocationCache);
   return *this;
 }
-
-Program::~Program() { GLCall(glDeleteProgram(m_id)); }
 
 void Program::bind() const { GLCall(glUseProgram(m_id)); }
 
@@ -167,7 +167,7 @@ void Program::setMat4x3(const std::string &name, const glm::mat4x3 &value) const
 
 GLint Program::getUniformLocation(const std::string &name) const
 {
-  if (const auto location = uniformLocationCache.find(name); uniformLocationCache.end() != location) {
+  if (const auto location = m_uniformLocationCache.find(name); m_uniformLocationCache.end() != location) {
     return location->second;
   }
 
@@ -175,6 +175,6 @@ GLint Program::getUniformLocation(const std::string &name) const
 
   if (-1 == location) { fmt::println(stderr, "Warning: uniform '{}' does not exist!", name); }
 
-  uniformLocationCache.insert({ name, location });
+  m_uniformLocationCache.insert({ name, location });
   return location;
 }

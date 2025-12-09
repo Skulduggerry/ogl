@@ -14,7 +14,7 @@ VertexArray::VertexArray() : m_id(createVertexArrayId()) {}
 
 VertexArray::~VertexArray() { GLCall(glDeleteVertexArrays(1, &m_id)); }
 
-VertexArray::VertexArray(VertexArray &&other) noexcept : m_id(other.m_id) {}
+VertexArray::VertexArray(VertexArray &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}
 
 VertexArray &VertexArray::operator=(VertexArray &&other) noexcept
 {
@@ -39,26 +39,33 @@ VertexArray &VertexArray::enableAttrib(const GLuint index)
 }
 
 VertexArray &VertexArray::attribFormat(const GLuint attribIndex,
-  const GLint size,
-  const GLenum type,
+  const AttributeSize size,
+  const BufferDataType type,
   const GLboolean normalized,
   const GLuint relativeOffset)
 {
-  GLCall(glVertexArrayAttribFormat(m_id, attribIndex, size, type, normalized, relativeOffset));
+  GLCall(glVertexArrayAttribFormat(
+    m_id, attribIndex, static_cast<GLint>(size), static_cast<GLenum>(type), normalized, relativeOffset));
   return *this;
 }
 
-VertexArray &
-  VertexArray::attribIFormat(const GLuint attribIndex, const GLint size, const GLenum type, const GLuint relativeOffset)
+VertexArray &VertexArray::attribIFormat(const GLuint attribIndex,
+  const AttributeSize size,
+  const BufferDataType type,
+  const GLuint relativeOffset)
 {
-  GLCall(glVertexArrayAttribIFormat(m_id, attribIndex, size, type, relativeOffset));
+  GLCall(
+    glVertexArrayAttribIFormat(m_id, attribIndex, static_cast<GLint>(size), static_cast<GLenum>(type), relativeOffset));
   return *this;
 }
 
-VertexArray &
-  VertexArray::attribLFormat(const GLuint attribIndex, const GLint size, const GLenum type, const GLuint relativeOffset)
+VertexArray &VertexArray::attribLFormat(const GLuint attribIndex,
+  const AttributeSize size,
+  const BufferDataType type,
+  const GLuint relativeOffset)
 {
-  GLCall(glVertexArrayAttribLFormat(m_id, attribIndex, size, type, relativeOffset));
+  GLCall(
+    glVertexArrayAttribLFormat(m_id, attribIndex, static_cast<GLint>(size), static_cast<GLenum>(type), relativeOffset));
   return *this;
 }
 

@@ -23,12 +23,11 @@ Texture2DArray &Texture2DArray::operator=(Texture2DArray &&other) noexcept
   if (this == &other) { return *this; }
   using std::swap;
   swap(m_id, other.m_id);
-  swap(m_format, other.m_format);
-  swap(m_mipLevelCount, other.m_mipLevelCount);
-  swap(m_width, other.m_width);
-  swap(m_height, other.m_height);
-  swap(m_layerCount, other.m_layerCount);
-
+  m_format = other.m_format;
+  m_mipLevelCount = other.m_mipLevelCount;
+  m_width = other.m_width;
+  m_height = other.m_height;
+  m_layerCount = other.m_layerCount;
   return *this;
 }
 
@@ -36,10 +35,12 @@ void Texture2DArray::storage(const InternalFormat format,
   const GLsizei width,
   const GLsizei height,
   const GLsizei layerCount)
-{ storage(calculateMipLevels(width, height), format, width, height, layerCount); }
+{
+  storage(calculateMipLevels(width, height), format, width, height, layerCount);
+}
 
 void Texture2DArray::storage(const GLsizei mipLevelCount,
-  InternalFormat format,
+  const InternalFormat format,
   const GLsizei width,
   const GLsizei height,
   const GLsizei layerCount)
@@ -61,7 +62,7 @@ void Texture2DArray::subImage(const GLint mipLevel,
   const GLsizei height,
   const GLsizei layerCount,
   Format format,
-  DataType type,
+  ImageDataType type,
   const void *pixels) const
 {
   GLCall(glTextureSubImage3D(m_id,

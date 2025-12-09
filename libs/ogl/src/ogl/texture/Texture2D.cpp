@@ -22,21 +22,23 @@ Texture2D &Texture2D::operator=(Texture2D &&other) noexcept
   if (this == &other) { return *this; }
   using std::swap;
   swap(m_id, other.m_id);
-  swap(m_format, other.m_format);
-  swap(m_mipLevelCount, other.m_mipLevelCount);
-  swap(m_width, other.m_width);
-  swap(m_height, other.m_height);
-
+  m_format = other.m_format;
+  m_mipLevelCount = other.m_mipLevelCount;
+  m_width = other.m_width;
+  m_height = other.m_height;
   return *this;
 }
 
-void Texture2D::storage(InternalFormat format, GLsizei width, GLsizei height)
+void Texture2D::storage(const InternalFormat format, const GLsizei width, const GLsizei height)
 {
   storage(calculateMipLevels(width, height), format, width, height);
 }
 
 
-void Texture2D::storage(const GLsizei mipLevelCount, InternalFormat format, const GLsizei width, const GLsizei height)
+void Texture2D::storage(const GLsizei mipLevelCount,
+  const InternalFormat format,
+  const GLsizei width,
+  const GLsizei height)
 {
   m_mipLevelCount = mipLevelCount;
   m_format = format;
@@ -51,7 +53,7 @@ void Texture2D::subImage(const GLint mipLevel,
   const GLsizei width,
   const GLsizei height,
   Format format,
-  DataType type,
+  ImageDataType type,
   const void *pixels) const
 {
   GLCall(glTextureSubImage2D(

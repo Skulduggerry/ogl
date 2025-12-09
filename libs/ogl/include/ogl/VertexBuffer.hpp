@@ -1,6 +1,7 @@
 #ifndef OGL_VERTEXBUFFER_HPP
 #define OGL_VERTEXBUFFER_HPP
 #include "Logging.hpp"
+#include "BufferUsage.hpp"
 
 #include <glad/glad.h>
 #include <ranges>
@@ -18,11 +19,13 @@ public:
   VertexBuffer &operator=(const VertexBuffer &other) = delete;
   VertexBuffer &operator=(VertexBuffer &&other) noexcept;
 
-  template<std::ranges::random_access_range R> void bufferData(const R &buffer, const GLenum usage) const
+  template<std::ranges::random_access_range R> void bufferData(const R &buffer, const BufferUsage usage) const
   {
     using namespace std::ranges;
-    GLCall(
-      glNamedBufferData(m_id, static_cast<GLsizeiptr>(size(buffer) * sizeof(range_value_t<R>)), data(buffer), usage));
+    GLCall(glNamedBufferData(m_id,
+      static_cast<GLsizeiptr>(size(buffer) * sizeof(range_value_t<R>)),
+      data(buffer),
+      static_cast<BufferUsage>(usage)));
   }
 
   friend class VertexArray;

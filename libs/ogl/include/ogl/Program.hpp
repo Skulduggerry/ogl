@@ -10,7 +10,7 @@ class Program
   // the program id
   GLuint m_id;
   // used for optimization
-  mutable std::unordered_map<std::string, GLint> uniformLocationCache;
+  mutable std::unordered_map<std::string, GLint> m_uniformLocationCache;
 
 public:
   Program(const std::string &vertexPath, const std::string &fragmentPath);

@@ -19,13 +19,18 @@ Renderbuffer::Renderbuffer(const InternalFormat format, const GLsizei width, con
 
 Renderbuffer::~Renderbuffer() { GLCall(glDeleteRenderbuffers(1, &m_id)); }
 
-Renderbuffer::Renderbuffer(Renderbuffer &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}
+Renderbuffer::Renderbuffer(Renderbuffer &&other) noexcept
+  : m_id(std::exchange(other.m_id, 0)), m_format(other.m_format), m_width(other.m_width), m_height(other.m_height)
+{}
 
 Renderbuffer &Renderbuffer::operator=(Renderbuffer &&other) noexcept
 {
   if (this == &other) { return *this; }
   using std::swap;
   swap(m_id, other.m_id);
+  m_format = other.m_format;
+  m_width = other.m_width;
+  m_height = other.m_height;
   return *this;
 }
 

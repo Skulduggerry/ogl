@@ -5,6 +5,7 @@
 #include <glm/common.hpp>
 #include <glm/exponential.hpp>
 #include <glm/gtc/integer.hpp>
+#include <utility>
 
 TextureBase::TextureBase(const GLuint id) : m_id(id) {}
 

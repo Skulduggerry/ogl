@@ -13,14 +13,14 @@ IndexBuffer::IndexBuffer() : m_id(createIndexBuffer()) {}
 
 IndexBuffer::~IndexBuffer() { GLCall(glDeleteBuffers(1, &m_id)); }
 
-IndexBuffer::IndexBuffer(IndexBuffer &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}
+IndexBuffer::IndexBuffer(IndexBuffer &&other) noexcept : m_id(std::exchange(other.m_id, 0)), m_type(other.m_type) {}
 
 IndexBuffer &IndexBuffer::operator=(IndexBuffer &&other) noexcept
 {
   if (this == &other) { return *this; }
   using std::swap;
   swap(m_id, other.m_id);
-  swap(type, other.type);
+  m_type = other.m_type;
   return *this;
 }
 

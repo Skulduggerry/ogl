@@ -28,7 +28,7 @@ public:
     GLsizei width,
     GLsizei height,
     Format format,
-    DataType type,
+    ImageDataType type,
     const void *pixels) const;
 };
 

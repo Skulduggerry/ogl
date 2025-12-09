@@ -3,9 +3,9 @@
 
 #include <glad/glad.h>
 
-enum struct DataType : GLenum {
-  // all data types supported by OpenGL
-  // ==================================
+enum struct ImageDataType : GLenum {
+  // all image data types supported by OpenGL
+  // ========================================
   UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
   BYTE = GL_BYTE,
   UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
@@ -25,6 +25,32 @@ enum struct DataType : GLenum {
   UNSIGNED_INT_8_8_8_8_REV = GL_UNSIGNED_INT_8_8_8_8_REV,
   UNSIGNED_INT_10_10_10_2 = GL_UNSIGNED_INT_10_10_10_2,
   UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV,
+};
+
+enum struct IndexType : GLenum {
+  // all index data types supported by OpenGL
+  // ========================================
+  UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+  UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+  UNSIGNED_INT = GL_UNSIGNED_INT,
+};
+
+enum struct BufferDataType : GLenum {
+  // all buffer data types supported by OpenGL
+  // =========================================
+  BYTE = GL_BYTE,
+  UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+  SHORT = GL_SHORT,
+  UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+  INT = GL_INT,
+  UNSIGNED_INT = GL_UNSIGNED_INT,
+  FIXED = GL_FIXED,
+  FLOAT = GL_FLOAT,
+  HALF_FLOAT = GL_HALF_FLOAT,
+  DOUBLE = GL_DOUBLE,
+  INT_2_10_10_10_REV = GL_INT_2_10_10_10_REV,
+  UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV,
+  UNSIGNED_INT_10F_11F_11F_REV = GL_UNSIGNED_INT_10F_11F_11F_REV
 };
 
 #endif
