@@ -95,6 +95,8 @@ enum struct InternalFormat : GLenum {
 };
 
 enum struct Format : GLenum {
+  // image formats
+  // =============
   RED = GL_RED,
   RG = GL_RG,
   RGB = GL_RGB,
@@ -106,6 +108,8 @@ enum struct Format : GLenum {
 };
 
 enum struct DataType : GLenum {
+  // all data types supported by OpenGL
+  // ==================================
   UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
   BYTE = GL_BYTE,
   UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
