@@ -27,7 +27,7 @@ public:
 
   // TODO add class VertexBufferLayout to store the layout of a buffer
   void vertexBuffer(GLuint bindingIndex, const VertexBuffer &buffer, GLintptr offset, GLsizei stride) const;
-  VertexArray &enableAttrib(GLuint index);
+  VertexArray &enableAttrib(GLuint attribIndex);
   VertexArray &attribFormat(GLuint attribIndex,
     AttributeSize size,
     BufferDataType type,

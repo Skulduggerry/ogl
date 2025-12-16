@@ -32,9 +32,9 @@ void VertexArray::vertexBuffer(const GLuint bindingIndex,
   GLCall(glVertexArrayVertexBuffer(m_id, bindingIndex, buffer.m_id, offset, stride));
 }
 
-VertexArray &VertexArray::enableAttrib(const GLuint index)
+VertexArray &VertexArray::enableAttrib(const GLuint attribIndex)
 {
-  GLCall(glEnableVertexArrayAttrib(m_id, index));
+  GLCall(glEnableVertexArrayAttrib(m_id, attribIndex));
   return *this;
 }
 
