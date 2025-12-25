@@ -1,6 +1,7 @@
 #ifndef OGL_DATATYPE_HPP
 #define OGL_DATATYPE_HPP
 
+#include <concepts>
 #include <glad/glad.h>
 
 enum struct ImageDataType : GLenum {
@@ -48,9 +49,34 @@ enum struct BufferDataType : GLenum {
   FLOAT = GL_FLOAT,
   HALF_FLOAT = GL_HALF_FLOAT,
   DOUBLE = GL_DOUBLE,
-  INT_2_10_10_10_REV = GL_INT_2_10_10_10_REV,
-  UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV,
-  UNSIGNED_INT_10F_11F_11F_REV = GL_UNSIGNED_INT_10F_11F_11F_REV
 };
+
+template<BufferDataType T> consteval GLuint getSizeOfType()
+{
+  if constexpr (T == BufferDataType::BYTE) {
+    return sizeof(GLbyte);
+  } else if constexpr (T == BufferDataType::UNSIGNED_BYTE) {
+    return sizeof(GLubyte);
+  } else if constexpr (T == BufferDataType::SHORT) {
+    return sizeof(GLshort);
+  } else if constexpr (T == BufferDataType::UNSIGNED_SHORT) {
+    return sizeof(GLushort);
+  } else if constexpr (T == BufferDataType::INT) {
+    return sizeof(GLint);
+  } else if constexpr (T == BufferDataType::UNSIGNED_INT) {
+    return sizeof(GLuint);
+  } else if constexpr (T == BufferDataType::FIXED) {
+    return sizeof(GLfixed);
+  } else if constexpr (T == BufferDataType::FLOAT) {
+    return sizeof(GLfloat);
+  } else if constexpr (T == BufferDataType::HALF_FLOAT) {
+    return sizeof(GLhalf);
+  } else if constexpr (T == BufferDataType::DOUBLE) {
+    return sizeof(GLdouble);
+  } else {
+    static_assert(false, "This type is not yet supported");
+    return 0;
+  }
+}
 
 #endif

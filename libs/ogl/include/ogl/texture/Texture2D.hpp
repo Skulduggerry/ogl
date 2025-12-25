@@ -3,7 +3,7 @@
 
 #include "TextureBase.hpp"
 #include "ogl/DataType.hpp"
-#include "ogl/ImageFormats.hpp"
+#include "ogl/ImageFormat.hpp"
 
 class Texture2D final : TextureBase
 {

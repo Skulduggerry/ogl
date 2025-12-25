@@ -10,6 +10,7 @@ add_library(ogl
         "src/ogl/texture/TextureBase.cpp"
         "src/ogl/texture/Texture2D.cpp"
         "src/ogl/texture/Texture2DArray.cpp"
+        "src/ogl/VertexBufferLayout.cpp"
 )
 
 # link project_options/warnings

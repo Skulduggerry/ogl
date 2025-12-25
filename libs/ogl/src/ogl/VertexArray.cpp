@@ -24,52 +24,34 @@ VertexArray &VertexArray::operator=(VertexArray &&other) noexcept
   return *this;
 }
 
+void VertexArray::bind() const { GLCall(glBindVertexArray(m_id)); }
+
+void VertexArray::unbind() { GLCall(glBindVertexArray(0)); }
+
 void VertexArray::vertexBuffer(const GLuint bindingIndex,
   const VertexBuffer &buffer,
-  const GLintptr offset,
-  const GLsizei stride) const
+  const VertexBufferLayout &layout,
+  const GLintptr offset) const
 {
-  GLCall(glVertexArrayVertexBuffer(m_id, bindingIndex, buffer.m_id, offset, stride));
-}
+  glVertexArrayVertexBuffer(m_id, bindingIndex, buffer.m_id, offset, layout.m_totalOffset);
 
-VertexArray &VertexArray::enableAttrib(const GLuint attribIndex)
-{
-  GLCall(glEnableVertexArrayAttrib(m_id, attribIndex));
-  return *this;
-}
+  for (auto &[attribIndex, count, type, normalized, relativeOffset] : layout.m_floatAttribs) {
+    glEnableVertexArrayAttrib(m_id, attribIndex);
+    glVertexArrayAttribFormat(
+      m_id, attribIndex, static_cast<GLint>(count), static_cast<GLenum>(type), normalized, relativeOffset);
+    glVertexArrayAttribBinding(m_id, attribIndex, bindingIndex);
+  }
 
-VertexArray &VertexArray::attribFormat(const GLuint attribIndex,
-  const AttributeSize size,
-  const BufferDataType type,
-  const GLboolean normalized,
-  const GLuint relativeOffset)
-{
-  GLCall(glVertexArrayAttribFormat(
-    m_id, attribIndex, static_cast<GLint>(size), static_cast<GLenum>(type), normalized, relativeOffset));
-  return *this;
-}
+  for (auto &[attribIndex, count, type, relativeOffset] : layout.m_intAttribs) {
+    glEnableVertexArrayAttrib(m_id, attribIndex);
+    glVertexArrayAttribIFormat(m_id, attribIndex, static_cast<GLint>(count), static_cast<GLenum>(type), relativeOffset);
+    glVertexArrayAttribBinding(m_id, attribIndex, bindingIndex);
+  }
 
-VertexArray &VertexArray::attribIFormat(const GLuint attribIndex,
-  const AttributeSize size,
-  const BufferDataType type,
-  const GLuint relativeOffset)
-{
-  GLCall(
-    glVertexArrayAttribIFormat(m_id, attribIndex, static_cast<GLint>(size), static_cast<GLenum>(type), relativeOffset));
-  return *this;
-}
-
-VertexArray &VertexArray::attribLFormat(const GLuint attribIndex,
-  const AttributeSize size,
-  const BufferDataType type,
-  const GLuint relativeOffset)
-{
-  GLCall(
-    glVertexArrayAttribLFormat(m_id, attribIndex, static_cast<GLint>(size), static_cast<GLenum>(type), relativeOffset));
-  return *this;
-}
-
-void VertexArray::attribBinding(const GLuint attribIndex, const GLuint bindingIndex) const
-{
-  GLCall(glVertexArrayAttribBinding(m_id, attribIndex, bindingIndex));
+  for (auto &[attribIndex, count, relativeOffset] : layout.m_doubleAttribs) {
+    glEnableVertexArrayAttrib(m_id, attribIndex);
+    glVertexArrayAttribLFormat(
+      m_id, attribIndex, static_cast<GLint>(count), static_cast<GLenum>(BufferDataType::DOUBLE), relativeOffset);
+    glVertexArrayAttribBinding(m_id, attribIndex, bindingIndex);
+  }
 }

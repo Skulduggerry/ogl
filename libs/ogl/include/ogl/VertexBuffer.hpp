@@ -1,7 +1,7 @@
 #ifndef OGL_VERTEXBUFFER_HPP
 #define OGL_VERTEXBUFFER_HPP
-#include "Logging.hpp"
 #include "BufferUsage.hpp"
+#include "Logging.hpp"
 
 #include <glad/glad.h>
 #include <ranges>
@@ -25,7 +25,7 @@ public:
     GLCall(glNamedBufferData(m_id,
       static_cast<GLsizeiptr>(size(buffer) * sizeof(range_value_t<R>)),
       data(buffer),
-      static_cast<BufferUsage>(usage)));
+      static_cast<GLenum>(usage)));
   }
 
   friend class VertexArray;
