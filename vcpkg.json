@@ -1,7 +1,7 @@
 {
   "name" : "my-project",
   "version-string" : "1.0.0",
-  "builtin-baseline" : "2b6a882f61eaa764ec3cf816e2265fe804a44cd0",
+  "builtin-baseline" : "af752f21c9d79ba3df9cb0250ce2233933f58486",
   "dependencies" : [ {
     "name" : "fmt",
     "version>=" : "12.1.0#0"
