@@ -1,13 +1,13 @@
 {
   "name" : "my-project",
   "version-string" : "1.0.0",
-  "builtin-baseline" : "af752f21c9d79ba3df9cb0250ce2233933f58486",
+  "builtin-baseline" : "01e159b519b7e791cc5bb3548663a26d9c0922a3",
   "dependencies" : [ {
     "name" : "fmt",
     "version>=" : "12.1.0#0"
   }, {
     "name" : "glm",
-    "version>=" : "1.0.2#0"
+    "version>=" : "1.0.3#0"
   }, {
     "name" : "glfw3",
     "version>=" : "3.4#1",
@@ -24,7 +24,7 @@
       "description" : "Build the tests of the package's tests",
       "dependencies" : [ {
         "name" : "catch2",
-        "version>=" : "3.11.0#0"
+        "version>=" : "3.12.0#0"
       } ]
     }
   }
