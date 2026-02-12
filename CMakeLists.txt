@@ -25,7 +25,7 @@ include(Features.cmake)
 # install vcpkg dependencies: - should be called before defining project()
 run_vcpkg(
         VCPKG_URL "https://github.com/microsoft/vcpkg.git"
-        VCPKG_REV "01e159b519b7e791cc5bb3548663a26d9c0922a3"
+        VCPKG_REV "0a434205c521ca43d66921271ae2a1d051e718a5"
         VCPKG_DIR "${CMAKE_SOURCE_DIR}/.vcpkg"
         ENABLE_VCPKG_UPDATE)
 
