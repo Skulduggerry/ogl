@@ -121,47 +121,47 @@ void Program::setUVec4(const std::string &name, const glm::uvec4 &value) const
 
 void Program::setMat2(const std::string &name, const glm::mat2 &value) const
 {
-  GLCall(glUniformMatrix2fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix2fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void Program::setMat3(const std::string &name, const glm::mat3 &value) const
 {
-  GLCall(glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix3fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void Program::setMat4(const std::string &name, const glm::mat4 &value) const
 {
-  GLCall(glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix4fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void Program::setMat2x3(const std::string &name, const glm::mat2x3 &value) const
 {
-  GLCall(glUniformMatrix2x3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix2x3fv(m_id,getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void Program::setMat3x2(const std::string &name, const glm::mat3x2 &value) const
 {
-  GLCall(glUniformMatrix3x2fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix3x2fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void Program::setMat2x4(const std::string &name, const glm::mat2x4 &value) const
 {
-  GLCall(glUniformMatrix2x4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix2x4fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void Program::setMat4x2(const std::string &name, const glm::mat4x2 &value) const
 {
-  GLCall(glUniformMatrix4x2fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix4x2fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void Program::setMat3x4(const std::string &name, const glm::mat3x4 &value) const
 {
-  GLCall(glUniformMatrix3x4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix3x4fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 void Program::setMat4x3(const std::string &name, const glm::mat4x3 &value) const
 {
-  GLCall(glUniformMatrix4x3fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
+  GLCall(glProgramUniformMatrix4x3fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value)));
 }
 
 
