@@ -46,7 +46,7 @@ Program &Program::operator=(Program &&other) noexcept
   if (this == &other) { return *this; }
   using std::swap;
   swap(m_id, other.m_id);
-  m_uniformLocationCache = std::move(other.m_uniformLocationCache);
+  swap(m_uniformLocationCache, other.m_uniformLocationCache);
   return *this;
 }
 
