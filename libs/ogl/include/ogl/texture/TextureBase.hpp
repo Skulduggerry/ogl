@@ -35,15 +35,17 @@ protected:
   // don't allow construction of this base class
   explicit TextureBase(GLuint id);
 
+  // prevent slicing and direct instantiation
+  TextureBase(TextureBase &&other) noexcept;
+  TextureBase &operator=(TextureBase &&other) noexcept;
+
 public:
   // Base class needs virtual destructor
   virtual ~TextureBase();
 
   // prevent slicing and direct instantiation
   TextureBase(const TextureBase &other) = delete;
-  TextureBase(TextureBase &&other) = delete;
   TextureBase &operator=(const TextureBase &other) = delete;
-  TextureBase &operator=(TextureBase &&other) = delete;
 
   void bindTextureUnit(GLuint unit) const;
 

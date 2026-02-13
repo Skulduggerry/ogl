@@ -13,7 +13,7 @@ GLuint createTexture()
 Texture2D::Texture2D() : TextureBase(createTexture()) {}
 
 Texture2D::Texture2D(Texture2D &&other) noexcept
-  : TextureBase(std::exchange(other.m_id, 0)), m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount),
+  : TextureBase(std::move(other)), m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount),
     m_width(other.m_width), m_height(other.m_height)
 {}
 
@@ -21,7 +21,7 @@ Texture2D &Texture2D::operator=(Texture2D &&other) noexcept
 {
   if (this == &other) { return *this; }
   using std::swap;
-  swap(m_id, other.m_id);
+  TextureBase::operator=(std::move(other));
   m_format = other.m_format;
   m_mipLevelCount = other.m_mipLevelCount;
   m_width = other.m_width;
@@ -30,9 +30,7 @@ Texture2D &Texture2D::operator=(Texture2D &&other) noexcept
 }
 
 void Texture2D::storage(const InternalFormat format, const GLsizei width, const GLsizei height)
-{
-  storage(calculateMipLevels(width, height), format, width, height);
-}
+{ storage(calculateMipLevels(width, height), format, width, height); }
 
 
 void Texture2D::storage(const GLsizei mipLevelCount,
