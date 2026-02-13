@@ -44,22 +44,14 @@ Framebuffer &Framebuffer::operator=(Framebuffer &&other) noexcept
 }
 
 void Framebuffer::drawBuffer(Attachment buffer) const
-{
-  GLCall(glNamedFramebufferDrawBuffer(m_id, static_cast<GLenum>(buffer)));
-}
+{ GLCall(glNamedFramebufferDrawBuffer(m_id, static_cast<GLenum>(buffer))); }
 
 void Framebuffer::attach(const Renderbuffer &renderbuffer, Attachment attachment) const
-{
-  GLCall(glNamedFramebufferRenderbuffer(m_id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.m_id));
-}
+{ GLCall(glNamedFramebufferRenderbuffer(m_id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.m_id)); }
 
 void Framebuffer::detach(Attachment attachment) const
-{
-  glNamedFramebufferTexture(m_id, static_cast<GLenum>(attachment), 0, 0);
-}
+{ GLCall(glNamedFramebufferTexture(m_id, static_cast<GLenum>(attachment), 0, 0)); }
 
 
 bool Framebuffer::isComplete() const
-{
-  return glCheckNamedFramebufferStatus(m_id, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
-}
+{ return glCheckNamedFramebufferStatus(m_id, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE; }

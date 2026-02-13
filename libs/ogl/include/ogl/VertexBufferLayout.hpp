@@ -43,7 +43,7 @@ public:
   void increaseAttribIndex(const GLuint amount) { m_attribIndex += amount; }
   void increaseOffset(const GLuint amount) { m_totalOffset += amount; }
 
-  template<BufferDataType T> VertexBufferLayout &pushF(GLuint count, GLboolean normalized);
+  template<BufferDataType T> VertexBufferLayout &pushF(GLuint count, GLboolean normalized = GL_FALSE);
   template<BufferDataType T> VertexBufferLayout &pushI(GLuint count);
   VertexBufferLayout &pushL(GLuint count);
 

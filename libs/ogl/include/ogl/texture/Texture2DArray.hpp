@@ -5,7 +5,7 @@
 #include "ogl/DataType.hpp"
 #include "ogl/ImageFormat.hpp"
 
-class Texture2DArray final : TextureBase
+class Texture2DArray final : public TextureBase
 {
   InternalFormat m_format = InternalFormat::RGB16F;
   GLsizei m_mipLevelCount = 0;

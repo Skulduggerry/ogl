@@ -23,6 +23,8 @@ public:
 
   void bind() const;
 
+  IndexType getType() const { return m_type; }
+
   template<std::ranges::random_access_range R> void bufferData(const R &buffer, const BufferUsage usage)
   {
     using namespace std::ranges;

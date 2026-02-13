@@ -57,7 +57,7 @@ constexpr glm::mat4 getLightProjectionMatrix(const std::array<glm::vec3, 8> &fru
   // tune this parameter according to the scene
   static constexpr float zMult = 10.0F;
   minZ = minZ < 0 ? minZ * zMult : minZ / zMult;
-  maxZ = maxX < 0 ? maxX / zMult : maxX * zMult;
+  maxZ = maxZ < 0 ? maxZ / zMult : maxZ * zMult;
 
   return glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
 }
