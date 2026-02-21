@@ -1,9 +1,9 @@
 #include "ogl/Shader.hpp"
-
 #include "ogl/Logging.hpp"
 
 #include <fmt/base.h>
 #include <fstream>
+#include <regex>
 #include <sstream>
 #include <utility>
 
@@ -21,15 +21,50 @@ std::string readFile(const std::string &path)
   return buffer.str();
 }
 
+std::string map_replace(std::string text, const std::map<std::string, std::string> &replacements)
+{
+  if (replacements.empty()) return text;
+
+  const std::string pattern_str =
+    "\\{\\{\\s*("
+    + (replacements | std::views::keys | std::views::join_with(std::string{ "|" }) | std::ranges::to<std::string>())
+    + ")\\s*\\}\\}";
+  const std::regex pattern(pattern_str);
+
+  std::string result{};
+  const auto words_begin = std::sregex_iterator(text.begin(), text.end(), pattern);
+  const auto words_end = std::sregex_iterator();
+
+  size_t last_pos = 0;
+  for (std::sregex_iterator i = words_begin; i != words_end; ++i) {
+    const std::smatch &match = *i;
+
+    // Add the text before the match
+    result += text.substr(last_pos, match.position() - last_pos);
+
+    // Find the replacement value (match[1] is the key inside the brackets)
+    result += replacements.at(match[1].str());
+
+    last_pos = match.position() + match.length();
+  }
+
+  // Add the remaining part of the string
+  result += text.substr(last_pos);
+  return result;
+}
+
 GLuint createShader(Shader::Types type)
 {
-  GLCall(const GLuint id = glCreateShader(static_cast<std::underlying_type_t<Shader::Types>>(type)));
+  GLCall(const GLuint id = glCreateShader(static_cast<GLenum>(type)));
   return id;
 }
 
-Shader::Shader(const std::string &path, const Types type) : m_id(createShader(type))
+Shader::Shader(const std::string &path, const Types type, const std::map<std::string, std::string> &replacements)
+  : m_id(createShader(type))
 {
-  const std::string code = readFile(path);
+  std::string code = readFile(path);
+  code = map_replace(code, replacements);
+
   const char *src = code.c_str();
   const auto size = static_cast<GLint>(code.size());
 

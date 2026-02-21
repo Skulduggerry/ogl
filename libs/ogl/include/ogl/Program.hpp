@@ -2,6 +2,7 @@
 #define OGL_PROGRAM_HPP
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include <map>
 #include <string>
 #include <unordered_map>
 
@@ -13,7 +14,15 @@ class Program
   mutable std::unordered_map<std::string, GLint> m_uniformLocationCache;
 
 public:
-  Program(const std::string &vertexPath, const std::string &fragmentPath);
+  Program(const std::string &vertexPath,
+    const std::string &fragmentPath,
+    const std::map<std::string, std::string> &replacements = {});
+  Program(const std::string &vertexPath,
+    const std::string &fragmentPath,
+    const std::string &geometryPath,
+    const std::map<std::string, std::string> &replacements = {});
+  explicit Program(const std::string &computePath, const std::map<std::string, std::string> &replacements = {});
+
   ~Program();
   Program(const Program &other) = delete;
   Program(Program &&other) noexcept;
