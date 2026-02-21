@@ -53,13 +53,13 @@ std::string map_replace(std::string text, const std::map<std::string, std::strin
   return result;
 }
 
-GLuint createShader(Shader::Types type)
+GLuint createShader(Shader::Type type)
 {
   GLCall(const GLuint id = glCreateShader(static_cast<GLenum>(type)));
   return id;
 }
 
-Shader::Shader(const std::string &path, const Types type, const std::map<std::string, std::string> &replacements)
+Shader::Shader(const std::string &path, const Type type, const std::map<std::string, std::string> &replacements)
   : m_id(createShader(type))
 {
   std::string code = readFile(path);

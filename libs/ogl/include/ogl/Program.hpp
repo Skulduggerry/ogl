@@ -1,5 +1,8 @@
 #ifndef OGL_PROGRAM_HPP
 #define OGL_PROGRAM_HPP
+#include "Shader.hpp"
+
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <map>
@@ -14,12 +17,15 @@ class Program
   mutable std::unordered_map<std::string, GLint> m_uniformLocationCache;
 
 public:
+  struct ShaderSourceInfo
+  {
+    std::string path;
+    Shader::Type type;
+  };
+
   Program(const std::string &vertexPath,
     const std::string &fragmentPath,
-    const std::map<std::string, std::string> &replacements = {});
-  Program(const std::string &vertexPath,
-    const std::string &fragmentPath,
-    const std::string &geometryPath,
+    const std::vector<ShaderSourceInfo> &additional,
     const std::map<std::string, std::string> &replacements = {});
   explicit Program(const std::string &computePath, const std::map<std::string, std::string> &replacements = {});
 

@@ -10,7 +10,7 @@ class Program;
 class Shader
 {
 public:
-  enum struct Types : GLenum {
+  enum struct Type : GLenum {
     // the two basic types of shaders we always need
     VERTEX = GL_VERTEX_SHADER,
     FRAGMENT = GL_FRAGMENT_SHADER,
@@ -28,7 +28,7 @@ private:
   GLuint m_id;
 
 public:
-  Shader(const std::string &path, Types type, const std::map<std::string, std::string> &replacements = {});
+  Shader(const std::string &path, Type type, const std::map<std::string, std::string> &replacements = {});
   ~Shader();
   Shader(const Shader &other) = delete;
   Shader(Shader &&other) noexcept;

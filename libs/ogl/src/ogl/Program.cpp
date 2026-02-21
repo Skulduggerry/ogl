@@ -1,7 +1,10 @@
 #include "ogl/Program.hpp"
 #include "ogl/Logging.hpp"
 #include "ogl/Shader.hpp"
+
+#include <algorithm>
 #include <glm/gtc/type_ptr.hpp>
+#include <ranges>
 #include <utility>
 
 GLuint createProgram()
@@ -12,15 +15,22 @@ GLuint createProgram()
 
 Program::Program(const std::string &vertexPath,
   const std::string &fragmentPath,
+  const std::vector<ShaderSourceInfo> &additional,
   const std::map<std::string, std::string> &replacements)
   : m_id(createProgram())
 {
   // create shaders and attach to the program
-  const Shader vertexShader{ vertexPath, Shader::Types::VERTEX, replacements };
-  const Shader fragmentShader{ fragmentPath, Shader::Types::FRAGMENT, replacements };
+  const Shader vertexShader{ vertexPath, Shader::Type::VERTEX, replacements };
+  const Shader fragmentShader{ fragmentPath, Shader::Type::FRAGMENT, replacements };
+  const std::vector<Shader> additionalShaders = additional
+                                          | std::views::transform([](const auto& information) { return Shader{ information.path, information.type }; })
+                                          | std::ranges::to<std::vector<Shader>>();
 
   GLCall(glAttachShader(m_id, vertexShader.m_id));
   GLCall(glAttachShader(m_id, fragmentShader.m_id));
+  for (const auto &shader : additionalShaders) {
+    GLCall(glAttachShader(m_id, shader.m_id));
+  }
 
   // link the program, check for errors
   GLCall(glLinkProgram(m_id));
@@ -39,48 +49,16 @@ Program::Program(const std::string &vertexPath,
 
   GLCall(glDetachShader(m_id, vertexShader.m_id));
   GLCall(glDetachShader(m_id, fragmentShader.m_id));
-}
-
-Program::Program(const std::string &vertexPath,
-  const std::string &fragmentPath,
-  const std::string &geometryPath,
-  const std::map<std::string, std::string> &replacements)
-  : m_id(createProgram())
-{
-  // create shaders and attach to the program
-  const Shader vertexShader{ vertexPath, Shader::Types::VERTEX, replacements };
-  const Shader fragmentShader{ fragmentPath, Shader::Types::FRAGMENT, replacements };
-  const Shader geometryShader{ geometryPath, Shader::Types::GEOMETRY, replacements };
-
-  GLCall(glAttachShader(m_id, vertexShader.m_id));
-  GLCall(glAttachShader(m_id, fragmentShader.m_id));
-  GLCall(glAttachShader(m_id, geometryShader.m_id));
-
-  // link the program, check for errors
-  GLCall(glLinkProgram(m_id));
-  GLint result;
-  GLCall(glGetProgramiv(m_id, GL_LINK_STATUS, &result));
-  if (GL_FALSE == result) {
-    GLint length;
-    GLCall(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
-
-    std::string infoLog(length, 0);
-    GLCall(glGetProgramInfoLog(m_id, length, &length, infoLog.data()));
-
-    fmt::println(stderr, "[Program Error]: Failed to link program!");
-    fmt::println(stderr, "{}", infoLog);
+  for (const auto &shader : additionalShaders) {
+    GLCall(glDetachShader(m_id, shader.m_id));
   }
-
-  GLCall(glDetachShader(m_id, vertexShader.m_id));
-  GLCall(glDetachShader(m_id, fragmentShader.m_id));
-  GLCall(glDetachShader(m_id, geometryShader.m_id));
 }
 
 Program::Program(const std::string &computePath, const std::map<std::string, std::string> &replacements)
   : m_id(createProgram())
 {
   // create shaders and attach to the program
-  const Shader computeShader{ computePath, Shader::Types::COMPUTE, replacements };
+  const Shader computeShader{ computePath, Shader::Type::COMPUTE, replacements };
 
   GLCall(glAttachShader(m_id, computeShader.m_id));
 
