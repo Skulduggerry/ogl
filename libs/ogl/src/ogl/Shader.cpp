@@ -21,7 +21,7 @@ std::string readFile(const std::string &path)
   return buffer.str();
 }
 
-std::string map_replace(std::string text, const std::map<std::string, std::string> &replacements)
+std::string mapReplace(std::string text, const std::map<std::string, std::string> &replacements)
 {
   if (replacements.empty()) return text;
 
@@ -63,7 +63,7 @@ Shader::Shader(const std::string &path, const Type type, const std::map<std::str
   : m_id(createShader(type))
 {
   std::string code = readFile(path);
-  code = map_replace(code, replacements);
+  code = mapReplace(code, replacements);
 
   const char *src = code.c_str();
   const auto size = static_cast<GLint>(code.size());

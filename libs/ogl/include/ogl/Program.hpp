@@ -25,7 +25,7 @@ public:
 
   Program(const std::string &vertexPath,
     const std::string &fragmentPath,
-    const std::vector<ShaderSourceInfo> &additional,
+    const std::vector<ShaderSourceInfo> &additional = {},
     const std::map<std::string, std::string> &replacements = {});
   explicit Program(const std::string &computePath, const std::map<std::string, std::string> &replacements = {});
 
