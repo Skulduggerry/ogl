@@ -13,9 +13,7 @@ GLuint createRenderbuffer()
 Renderbuffer::Renderbuffer() : m_id(createRenderbuffer()) {}
 
 Renderbuffer::Renderbuffer(const InternalFormat format, const GLsizei width, const GLsizei height) : Renderbuffer{}
-{
-  storage(format, width, height);
-}
+{ storage(format, width, height); }
 
 Renderbuffer::~Renderbuffer() { GLCall(glDeleteRenderbuffers(1, &m_id)); }
 

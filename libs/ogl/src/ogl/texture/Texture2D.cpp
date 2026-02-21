@@ -13,19 +13,19 @@ GLuint createTexture()
 Texture2D::Texture2D() : TextureBase(createTexture()) {}
 
 Texture2D::Texture2D(Texture2D &&other) noexcept
-  : TextureBase(std::move(other)), m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount),
-    m_width(other.m_width), m_height(other.m_height)
+  : m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount), m_width(other.m_width), m_height(other.m_height),
+    TextureBase(std::move(other))
 {}
 
 Texture2D &Texture2D::operator=(Texture2D &&other) noexcept
 {
   if (this == &other) { return *this; }
   using std::swap;
-  TextureBase::operator=(std::move(other));
   m_format = other.m_format;
   m_mipLevelCount = other.m_mipLevelCount;
   m_width = other.m_width;
   m_height = other.m_height;
+  TextureBase::operator=(std::move(other));
   return *this;
 }
 

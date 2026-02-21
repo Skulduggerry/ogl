@@ -15,7 +15,7 @@ void scroll_callback(GLFWwindow *window, double xOffset, double yOffset);
 void process_input(GLFWwindow *window);
 
 // global variables
-Camera camera{{0.0f, 0.0f, 5.0f}};
+Camera camera{ { 0.0f, 0.0f, 5.0f } };
 
 int windowWidth = 800, windowHeight = 600;
 float lastX = 0;

@@ -15,20 +15,20 @@ GLuint createTexture()
 Texture2DArray::Texture2DArray() : TextureBase(createTexture()) {}
 
 Texture2DArray::Texture2DArray(Texture2DArray &&other) noexcept
-  : TextureBase(std::move(other)), m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount),
-    m_width(other.m_width), m_height(other.m_height), m_layerCount(other.m_layerCount)
+  : m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount), m_width(other.m_width), m_height(other.m_height),
+    m_layerCount(other.m_layerCount), TextureBase(std::move(other))
 {}
 
 Texture2DArray &Texture2DArray::operator=(Texture2DArray &&other) noexcept
 {
   if (this == &other) { return *this; }
   using std::swap;
-  TextureBase::operator=(std::move(other));
   m_format = other.m_format;
   m_mipLevelCount = other.m_mipLevelCount;
   m_width = other.m_width;
   m_height = other.m_height;
   m_layerCount = other.m_layerCount;
+  TextureBase::operator=(std::move(other));
   return *this;
 }
 
