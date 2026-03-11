@@ -63,7 +63,7 @@ int main()
   GLCall(glEnable(GL_DEPTH_TEST));
 
   // load the shader program
-  const Program program{ RESOURCE_PATH "shader.vert", RESOURCE_PATH "shader.frag" };
+  const Program program{ RESOURCE_PATH "shaders/shader.vert", RESOURCE_PATH "shaders/shader.frag" };
 
   // create a vertex buffer
   const VertexBuffer vbo{};
@@ -83,7 +83,7 @@ int main()
   layout.pushF<BufferDataType::FLOAT>(3, GL_FALSE);
 
   // create a vertex array
-  VertexArray vao{};
+  const VertexArray vao{};
   vao.vertexBuffer(0, vbo, layout, 0);
 
   while (!glfwWindowShouldClose(window)) {
