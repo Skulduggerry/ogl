@@ -2,6 +2,7 @@
 #define OGL_FRAMEBUFFER_HPP
 #include "Logging.hpp"
 #include "Renderbuffer.hpp"
+#include "texture/TextureBase.hpp"
 
 #include <glad/glad.h>
 #include <ranges>
@@ -67,8 +68,10 @@ public:
     GLCall(glNamedFramebufferDrawBuffers(m_id, size(buffer), reinterpret_cast<const GLenum *>(data(buffer))));
   }
 
+  void readBuffer(Attachment buffer) const;
+
   void attach(const Renderbuffer &renderbuffer, Attachment attachment) const;
-  void detach(Attachment attachment) const;
+  void attach(const TextureBase &texture, Attachment attachment, GLint level = 0) const;
 
   [[nodiscard]] bool isComplete() const;
 };
