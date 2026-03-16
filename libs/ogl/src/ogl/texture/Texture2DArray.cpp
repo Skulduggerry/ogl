@@ -5,7 +5,7 @@
 #include <chrono>
 #include <utility>
 
-GLuint createTexture()
+static GLuint createTexture()
 {
   GLuint id = 0;
   GLCall(glCreateTextures(GL_TEXTURE_2D_ARRAY, 1, &id));

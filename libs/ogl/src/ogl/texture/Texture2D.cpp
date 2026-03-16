@@ -3,7 +3,7 @@
 
 #include <utility>
 
-GLuint createTexture()
+static GLuint createTexture()
 {
   GLuint id = 0;
   GLCall(glCreateTextures(GL_TEXTURE_2D, 1, &id));

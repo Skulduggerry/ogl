@@ -67,7 +67,10 @@ public:
   void setMat3x4(const std::string &name, const glm::mat3x4 &value) const;
   void setMat4x3(const std::string &name, const glm::mat4x3 &value) const;
 
+  void uniformBlockBinding(const std::string &uniformBlockName, GLuint bindingPoint) const;
+
 private:
+  GLuint getUniformBlockIndex(const std::string &uniformBlockName) const;
   GLint getUniformLocation(const std::string &name) const;
 };
 

@@ -24,12 +24,15 @@ private:
   glm::vec3 m_right{};
   glm::vec3 m_worldUp;
 
-public:
   // euler angles
   float m_yaw;
   float m_pitch;
+
   // camera options
   float m_zoom = ZOOM;
+
+public:
+  // public camera options
   float m_movementSpeed = SPEED;
   float m_mouseSensitivity = SENSITIVITY;
 
@@ -53,6 +56,8 @@ public:
   [[nodiscard]] glm::vec3 getViewDirection() const { return m_front; }
 
   [[nodiscard]] glm::mat4 getViewMatrix() const { return glm::lookAt(m_position, m_position + m_front, m_worldUp); }
+
+  [[nodiscard]] float getZoom() const { return m_zoom; }
 
   void processKeyboard(Directions direction, float deltaTime);
 

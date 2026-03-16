@@ -49,6 +49,8 @@ public:
 
   void bindTextureUnit(GLuint unit) const;
 
+  void generateMipmap() const;
+
   // texture parameters
   void borderColor(std::array<GLfloat, 4> color) const;
   void minFilter(TextureMinFilter filter) const;

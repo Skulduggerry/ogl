@@ -22,15 +22,13 @@ Program::Program(const std::string &vertexPath,
   // create shaders and attach to the program
   const Shader vertexShader{ vertexPath, Shader::Type::VERTEX, replacements };
   const Shader fragmentShader{ fragmentPath, Shader::Type::FRAGMENT, replacements };
-  const std::vector<Shader> additionalShaders = additional
-                                          | std::views::transform([](const auto& information) { return Shader{ information.path, information.type }; })
-                                          | std::ranges::to<std::vector<Shader>>();
+  const std::vector<Shader> additionalShaders = additional | std::views::transform([](const auto &information) {
+    return Shader{ information.path, information.type };
+  }) | std::ranges::to<std::vector<Shader>>();
 
   GLCall(glAttachShader(m_id, vertexShader.m_id));
   GLCall(glAttachShader(m_id, fragmentShader.m_id));
-  for (const auto &shader : additionalShaders) {
-    GLCall(glAttachShader(m_id, shader.m_id));
-  }
+  for (const auto &shader : additionalShaders) { GLCall(glAttachShader(m_id, shader.m_id)); }
 
   // link the program, check for errors
   GLCall(glLinkProgram(m_id));
@@ -49,9 +47,7 @@ Program::Program(const std::string &vertexPath,
 
   GLCall(glDetachShader(m_id, vertexShader.m_id));
   GLCall(glDetachShader(m_id, fragmentShader.m_id));
-  for (const auto &shader : additionalShaders) {
-    GLCall(glDetachShader(m_id, shader.m_id));
-  }
+  for (const auto &shader : additionalShaders) { GLCall(glDetachShader(m_id, shader.m_id)); }
 }
 
 Program::Program(const std::string &computePath, const std::map<std::string, std::string> &replacements)
@@ -165,6 +161,14 @@ void Program::setMat3x4(const std::string &name, const glm::mat3x4 &value) const
 void Program::setMat4x3(const std::string &name, const glm::mat4x3 &value) const
 { GLCall(glProgramUniformMatrix4x3fv(m_id, getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value))); }
 
+void Program::uniformBlockBinding(const std::string &uniformBlockName, const GLuint bindingPoint) const
+{ GLCall(glUniformBlockBinding(m_id, getUniformBlockIndex(uniformBlockName), bindingPoint)); }
+
+GLuint Program::getUniformBlockIndex(const std::string &uniformBlockName) const
+{
+  GLCall(const GLuint index = glGetUniformBlockIndex(m_id, uniformBlockName.c_str()));
+  return index;
+}
 
 GLint Program::getUniformLocation(const std::string &name) const
 {

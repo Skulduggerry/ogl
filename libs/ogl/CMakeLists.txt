@@ -1,16 +1,18 @@
 add_library(ogl
-        "src/ogl/VertexBuffer.cpp"
-        "src/ogl/VertexArray.cpp"
-        "src/ogl/IndexBuffer.cpp"
         "src/ogl/Camera.cpp"
-        "src/ogl/Shader.cpp"
-        "src/ogl/Program.cpp"
         "src/ogl/Framebuffer.cpp"
+        "src/ogl/IndexBuffer.cpp"
+        "src/ogl/Program.cpp"
         "src/ogl/Renderbuffer.cpp"
+        "src/ogl/Shader.cpp"
+        "src/ogl/UniformBuffer.cpp"
+        "src/ogl/VertexArray.cpp"
+        "src/ogl/VertexBuffer.cpp"
+        "src/ogl/VertexBufferLayout.cpp"
+
         "src/ogl/texture/TextureBase.cpp"
         "src/ogl/texture/Texture2D.cpp"
         "src/ogl/texture/Texture2DArray.cpp"
-        "src/ogl/VertexBufferLayout.cpp"
 )
 
 # link project_options/warnings

@@ -2,9 +2,7 @@
 
 #include "ogl/Logging.hpp"
 
-#include <glm/common.hpp>
 #include <glm/exponential.hpp>
-#include <glm/gtc/integer.hpp>
 #include <utility>
 
 TextureBase::TextureBase(const GLuint id) : m_id(id) {}
@@ -22,6 +20,8 @@ TextureBase &TextureBase::operator=(TextureBase &&other) noexcept
 TextureBase::~TextureBase() { GLCall(glDeleteTextures(1, &m_id)); }
 
 void TextureBase::bindTextureUnit(const GLuint unit) const { GLCall(glBindTextureUnit(unit, m_id)); }
+
+void TextureBase::generateMipmap() const { GLCall(glGenerateTextureMipmap(m_id)); }
 
 void TextureBase::borderColor(std::array<GLfloat, 4> color) const
 { GLCall(glTextureParameterfv(m_id, GL_TEXTURE_BORDER_COLOR, color.data())); }

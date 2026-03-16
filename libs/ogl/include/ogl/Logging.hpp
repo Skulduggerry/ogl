@@ -10,16 +10,18 @@
 #define DEBUG_BREAK __debugbreak
 #endif
 
-#define ASSERT(x) \
-  if (!(x)) { DEBUG_BREAK(); }
-
 #ifdef DEVELOPER_BUILD
+
+#define ASSERT(x) \
+if (!(x)) { DEBUG_BREAK(); }
+
 #define GLCall(x) \
   GLClearError(); \
   x;              \
   ASSERT(GLLogCall(#x, __FILE__, __LINE__))
 #else
 #define GLCall(x) x;
+#define ASSERT(x) ;
 #endif
 
 inline void GLClearError()
