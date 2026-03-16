@@ -32,8 +32,8 @@ void renderPlane();
 void renderQuad();
 
 // global variables
-Camera camera{ { 0.0f, 0.0f, 3.0f } };
-Camera debugCamera{ { -70, 70, 100 } };
+Camera camera{ { 5.0f, 5.0f, 5.0f } };
+Camera debugCamera{ { -80, 80, 80 }, { 0.0, 1.0, 0.0 }, -45, -35 };
 
 int windowWidth = 800, windowHeight = 600;
 float lastX = 0;
@@ -58,13 +58,13 @@ int debugLayer = 0;
 const glm::vec3 lightDir = glm::normalize(glm::vec3(20.0f, 50, 20.0f));
 constexpr unsigned int depthMapResolution = 4096;
 
-bool showQuad = false;
+bool showQuad = false, showDebugCam = false;
 
 std::random_device device;
 std::mt19937 generator{ device() };
 
 std::array<glm::mat4, shadowCascadeLevels.size() + 1> getLightSpaceMatrices();
-void drawCascadeVolumeVisualizers(const std::array<glm::mat4, shadowCascadeLevels.size() + 1> &lightMatrices, const Program &program);
+void drawCascadeVolumeVisualizers(const Program &program);
 
 int main()
 {
@@ -142,6 +142,7 @@ int main()
 
   // render loop
   while (!glfwWindowShouldClose(window)) {
+    [[maybe_unused]] Camera c = camera;
 
     // per-frame time logic
     // --------------------
@@ -177,12 +178,12 @@ int main()
     GLCall(glCullFace(GL_BACK));
     DefaultFramebuffer::getInstance().bind();
 
-    // reset viewport
-    GLCall(glViewport(0, 0, windowWidth, windowHeight));
-    GLCall(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
-
     // 2. render the scene as normal using the generated depth/shadow map
     if (showQuad) {
+
+      // reset viewport
+      GLCall(glViewport(0, 0, windowWidth, windowHeight));
+      GLCall(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
 
       debugDepthQuad.bind();
       debugDepthQuad.setInt("layer", debugLayer);
@@ -190,10 +191,16 @@ int main()
       renderQuad();
 
     } else {
+      // reset viewport
+      GLsizei width = showDebugCam ? windowWidth / 2 : windowWidth;
+
+      GLCall(glViewport(0, 0, width, windowHeight));
+      GLCall(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
+
       shader.bind();
 
       const glm::mat4 proj = glm::perspective(glm::radians(camera.getZoom()),
-        static_cast<float>(windowWidth) / static_cast<float>(windowHeight),
+        static_cast<float>(width) / static_cast<float>(windowHeight),
         cameraNearPlane,
         cameraFarPlane);
       const glm::mat4 view = camera.getViewMatrix();
@@ -212,13 +219,28 @@ int main()
       lightDepthMaps.bindTextureUnit(1);
       renderScene(shader);
 
-      // GLCall(glEnable(GL_BLEND));
-      // GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-      // debugCascadeShader.bind();
-      // debugCascadeShader.setMat4("projection", proj);
-      // debugCascadeShader.setMat4("view", debugCamera.getViewMatrix());
-      // drawCascadeVolumeVisualizers(lightMatrices, debugCascadeShader);
-      // GLCall(glDisable(GL_BLEND));
+      if (showDebugCam) {
+        // reset viewport
+        GLCall(glViewport(width + 1, 0, windowWidth - width, windowHeight));
+
+        const glm::mat4 debugProj = glm::perspective(glm::radians(debugCamera.getZoom()),
+          static_cast<float>(width) / static_cast<float>(windowHeight),
+          cameraNearPlane,
+          cameraFarPlane);
+        const glm::mat4 debugView = debugCamera.getViewMatrix();
+        shader.setMat4("projection", debugProj);
+        shader.setMat4("view", debugView);
+        shader.setVec3("viewPos", debugCamera.getPosition());
+        renderScene(shader);
+
+        GLCall(glEnable(GL_BLEND));
+        GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+        debugCascadeShader.bind();
+        debugCascadeShader.setMat4("projection", debugProj);
+        debugCascadeShader.setMat4("view", debugView);
+        drawCascadeVolumeVisualizers(debugCascadeShader);
+        GLCall(glDisable(GL_BLEND));
+      }
     }
 
     glfwSwapBuffers(window);
@@ -319,11 +341,7 @@ void process_input(GLFWwindow *window)
   nPress = glfwGetKey(window, GLFW_KEY_N);
 
   static int cPress = GLFW_RELEASE;
-  if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE && cPress == GLFW_PRESS) {
-    const auto matrices = getLightSpaceMatrices();
-    lightMatricesCache.resize(matrices.size());
-    std::ranges::copy(matrices, lightMatricesCache.begin());
-  }
+  if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE && cPress == GLFW_PRESS) { showDebugCam = !showDebugCam; }
   cPress = glfwGetKey(window, GLFW_KEY_C);
 
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) { camera.processKeyboard(Camera::Directions::FORWARD, deltaTime); }
@@ -641,14 +659,12 @@ std::array<glm::mat4, shadowCascadeLevels.size() + 1> getLightSpaceMatrices()
   return ret;
 }
 
-std::vector<VertexArray> visualizerVAOs{};
-std::vector<VertexBuffer> visualizerVBOs{};
-std::vector<IndexBuffer> visualizerEBOs{};
-void drawCascadeVolumeVisualizers(const std::array<glm::mat4, shadowCascadeLevels.size() + 1> &lightMatrices, const Program &program)
+
+void drawCascadeVolumeVisualizers(const Program &program)
 {
-  visualizerVAOs.resize(8);
-  visualizerVBOs.resize(8);
-  visualizerEBOs.resize(8);
+  static VertexArray vao{};
+  static VertexBuffer vbo{};
+  static IndexBuffer ebo{};
 
   // clang-format off
   static constexpr std::array<GLuint, 36> indices = {
@@ -675,24 +691,37 @@ void drawCascadeVolumeVisualizers(const std::array<glm::mat4, shadowCascadeLevel
   };
   // clang-format on
 
-  for (unsigned int i = 0; i < lightMatrices.size(); ++i) {
-    const auto corners = getFrustumCornersWorldSpace(lightMatrices[i]);
+  ebo.bufferData(indices, BufferUsage::STATIC_DRAW);
 
-    visualizerVBOs[i].bufferData(corners, BufferUsage::STATIC_DRAW);
-    visualizerEBOs[i].bufferData(indices, BufferUsage::STATIC_DRAW);
+  for (unsigned int i = 0; i < shadowCascadeLevels.size() + 1; ++i) {
+    float near, far;
+    if (i == 0) {
+      near = cameraNearPlane;
+      far = shadowCascadeLevels[0];
+    } else if (i == shadowCascadeLevels.size()) {
+      near = shadowCascadeLevels[i-1];
+      far = cameraFarPlane;
+    } else {
+      near = shadowCascadeLevels[i - 1];
+      far = shadowCascadeLevels[i];
+    }
+
+    const glm::mat4 view = camera.getViewMatrix();
+    const glm::mat4 projection = glm::perspective(glm::radians(camera.getZoom()), static_cast<float>(windowWidth) / 2 / static_cast<float>(windowHeight), near, far);
+
+    const auto corners = getFrustumCornersWorldSpace(projection * view);
+
+    vbo.bufferData(corners, BufferUsage::STATIC_DRAW);
 
     VertexBufferLayout layout{};
     layout.pushF<BufferDataType::FLOAT>(3);
-    visualizerVAOs[i].vertexBuffer(0, visualizerVBOs[i], layout, 0);
+    vao.vertexBuffer(0, vbo, layout, 0);
 
-    visualizerVAOs[i].bind();
-    visualizerEBOs[i].bind();
+    vao.bind();
+    ebo.bind();
     program.setVec4("color", colors[i % 3]);
     GLCall(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
   }
 
   VertexArray::unbind();
-  visualizerVAOs.clear();
-  visualizerVBOs.clear();
-  visualizerEBOs.clear();
 }
