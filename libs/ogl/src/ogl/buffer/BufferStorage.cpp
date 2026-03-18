@@ -1,13 +1,12 @@
 #include "ogl/buffer/BufferStorage.hpp"
 #include "ogl/Logging.hpp"
-#include "ogl/UniformBuffer.hpp"
 
 #include <algorithm>
 #include <numeric>
 
 static GLuint createBuffer()
 {
-  GLuint id;
+  GLuint id = 0;
   GLCall(glCreateBuffers(1, &id));
   return id;
 }
@@ -42,14 +41,14 @@ static GLbitfield toBitfield(const std::span<const T> flags)
   return bits;
 }
 
-void BufferStorage::allocateImmutableBytes(const GLsizeiptr byteCount, const std::span<const StorageFlag> flags)
+void BufferStorage::allocateImmutableBytes(const GLsizeiptr byteCount, const std::span<const BufferStorageFlag> flags)
 {
   m_byteSize = byteCount;
   GLCall(glNamedBufferStorage(m_id, byteCount, nullptr, toBitfield(flags)));
 }
 
 void BufferStorage::allocateImmutableBytes(const std::span<const std::byte> bytes,
-  const std::span<const StorageFlag> flags)
+  const std::span<const BufferStorageFlag> flags)
 {
   m_byteSize = static_cast<GLsizeiptr>(bytes.size_bytes());
   GLCall(glNamedBufferStorage(m_id, m_byteSize, bytes.data(), toBitfield(flags)));
@@ -64,7 +63,7 @@ void BufferStorage::allocateMutableBytes(const GLsizeiptr byteCount, const Buffe
 void BufferStorage::allocateMutableBytes(const std::span<const std::byte> bytes, const BufferUsage bufferUsage)
 {
   m_byteSize = static_cast<GLsizeiptr>(bytes.size_bytes());
-  glNamedBufferData(m_id, m_byteSize, bytes.data(), static_cast<GLenum>(bufferUsage));
+  GLCall(glNamedBufferData(m_id, m_byteSize, bytes.data(), static_cast<GLenum>(bufferUsage)));
 }
 
 void BufferStorage::subDataBytes(const GLintptr byteOffset, const std::span<const std::byte> bytes) const
@@ -119,7 +118,7 @@ BufferMapping<std::byte> BufferStorage::mapWriteBytes() const
 
 BufferMapping<std::byte> BufferStorage::mapRangeBytes(const GLintptr byteOffset,
   const GLsizeiptr byteCount,
-  const std::span<const MappingFlag> flags) const
+  const std::span<const BufferMappingFlag> flags) const
 {
   ASSERT(byteOffset + byteCount <= m_byteSize);
 
@@ -130,7 +129,7 @@ BufferMapping<std::byte> BufferStorage::mapRangeBytes(const GLintptr byteOffset,
 
 BufferMapping<const std::byte> BufferStorage::mapRangeReadBytes(const GLintptr byteOffset,
   const GLsizeiptr byteCount,
-  const std::span<const MappingFlag> flags) const
+  const std::span<const BufferMappingFlag> flags) const
 {
   ASSERT(byteOffset + byteCount <= m_byteSize);
 
@@ -141,7 +140,7 @@ BufferMapping<const std::byte> BufferStorage::mapRangeReadBytes(const GLintptr b
 
 BufferMapping<std::byte> BufferStorage::mapRangeWriteBytes(const GLintptr byteOffset,
   const GLsizeiptr byteCount,
-  const std::span<const MappingFlag> flags) const
+  const std::span<const BufferMappingFlag> flags) const
 {
   ASSERT(byteOffset + byteCount <= m_byteSize);
 

@@ -11,9 +11,9 @@ public:
 
   [[nodiscard]] GLsizeiptr getByteSize() const { return m_storage.getByteSize(); }
 
-  void allocateImmutableBytes(GLsizeiptr byteCount, std::span<const StorageFlag> flags);
+  void allocateImmutableBytes(GLsizeiptr byteCount, std::span<const BufferStorageFlag> flags);
 
-  void allocateImmutableBytes(std::span<const std::byte> bytes, std::span<const StorageFlag> flags);
+  void allocateImmutableBytes(std::span<const std::byte> bytes, std::span<const BufferStorageFlag> flags);
 
   void allocateMutableBytes(GLsizeiptr byteCount, BufferUsage bufferUsage);
 
@@ -47,7 +47,7 @@ public:
   [[nodiscard]] BufferMapping<std::byte> mapWriteBytes() const;
 
   [[nodiscard]] BufferMapping<std::byte>
-    mapRangeWriteBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const MappingFlag> flags) const;
+    mapRangeWriteBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const BufferMappingFlag> flags) const;
 
   void bindBase(GLuint bindingIndex) const;
 

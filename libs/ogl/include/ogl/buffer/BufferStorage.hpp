@@ -1,8 +1,8 @@
 #ifndef OGL_BUFFERSTORAGE_HPP
 #define OGL_BUFFERSTORAGE_HPP
 
+#include "BufferEnums.hpp"
 #include "BufferMapping.hpp"
-#include "Enums.hpp"
 
 #include <glad/glad.h>
 #include <span>
@@ -29,9 +29,9 @@ public:
 
   [[nodiscard]] GLsizeiptr getByteSize() const { return m_byteSize; }
 
-  void allocateImmutableBytes(GLsizeiptr byteCount, std::span<const StorageFlag> flags);
+  void allocateImmutableBytes(GLsizeiptr byteCount, std::span<const BufferStorageFlag> flags);
 
-  void allocateImmutableBytes(std::span<const std::byte> bytes, std::span<const StorageFlag> flags);
+  void allocateImmutableBytes(std::span<const std::byte> bytes, std::span<const BufferStorageFlag> flags);
 
   void allocateMutableBytes(GLsizeiptr byteCount, BufferUsage bufferUsage);
 
@@ -57,13 +57,13 @@ public:
   [[nodiscard]] BufferMapping<std::byte> mapWriteBytes() const;
 
   [[nodiscard]] BufferMapping<std::byte>
-    mapRangeBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const MappingFlag> flags) const;
+    mapRangeBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const BufferMappingFlag> flags) const;
 
   [[nodiscard]] BufferMapping<const std::byte>
-    mapRangeReadBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const MappingFlag> flags) const;
+    mapRangeReadBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const BufferMappingFlag> flags) const;
 
   [[nodiscard]] BufferMapping<std::byte>
-    mapRangeWriteBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const MappingFlag> flags) const;
+    mapRangeWriteBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const BufferMappingFlag> flags) const;
 };
 
 #endif

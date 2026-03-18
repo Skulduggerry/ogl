@@ -458,10 +458,10 @@ void renderCube()
     // clang-format on
     cubeVBO.bufferData(vertices, BufferUsage::STATIC_DRAW);
 
-    VertexBufferLayout layout{};
-    layout.pushF<BufferDataType::FLOAT>(3);
-    layout.pushF<BufferDataType::FLOAT>(3);
-    layout.pushF<BufferDataType::FLOAT>(2);
+    VertexBufferLayoutOld layout{};
+    layout.pushF<AttributeType::FLOAT>(3);
+    layout.pushF<AttributeType::FLOAT>(3);
+    layout.pushF<AttributeType::FLOAT>(2);
 
     cubeVAO.vertexBuffer(0, cubeVBO, layout, 0);
   }
@@ -493,10 +493,10 @@ void renderPlane()
     // clang-format on
     planeVBO.bufferData(vertices, BufferUsage::STATIC_DRAW);
 
-    VertexBufferLayout layout{};
-    layout.pushF<BufferDataType::FLOAT>(3);
-    layout.pushF<BufferDataType::FLOAT>(3);
-    layout.pushF<BufferDataType::FLOAT>(2);
+    VertexBufferLayoutOld layout{};
+    layout.pushF<AttributeType::FLOAT>(3);
+    layout.pushF<AttributeType::FLOAT>(3);
+    layout.pushF<AttributeType::FLOAT>(2);
 
     planeVAO.vertexBuffer(0, planeVBO, layout, 0);
   }
@@ -526,9 +526,9 @@ void renderQuad()
     // clang-format on
     quadVBO.bufferData(vertices, BufferUsage::STATIC_DRAW);
 
-    VertexBufferLayout layout{};
-    layout.pushF<BufferDataType::FLOAT>(3);
-    layout.pushF<BufferDataType::FLOAT>(2);
+    VertexBufferLayoutOld layout{};
+    layout.pushF<AttributeType::FLOAT>(3);
+    layout.pushF<AttributeType::FLOAT>(2);
 
     quadVAO.vertexBuffer(0, quadVBO, layout, 0);
   }
@@ -713,8 +713,8 @@ void drawCascadeVolumeVisualizers(const Program &program)
 
     vbo.bufferData(corners, BufferUsage::STATIC_DRAW);
 
-    VertexBufferLayout layout{};
-    layout.pushF<BufferDataType::FLOAT>(3);
+    VertexBufferLayoutOld layout{};
+    layout.pushF<AttributeType::FLOAT>(3);
     vao.vertexBuffer(0, vbo, layout, 0);
 
     vao.bind();

@@ -1,5 +1,5 @@
-#ifndef OGL_ENUMS_HPP
-#define OGL_ENUMS_HPP
+#ifndef OGL_BUFFERENUMS_HPP
+#define OGL_BUFFERENUMS_HPP
 
 #include <glad/glad.h>
 
@@ -15,7 +15,7 @@ enum struct BufferUsage : GLenum {
   DYNAMIC_COPY = GL_DYNAMIC_COPY,
 };
 
-enum struct StorageFlag : GLbitfield {
+enum struct BufferStorageFlag : GLbitfield {
   DYNAMIC_STORAGE = GL_DYNAMIC_STORAGE_BIT,
   MAP_READ = GL_MAP_READ_BIT,
   MAP_WRITE = GL_MAP_WRITE_BIT,
@@ -24,21 +24,13 @@ enum struct StorageFlag : GLbitfield {
   CLIENT_STORAGE = GL_CLIENT_STORAGE_BIT,
 };
 
-enum struct MappingFlag : GLbitfield {
+enum struct BufferMappingFlag : GLbitfield {
   MAP_PERSISTENT = GL_MAP_PERSISTENT_BIT,
   MAP_COHERENT = GL_MAP_COHERENT_BIT,
   MAP_INVALIDATE_RANGE = GL_MAP_INVALIDATE_RANGE_BIT,
   MAP_INVALIDATE_BUFFER = GL_MAP_INVALIDATE_BUFFER_BIT,
   MAP_FLUSH_EXPLICIT = GL_MAP_FLUSH_EXPLICIT_BIT,
   MAP_UNSYNCHRONIZED = GL_MAP_UNSYNCHRONIZED_BIT,
-};
-
-enum struct IndexFormat : GLenum {
-  // all index data types supported by OpenGL
-  // ========================================
-  UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
-  UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
-  UNSIGNED_INT = GL_UNSIGNED_INT,
 };
 
 #endif

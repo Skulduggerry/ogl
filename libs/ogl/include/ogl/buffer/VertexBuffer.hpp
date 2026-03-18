@@ -15,10 +15,10 @@ public:
 
   [[nodiscard]] GLsizeiptr getElementCount() const { return m_storage.getByteSize() / sizeof(T); }
 
-  void allocateImmutable(std::span<const T> data, const std::span<const StorageFlag> flags = {})
+  void allocateImmutable(std::span<const T> data, const std::span<const BufferStorageFlag> flags = {})
   { m_storage.allocateImmutableBytes(std::as_bytes(data), flags); }
 
-  void allocateImmutable(const GLsizeiptr elementCount, const std::span<const StorageFlag> flags = {})
+  void allocateImmutable(const GLsizeiptr elementCount, const std::span<const BufferStorageFlag> flags = {})
   {
     const GLsizeiptr byteCount = elementCount * sizeof(T);
     m_storage.allocateImmutableBytes(byteCount, flags);
@@ -65,7 +65,7 @@ public:
 
   [[nodiscard]] BufferMapping<T> mapRange(const GLintptr elementOffset,
     const GLsizeiptr elementCount,
-    const std::span<const MappingFlag> flags) const
+    const std::span<const BufferMappingFlag> flags) const
   {
     const GLintptr byteOffset = elementOffset * sizeof(T);
     const GLsizeiptr byteCount = elementCount * sizeof(T);
@@ -74,7 +74,7 @@ public:
 
   [[nodiscard]] BufferMapping<T> mapRangeWrite(const GLintptr elementOffset,
     const GLsizeiptr elementCount,
-    const std::span<const MappingFlag> flags) const
+    const std::span<const BufferMappingFlag> flags) const
   {
     const GLintptr byteOffset = elementOffset * sizeof(T);
     const GLsizeiptr byteCount = elementCount * sizeof(T);

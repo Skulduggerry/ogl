@@ -2,14 +2,14 @@
 
 #include "ogl/GlLimits.hpp"
 
-void UniformBuffer::allocateImmutableBytes(const GLsizeiptr byteCount, const std::span<const StorageFlag> flags)
+void UniformBuffer::allocateImmutableBytes(const GLsizeiptr byteCount, const std::span<const BufferStorageFlag> flags)
 {
   ASSERT(byteCount <= GlLimits::getInstance().maxUniformBlockSize);
   m_storage.allocateImmutableBytes(byteCount, flags);
 }
 
 void UniformBuffer::allocateImmutableBytes(const std::span<const std::byte> bytes,
-  const std::span<const StorageFlag> flags)
+  const std::span<const BufferStorageFlag> flags)
 {
   ASSERT(bytes.size_bytes() <= GlLimits::getInstance().maxUniformBlockSize);
   m_storage.allocateImmutableBytes(bytes, flags);
@@ -45,7 +45,7 @@ BufferMapping<std::byte> UniformBuffer::mapWriteBytes() const { return m_storage
 
 BufferMapping<std::byte> UniformBuffer::mapRangeWriteBytes(const GLintptr byteOffset,
   const GLsizeiptr byteCount,
-  const std::span<const MappingFlag> flags) const
+  const std::span<const BufferMappingFlag> flags) const
 { return m_storage.mapRangeWriteBytes(byteOffset, byteCount, flags); }
 
 void UniformBuffer::bindBase(const GLuint bindingIndex) const
