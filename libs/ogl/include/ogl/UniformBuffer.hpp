@@ -1,7 +1,7 @@
 #ifndef OGL_UNIFORMBUFFER_HPP
 #define OGL_UNIFORMBUFFER_HPP
+#include "BufferUsage.hpp"
 #include "Logging.hpp"
-#include "buffer/Buffer.hpp"
 
 #include <glad/glad.h>
 #include <ranges>

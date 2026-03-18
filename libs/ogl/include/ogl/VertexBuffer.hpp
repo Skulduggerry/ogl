@@ -1,7 +1,7 @@
 #ifndef OGL_VERTEXBUFFER_HPP
 #define OGL_VERTEXBUFFER_HPP
+#include "BufferUsage.hpp"
 #include "Logging.hpp"
-#include "buffer/Buffer.hpp"
 
 #include <glad/glad.h>
 #include <ranges>

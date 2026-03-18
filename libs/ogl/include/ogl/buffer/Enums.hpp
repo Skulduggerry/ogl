@@ -24,15 +24,7 @@ enum struct StorageFlag : GLbitfield {
   CLIENT_STORAGE = GL_CLIENT_STORAGE_BIT,
 };
 
-enum struct AccessFlag : GLenum {
-  READ_ONLY = GL_READ_ONLY,
-  WRITE_ONLY = GL_WRITE_ONLY,
-  READ_WRITE = GL_READ_WRITE,
-};
-
-enum struct RangeAccessFlag : GLbitfield {
-  MAP_READ = GL_MAP_READ_BIT,
-  MAP_WRITE = GL_MAP_WRITE_BIT,
+enum struct MappingFlag : GLbitfield {
   MAP_PERSISTENT = GL_MAP_PERSISTENT_BIT,
   MAP_COHERENT = GL_MAP_COHERENT_BIT,
   MAP_INVALIDATE_RANGE = GL_MAP_INVALIDATE_RANGE_BIT,

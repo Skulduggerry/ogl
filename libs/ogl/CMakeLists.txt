@@ -13,12 +13,7 @@ add_library(ogl
         "src/ogl/texture/TextureBase.cpp"
         "src/ogl/texture/Texture2D.cpp"
         "src/ogl/texture/Texture2DArray.cpp"
-        src/ogl/buffer/Buffer.cpp
-        include/ogl/buffer/Enums.hpp
-        include/ogl/buffer/BufferMapping.hpp
-        include/ogl/buffer/IndexBuffer.hpp
-        src/ogl/buffer/IndexBuffer.cpp
-        include/ogl/BufferUsage.hpp
+        "src/ogl/buffer/BufferStorage.cpp"
 )
 
 # link project_options/warnings
