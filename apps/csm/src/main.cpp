@@ -3,7 +3,6 @@
 #include "ogl/Logging.hpp"
 #include "ogl/Program.hpp"
 #include "ogl/Shader.hpp"
-#include "ogl/UniformBuffer.hpp"
 #include "ogl/VertexArray.hpp"
 #include "ogl/texture/Texture2D.hpp"
 #include "ogl/texture/Texture2DArray.hpp"
@@ -13,7 +12,7 @@
 #include <memory>
 #include <random>
 #define STB_IMAGE_IMPLEMENTATION
-#include "ogl/IndexBuffer.hpp"
+#include "ogl/buffer/UniformBuffer.hpp"
 
 
 #include <glm/ext/matrix_clip_space.hpp>
@@ -132,8 +131,8 @@ int main()
 
   // configure UBO
   UniformBuffer matricesUBO{};
-  matricesUBO.bufferData(sizeof(glm::mat4) * 16, BufferUsage::STATIC_DRAW);
-  matricesUBO.bind(0);
+  matricesUBO.allocateMutableBytes(sizeof(glm::mat4) * 16, BufferUsage::STATIC_DRAW);
+  matricesUBO.bindBase(0);
 
   // shader configuration
   shader.setInt("diffuseTexture", 0);
@@ -166,7 +165,7 @@ int main()
 
     // 0. UBO setup
     const auto lightMatrices = getLightSpaceMatrices();
-    matricesUBO.subData(0, lightMatrices.size(), lightMatrices);
+    matricesUBO.subDataBytes(0, std::as_bytes(std::span{ lightMatrices }));
 
     // 1. render the depth of a scene to texture (from light's perspective)
     simpleDepthShader.bind();
@@ -405,7 +404,7 @@ void renderCube()
 {
   static bool first = true;
   static VertexArray cubeVAO{};
-  static VertexBuffer cubeVBO{};
+  static VertexBuffer<GLfloat> cubeVBO{};
 
   if (first) {
     first = false;
@@ -456,26 +455,24 @@ void renderCube()
       -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f, // bottom-left
     };
     // clang-format on
-    cubeVBO.bufferData(vertices, BufferUsage::STATIC_DRAW);
+    cubeVBO.allocateImmutable(vertices);
 
-    VertexBufferLayoutOld layout{};
-    layout.pushF<AttributeType::FLOAT>(3);
-    layout.pushF<AttributeType::FLOAT>(3);
-    layout.pushF<AttributeType::FLOAT>(2);
+    VertexBufferLayout layout{};
+    layout.pushFloat(AttributeType::FLOAT, 3).pushFloat(AttributeType::FLOAT, 3).pushFloat(AttributeType::FLOAT, 2);
 
     cubeVAO.vertexBuffer(0, cubeVBO, layout, 0);
   }
 
   cubeVAO.bind();
   glDrawArrays(GL_TRIANGLES, 0, 36);
-  cubeVAO.unbind();
+  VertexArray::unbind();
 }
 
 void renderPlane()
 {
   static bool first = true;
   static VertexArray planeVAO{};
-  static VertexBuffer planeVBO{};
+  static VertexBuffer<GLfloat> planeVBO{};
 
   if (first) {
     first = false;
@@ -491,26 +488,24 @@ void renderPlane()
       25.0f, -2.0f, -25.0f,  0.0f, 1.0f, 0.0f,  25.0f, 25.0f,
     };
     // clang-format on
-    planeVBO.bufferData(vertices, BufferUsage::STATIC_DRAW);
+    planeVBO.allocateImmutable(vertices);
 
-    VertexBufferLayoutOld layout{};
-    layout.pushF<AttributeType::FLOAT>(3);
-    layout.pushF<AttributeType::FLOAT>(3);
-    layout.pushF<AttributeType::FLOAT>(2);
+    VertexBufferLayout layout{};
+    layout.pushFloat(AttributeType::FLOAT, 3).pushFloat(AttributeType::FLOAT, 3).pushFloat(AttributeType::FLOAT, 2);
 
     planeVAO.vertexBuffer(0, planeVBO, layout, 0);
   }
 
   planeVAO.bind();
   GLCall(glDrawArrays(GL_TRIANGLES, 0, 6));
-  planeVAO.unbind();
+  VertexArray::unbind();
 }
 
 void renderQuad()
 {
   static bool first = true;
   static VertexArray quadVAO{};
-  static VertexBuffer quadVBO{};
+  static VertexBuffer<GLfloat> quadVBO{};
 
   if (first) {
     first = false;
@@ -524,18 +519,17 @@ void renderQuad()
        1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
     };
     // clang-format on
-    quadVBO.bufferData(vertices, BufferUsage::STATIC_DRAW);
+    quadVBO.allocateImmutable(vertices);
 
-    VertexBufferLayoutOld layout{};
-    layout.pushF<AttributeType::FLOAT>(3);
-    layout.pushF<AttributeType::FLOAT>(2);
+    VertexBufferLayout layout{};
+    layout.pushFloat(AttributeType::FLOAT, 3).pushFloat(AttributeType::FLOAT, 2);
 
     quadVAO.vertexBuffer(0, quadVBO, layout, 0);
   }
 
   quadVAO.bind();
   GLCall(glDrawArrays(GL_TRIANGLE_STRIP, 0, 6));
-  quadVAO.unbind();
+  VertexArray::unbind();
 }
 
 void renderScene(const Program &program)
@@ -663,8 +657,8 @@ std::array<glm::mat4, shadowCascadeLevels.size() + 1> getLightSpaceMatrices()
 void drawCascadeVolumeVisualizers(const Program &program)
 {
   static VertexArray vao{};
-  static VertexBuffer vbo{};
-  static IndexBuffer ebo{};
+  static VertexBuffer<glm::vec3> vbo{};
+  static IndexBuffer<GLuint> ebo{};
 
   // clang-format off
   static constexpr std::array<GLuint, 36> indices = {
@@ -691,7 +685,7 @@ void drawCascadeVolumeVisualizers(const Program &program)
   };
   // clang-format on
 
-  ebo.bufferData(indices, BufferUsage::STATIC_DRAW);
+  ebo.allocateMutable(indices);
 
   for (unsigned int i = 0; i < shadowCascadeLevels.size() + 1; ++i) {
     float near, far;
@@ -699,7 +693,7 @@ void drawCascadeVolumeVisualizers(const Program &program)
       near = cameraNearPlane;
       far = shadowCascadeLevels[0];
     } else if (i == shadowCascadeLevels.size()) {
-      near = shadowCascadeLevels[i-1];
+      near = shadowCascadeLevels[i - 1];
       far = cameraFarPlane;
     } else {
       near = shadowCascadeLevels[i - 1];
@@ -707,18 +701,21 @@ void drawCascadeVolumeVisualizers(const Program &program)
     }
 
     const glm::mat4 view = camera.getViewMatrix();
-    const glm::mat4 projection = glm::perspective(glm::radians(camera.getZoom()), static_cast<float>(windowWidth) / 2 / static_cast<float>(windowHeight), near, far);
+    const glm::mat4 projection = glm::perspective(glm::radians(camera.getZoom()),
+      static_cast<float>(windowWidth) / 2 / static_cast<float>(windowHeight),
+      near,
+      far);
 
     const auto corners = getFrustumCornersWorldSpace(projection * view);
+    vbo.allocateMutable(corners);
 
-    vbo.bufferData(corners, BufferUsage::STATIC_DRAW);
+    VertexBufferLayout layout{};
+    layout.pushFloat(AttributeType::FLOAT, 3);
 
-    VertexBufferLayoutOld layout{};
-    layout.pushF<AttributeType::FLOAT>(3);
     vao.vertexBuffer(0, vbo, layout, 0);
+    vao.indexBuffer(ebo);
 
     vao.bind();
-    ebo.bind();
     program.setVec4("color", colors[i % 3]);
     GLCall(glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, nullptr));
   }

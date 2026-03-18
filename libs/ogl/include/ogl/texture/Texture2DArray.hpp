@@ -2,9 +2,10 @@
 #define OGL_TEXTURE2DARRAY_HPP
 
 #include "TextureBase.hpp"
-#include "ogl/DataType.hpp"
 #include "ogl/ImageFormat.hpp"
 
+
+enum struct ImageDataType : GLenum;
 class Texture2DArray final : public TextureBase
 {
   InternalFormat m_format = InternalFormat::RGB16F;

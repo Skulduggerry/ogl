@@ -2,7 +2,7 @@
 #include "ogl/Logging.hpp"
 
 VertexBufferLayout &
-  VertexBufferLayout::pushFloat(const AttributeType type, const GLuint components, const GLboolean normalized)
+  VertexBufferLayout::pushFloat(const AttributeType type, const GLint components, const GLboolean normalized)
 {
   ASSERT(1 <= components && components <= 4);
   ASSERT(type != AttributeType::DOUBLE);
@@ -11,7 +11,7 @@ VertexBufferLayout &
   return *this;
 }
 
-VertexBufferLayout &VertexBufferLayout::pushInt(const AttributeType type, const GLuint components)
+VertexBufferLayout &VertexBufferLayout::pushInt(const AttributeType type, const GLint components)
 {
   ASSERT(1 <= components && components <= 4);
   ASSERT(type != AttributeType::FIXED && type != AttributeType::FLOAT && type != AttributeType::HALF_FLOAT
@@ -21,7 +21,7 @@ VertexBufferLayout &VertexBufferLayout::pushInt(const AttributeType type, const 
   return *this;
 }
 
-VertexBufferLayout &VertexBufferLayout::pushDouble(const GLuint components)
+VertexBufferLayout &VertexBufferLayout::pushDouble(const GLint components)
 {
   ASSERT(1 <= components && components <= 4);
   m_attribs.emplace_back(

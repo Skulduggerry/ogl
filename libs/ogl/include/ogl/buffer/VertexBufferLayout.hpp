@@ -13,7 +13,7 @@ enum struct AttributeKind : uint8_t { FLOAT, INT, DOUBLE };
 struct VertexAttribDesc
 {
   GLuint location = 0;
-  GLuint components = 0;
+  GLint components = 0;
   AttributeType type = AttributeType::FLOAT;
   AttributeKind kind = AttributeKind::FLOAT;
   GLboolean normalized = GL_FALSE;
@@ -22,14 +22,14 @@ struct VertexAttribDesc
 
 class VertexBufferLayout
 {
-  GLuint m_stride = 0;
+  GLint m_stride = 0;
   GLuint m_nextLocation = 0;
   std::vector<VertexAttribDesc> m_attribs;
 
 public:
-  [[nodiscard]] GLuint stride() const noexcept { return m_stride; }
+  [[nodiscard]] GLint stride() const noexcept { return m_stride; }
 
-  VertexBufferLayout &addPaddingBytes(const GLuint padding)
+  VertexBufferLayout &addPaddingBytes(const GLint padding)
   {
     m_stride += padding;
     return *this;
@@ -43,11 +43,11 @@ public:
 
   [[nodiscard]] std::span<const VertexAttribDesc> attribs() const noexcept { return m_attribs; }
 
-  VertexBufferLayout &pushFloat(AttributeType type, GLuint components, GLboolean normalized = GL_FALSE);
+  VertexBufferLayout &pushFloat(AttributeType type, GLint components, GLboolean normalized = GL_FALSE);
 
-  VertexBufferLayout &pushInt(AttributeType type, GLuint components);
+  VertexBufferLayout &pushInt(AttributeType type, GLint components);
 
-  VertexBufferLayout &pushDouble(GLuint components);
+  VertexBufferLayout &pushDouble(GLint components);
 };
 
 #endif

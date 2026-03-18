@@ -28,7 +28,7 @@ public:
     const VertexBufferLayout &layout,
     const GLintptr elementOffset) const
   {
-    const GLintptr byteOffset = elementOffset * sizeof(T);
+    const GLintptr byteOffset = elementOffset * static_cast<GLintptr>(sizeof(T));
 
     GLCall(glVertexArrayVertexBuffer(m_id, bindingIndex, buffer.getId(), byteOffset, layout.stride()));
 
