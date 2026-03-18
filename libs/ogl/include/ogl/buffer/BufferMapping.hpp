@@ -27,7 +27,7 @@ public:
 
   T &operator[](size_t index);
 
-  size_t size() const;
+  auto size() const;
 
   auto begin();
 
@@ -59,7 +59,7 @@ template<typename T> BufferMapping<T>::~BufferMapping()
 
 template<typename T> BufferMapping<T> &BufferMapping<T>::operator=(BufferMapping &&other) noexcept
 {
-  if (this == &other) return *this;
+  if (this == &other) { return *this; }
   using std::swap;
   swap(m_bufferId, other.m_bufferId);
   swap(m_view, other.m_view);
@@ -68,11 +68,11 @@ template<typename T> BufferMapping<T> &BufferMapping<T>::operator=(BufferMapping
 
 template<typename T> std::span<T> BufferMapping<T>::span() const { return m_view; }
 
-template<typename T> T *BufferMapping<T>::data() { return m_view; }
+template<typename T> T *BufferMapping<T>::data() { return m_view.data(); }
 
 template<typename T> T &BufferMapping<T>::operator[](size_t index) { return m_view[index]; }
 
-template<typename T> size_t BufferMapping<T>::size() const { return m_view.size(); }
+template<typename T> auto BufferMapping<T>::size() const { return m_view.size(); }
 
 template<typename T> auto BufferMapping<T>::begin() { return m_view.begin(); }
 
