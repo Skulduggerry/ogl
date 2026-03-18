@@ -13,8 +13,8 @@ static GLuint createTexture()
 Texture2D::Texture2D() : TextureBase(createTexture()) {}
 
 Texture2D::Texture2D(Texture2D &&other) noexcept
-  : m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount), m_width(other.m_width), m_height(other.m_height),
-    TextureBase(std::move(other))
+  : TextureBase(std::move(other)), m_format(other.m_format), m_mipLevelCount(other.m_mipLevelCount), m_width(other.m_width),
+    m_height(other.m_height)
 {}
 
 Texture2D &Texture2D::operator=(Texture2D &&other) noexcept

@@ -1,16 +1,23 @@
 #ifndef OGL_INDEXBUFFER_HPP
 #define OGL_INDEXBUFFER_HPP
 #include "BufferUsage.hpp"
-#include "DataType.hpp"
 #include "Logging.hpp"
 
 #include <glad/glad.h>
 #include <ranges>
 
+enum struct IndexFormat : GLenum {
+  // all index data types supported by OpenGL
+  // ========================================
+  UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+  UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+  UNSIGNED_INT = GL_UNSIGNED_INT,
+};
+
 class IndexBuffer
 {
   GLuint m_id;
-  IndexType m_type = IndexType::UNSIGNED_INT;
+  IndexFormat m_type = IndexFormat::UNSIGNED_INT;
 
 public:
   IndexBuffer();
@@ -23,7 +30,7 @@ public:
 
   void bind() const;
 
-  [[nodiscard]] IndexType getType() const { return m_type; }
+  [[nodiscard]] IndexFormat getType() const { return m_type; }
 
   template<std::ranges::random_access_range R> void bufferData(const R &buffer, const BufferUsage usage)
   {
@@ -35,11 +42,11 @@ public:
       static_cast<GLenum>(usage)));
 
     if constexpr (std::same_as<GLubyte, range_value_t<R>>) {
-      m_type = IndexType::UNSIGNED_BYTE;
+      m_type = IndexFormat::UNSIGNED_BYTE;
     } else if constexpr (std::same_as<GLushort, range_value_t<R>>) {
-      m_type = IndexType::UNSIGNED_SHORT;
+      m_type = IndexFormat::UNSIGNED_SHORT;
     } else if constexpr (std::same_as<GLuint, range_value_t<R>>) {
-      m_type = IndexType::UNSIGNED_INT;
+      m_type = IndexFormat::UNSIGNED_INT;
     } else {
       static_assert(false, "Unsupported type: Please make sure your container stores GLubyte, GLushort or GLuint!");
     }
