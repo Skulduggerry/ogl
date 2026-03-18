@@ -13,7 +13,13 @@ add_library(ogl
         "src/ogl/texture/TextureBase.cpp"
         "src/ogl/texture/Texture2D.cpp"
         "src/ogl/texture/Texture2DArray.cpp"
+
         "src/ogl/buffer/BufferStorage.cpp"
+        "src/ogl/buffer/VertexBuffer.cpp"
+        "src/ogl/buffer/IndexBuffer.cpp"
+        src/ogl/buffer/UniformBuffer.cpp
+        include/ogl/GlLimits.hpp
+        src/ogl/GlLimits.cpp
 )
 
 # link project_options/warnings
@@ -31,6 +37,11 @@ set_target_properties(fmt::fmt PROPERTIES INTERFACE_COMPILE_OPTIONS
 # Link dependencies
 target_link_system_libraries(ogl PRIVATE fmt::fmt)
 target_link_system_libraries(ogl PUBLIC glm::glm glad::glad)
+
+# set compile definitions
+if (${FEATURE_DEVELOPER_MODE})
+    target_compile_definitions(ogl PRIVATE DEVELOPER_BUILD)
+endif ()
 
 if (FEATURE_TESTS)
     #add_subdirectory(test)

@@ -1,5 +1,9 @@
 #include "ogl/buffer/BufferStorage.hpp"
 #include "ogl/Logging.hpp"
+#include "ogl/UniformBuffer.hpp"
+
+#include <algorithm>
+#include <numeric>
 
 static GLuint createBuffer()
 {

@@ -25,9 +25,9 @@ public:
 
   BufferStorage &operator=(BufferStorage &&other) noexcept;
 
-  [[nodiscard]] GLuint id() const { return m_id; }
+  [[nodiscard]] GLuint getId() const { return m_id; }
 
-  [[nodiscard]] GLsizeiptr byteSize() const { return m_byteSize; }
+  [[nodiscard]] GLsizeiptr getByteSize() const { return m_byteSize; }
 
   void allocateImmutableBytes(GLsizeiptr byteCount, std::span<const StorageFlag> flags);
 
