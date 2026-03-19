@@ -1,4 +1,4 @@
-#include "ogl/texture/Texture2DArray.hpp"
+#include "ogl/texture_old/Texture2DArray.hpp"
 
 #include "ogl/Logging.hpp"
 

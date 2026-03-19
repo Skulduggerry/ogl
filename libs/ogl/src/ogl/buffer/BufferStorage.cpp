@@ -11,9 +11,11 @@ static GLuint createBuffer()
   return id;
 }
 
-BufferStorage::BufferStorage() : m_id(createBuffer()) {}
+BufferStorage::BufferStorage() noexcept : m_id(createBuffer()) {}
 
-BufferStorage::~BufferStorage()
+BufferStorage::BufferStorage(NoCreate_t) noexcept : m_id(0) {}
+
+BufferStorage::~BufferStorage() noexcept
 {
   if (m_id != 0) { GLCall(glDeleteBuffers(1, &m_id)); }
 }

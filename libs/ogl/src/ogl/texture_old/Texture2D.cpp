@@ -1,4 +1,4 @@
-#include "ogl/texture/Texture2D.hpp"
+#include "ogl/texture_old/Texture2D.hpp"
 #include "ogl/Logging.hpp"
 
 #include <utility>

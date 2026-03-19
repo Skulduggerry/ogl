@@ -2,7 +2,7 @@
 #define OGL_FRAMEBUFFER_HPP
 #include "Logging.hpp"
 #include "Renderbuffer.hpp"
-#include "texture/TextureBase.hpp"
+#include "texture_old/TextureBase.hpp"
 
 #include <glad/glad.h>
 #include <ranges>

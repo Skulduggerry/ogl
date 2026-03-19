@@ -42,7 +42,7 @@ public:
     return *this;
   }
 
-  ~BufferMapping() { reset(); }
+  ~BufferMapping() noexcept { reset(); }
 
   void reset() noexcept
   {
@@ -57,9 +57,9 @@ public:
 
   [[nodiscard]] T *data() const noexcept { return m_view.data(); }
 
-  [[nodiscard]] auto size() const { return m_view.size(); }
+  [[nodiscard]] auto size() const noexcept { return m_view.size(); }
 
-  [[nodiscard]] auto sizeGL() const { return static_cast<GLsizeiptr>(m_view.size()); }
+  [[nodiscard]] auto sizeGL() const noexcept { return static_cast<GLsizeiptr>(m_view.size()); }
 
   T &operator[](size_t index) const noexcept { return m_view[index]; }
 

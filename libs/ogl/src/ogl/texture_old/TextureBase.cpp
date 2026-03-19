@@ -1,4 +1,4 @@
-#include "ogl/texture/TextureBase.hpp"
+#include "ogl/texture_old/TextureBase.hpp"
 
 #include "ogl/Logging.hpp"
 

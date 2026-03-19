@@ -3,6 +3,7 @@
 
 #include "BufferEnums.hpp"
 #include "BufferMapping.hpp"
+#include "ogl/NoCreate.hpp"
 
 #include <glad/glad.h>
 #include <span>
@@ -13,9 +14,11 @@ class BufferStorage
   GLsizeiptr m_byteSize = 0;
 
 public:
-  BufferStorage();
+  BufferStorage() noexcept;
 
-  ~BufferStorage();
+  explicit BufferStorage(NoCreate_t) noexcept;
+
+  ~BufferStorage() noexcept;
 
   BufferStorage(const BufferStorage &other) = delete;
 
@@ -25,9 +28,9 @@ public:
 
   BufferStorage &operator=(BufferStorage &&other) noexcept;
 
-  [[nodiscard]] GLuint getId() const { return m_id; }
+  [[nodiscard]] GLuint getId() const noexcept { return m_id; }
 
-  [[nodiscard]] GLsizeiptr getByteSize() const { return m_byteSize; }
+  [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_byteSize; }
 
   void allocateImmutableBytes(GLsizeiptr byteCount, std::span<const BufferStorageFlag> flags);
 

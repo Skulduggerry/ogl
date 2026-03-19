@@ -8,18 +8,30 @@
 
 template<typename T>
 concept IsIndexType = std::same_as<std::remove_const_t<T>, GLubyte> || std::same_as<std::remove_const_t<T>, GLushort>
-                    || std::same_as<std::remove_const_t<T>, GLuint>;
+                      || std::same_as<std::remove_const_t<T>, GLuint>;
 
 template<IsIndexType T> class IndexBuffer
 {
   BufferStorage m_storage;
 
 public:
-  [[nodiscard]] GLuint getId() const { return m_storage.getId(); }
+  IndexBuffer() noexcept = default;
 
-  [[nodiscard]] GLsizeiptr getByteSize() const { return m_storage.getByteSize(); }
+  explicit IndexBuffer(NoCreate_t) noexcept : m_storage(NoCreate) {}
 
-  [[nodiscard]] GLsizeiptr getElementCount() const { return m_storage.getByteSize() / sizeof(T); }
+  IndexBuffer(const IndexBuffer &other) = delete;
+
+  IndexBuffer(IndexBuffer &&other) noexcept = default;
+
+  IndexBuffer &operator=(const IndexBuffer &other) = delete;
+
+  IndexBuffer &operator=(IndexBuffer &&other) noexcept = default;
+
+  [[nodiscard]] GLuint getId() const noexcept { return m_storage.getId(); }
+
+  [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_storage.getByteSize(); }
+
+  [[nodiscard]] GLsizeiptr getElementCount() const noexcept { return m_storage.getByteSize() / sizeof(T); }
 
   [[nodiscard]] static consteval IndexType getFormat()
   {

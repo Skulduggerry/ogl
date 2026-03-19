@@ -9,11 +9,23 @@ class VertexBuffer
   BufferStorage m_storage;
 
 public:
-  [[nodiscard]] GLuint getId() const { return m_storage.getId(); }
+  VertexBuffer() noexcept = default;
 
-  [[nodiscard]] GLsizeiptr getByteSize() const { return m_storage.getByteSize(); }
+  explicit VertexBuffer(NoCreate_t) noexcept : m_storage(NoCreate) {}
 
-  [[nodiscard]] GLsizeiptr getElementCount() const { return m_storage.getByteSize() / sizeof(T); }
+  VertexBuffer(const VertexBuffer &other) = delete;
+
+  VertexBuffer(VertexBuffer &&other) noexcept = default;
+
+  VertexBuffer &operator=(const VertexBuffer &other) = delete;
+
+  VertexBuffer &operator=(VertexBuffer &&other) noexcept = default;
+
+  [[nodiscard]] GLuint getId() const noexcept { return m_storage.getId(); }
+
+  [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_storage.getByteSize(); }
+
+  [[nodiscard]] GLsizeiptr getElementCount() const noexcept { return m_storage.getByteSize() / sizeof(T); }
 
   void allocateImmutable(std::span<const T> data, const std::span<const BufferStorageFlag> flags = {})
   { m_storage.allocateImmutableBytes(std::as_bytes(data), flags); }

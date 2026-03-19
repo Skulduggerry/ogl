@@ -4,8 +4,8 @@
 #include "ogl/Program.hpp"
 #include "ogl/Shader.hpp"
 #include "ogl/VertexArray.hpp"
-#include "ogl/texture/Texture2D.hpp"
-#include "ogl/texture/Texture2DArray.hpp"
+#include "ogl/texture_old/Texture2D.hpp"
+#include "ogl/texture_old/Texture2DArray.hpp"
 
 #include <GLFW/glfw3.h>
 #include <fmt/core.h>

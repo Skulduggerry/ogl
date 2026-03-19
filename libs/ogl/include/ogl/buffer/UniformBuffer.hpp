@@ -7,9 +7,21 @@ class UniformBuffer
   BufferStorage m_storage;
 
 public:
-  [[nodiscard]] GLuint getId() const { return m_storage.getId(); }
+  UniformBuffer() noexcept = default;
 
-  [[nodiscard]] GLsizeiptr getByteSize() const { return m_storage.getByteSize(); }
+  explicit UniformBuffer(NoCreate_t) noexcept;
+
+  UniformBuffer(const UniformBuffer &other) = delete;
+
+  UniformBuffer(UniformBuffer &&other) noexcept = default;
+
+  UniformBuffer &operator=(const UniformBuffer &other) = delete;
+
+  UniformBuffer &operator=(UniformBuffer &&other) noexcept = default;
+
+  [[nodiscard]] GLuint getId() const noexcept { return m_storage.getId(); }
+
+  [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_storage.getByteSize(); }
 
   void allocateImmutableBytes(GLsizeiptr byteCount, std::span<const BufferStorageFlag> flags);
 

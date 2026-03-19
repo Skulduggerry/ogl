@@ -6,9 +6,9 @@ add_library(ogl
         "src/ogl/Shader.cpp"
         "src/ogl/VertexArray.cpp"
 
-        "src/ogl/texture/TextureBase.cpp"
-        "src/ogl/texture/Texture2D.cpp"
-        "src/ogl/texture/Texture2DArray.cpp"
+        "src/ogl/texture_old/TextureBase.cpp"
+        "src/ogl/texture_old/Texture2D.cpp"
+        "src/ogl/texture_old/Texture2DArray.cpp"
 
         "src/ogl/buffer/BufferStorage.cpp"
         "src/ogl/buffer/IndexBuffer.cpp"
@@ -18,7 +18,6 @@ add_library(ogl
 
         "src/ogl/GlLimits.cpp"
         "src/ogl/Types.cpp"
-        include/ogl/buffer/BufferConstants.hpp
 )
 
 # link project_options/warnings
