@@ -10,14 +10,16 @@ add_library(ogl
         "src/ogl/texture_old/Texture2D.cpp"
         "src/ogl/texture_old/Texture2DArray.cpp"
 
+        "src/ogl/GlLimits.cpp"
+        "src/ogl/Types.cpp"
+
         "src/ogl/buffer/BufferStorage.cpp"
         "src/ogl/buffer/IndexBuffer.cpp"
         "src/ogl/buffer/UniformBuffer.cpp"
         "src/ogl/buffer/VertexBuffer.cpp"
         "src/ogl/buffer/VertexBufferLayout.cpp"
 
-        "src/ogl/GlLimits.cpp"
-        "src/ogl/Types.cpp"
+        "src/ogl/texture/TextureObject.cpp"
 )
 
 # link project_options/warnings
