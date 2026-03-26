@@ -3,7 +3,7 @@
 
 #include <utility>
 
-GLuint createRenderbuffer()
+static GLuint createRenderbuffer()
 {
   GLuint id = 0;
   GLCall(glCreateRenderbuffers(1, &id));
@@ -12,7 +12,7 @@ GLuint createRenderbuffer()
 
 Renderbuffer::Renderbuffer() : m_id(createRenderbuffer()) {}
 
-Renderbuffer::Renderbuffer(const InternalFormat format, const GLsizei width, const GLsizei height) : Renderbuffer{}
+Renderbuffer::Renderbuffer(const InternalImageFormat format, const GLsizei width, const GLsizei height) : Renderbuffer{}
 { storage(format, width, height); }
 
 Renderbuffer::~Renderbuffer() { GLCall(glDeleteRenderbuffers(1, &m_id)); }
@@ -32,7 +32,7 @@ Renderbuffer &Renderbuffer::operator=(Renderbuffer &&other) noexcept
   return *this;
 }
 
-void Renderbuffer::storage(const InternalFormat format, const GLsizei width, const GLsizei height)
+void Renderbuffer::storage(const InternalImageFormat format, const GLsizei width, const GLsizei height)
 {
   m_format = format;
   m_width = width;

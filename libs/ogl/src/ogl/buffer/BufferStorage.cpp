@@ -27,9 +27,14 @@ BufferStorage::BufferStorage(BufferStorage &&other) noexcept
 BufferStorage &BufferStorage::operator=(BufferStorage &&other) noexcept
 {
   if (this == &other) { return *this; }
-  using std::swap;
-  swap(m_id, other.m_id);
-  swap(m_byteSize, other.m_byteSize);
+
+  // release currently owned resource
+  if (m_id != 0) { GLCall(glDeleteBuffers(1, &m_id)); }
+
+  // steal
+  m_id = std::exchange(other.m_id, 0);
+  m_byteSize = std::exchange(other.m_byteSize, 0);
+
   return *this;
 }
 

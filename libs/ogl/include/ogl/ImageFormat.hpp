@@ -2,7 +2,7 @@
 #define OGL_INTERNALFORMATS_HPP
 #include <glad/glad.h>
 
-enum struct Format : GLenum {
+enum struct ImageFormat : GLenum {
   // image formats
   // =============
   RED = GL_RED,
@@ -15,7 +15,7 @@ enum struct Format : GLenum {
   STENCIL_INDEX = GL_STENCIL_INDEX,
 };
 
-enum struct InternalFormat : GLenum {
+enum struct InternalImageFormat : GLenum {
   // sized internal formats
   // ======================
   R8 = GL_R8,

@@ -1,7 +1,8 @@
-#ifndef OGL_TEXTURESTORAGE_HPP
-#define OGL_TEXTURESTORAGE_HPP
+#ifndef OGL_TEXTUREOBJECT_HPP
+#define OGL_TEXTUREOBJECT_HPP
 
 #include "TextureEnums.hpp"
+#include "ogl/NoCreate.hpp"
 
 #include <glad/glad.h>
 #include <glm/vec4.hpp>
@@ -13,11 +14,13 @@ enum struct TextureTarget : GLenum {
 
 class TextureObject
 {
-  GLuint m_id = 0;
+  GLuint m_id;
   TextureTarget m_target;
 
 public:
   explicit TextureObject(TextureTarget target) noexcept;
+
+  explicit TextureObject(TextureTarget target, NoCreate_t) noexcept;
 
   ~TextureObject() noexcept;
 
@@ -33,7 +36,7 @@ public:
 
   [[nodiscard]] TextureTarget getTarget() const noexcept { return m_target; }
 
-  void bindTextureUnit() const;
+  void bindTextureUnit(GLuint unit) const;
 
   void generateMipmap() const;
 

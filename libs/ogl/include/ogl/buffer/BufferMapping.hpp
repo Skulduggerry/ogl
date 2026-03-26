@@ -20,7 +20,7 @@ class BufferMapping
 public:
   using element_type = T;
 
-  BufferMapping() = default;
+  BufferMapping() noexcept = default;
 
   BufferMapping(const GLuint bufferId, T *ptr, const size_t count) noexcept : m_bufferId(bufferId), m_view(ptr, count)
   {}
@@ -36,9 +36,14 @@ public:
   BufferMapping &operator=(BufferMapping &&other) noexcept
   {
     if (this == &other) { return *this; }
-    using std::swap;
-    swap(m_bufferId, other.m_bufferId);
-    swap(m_view, other.m_view);
+
+    // release current mapping (unmap)
+    if (m_bufferId != 0) { GLCall(glUnmapNamedBuffer(m_bufferId)); }
+
+    // steal
+    m_bufferId = std::exchange(other.m_bufferId, 0);
+    m_view = std::exchange(other.m_view, {});
+
     return *this;
   }
 
@@ -46,7 +51,7 @@ public:
 
   void reset() noexcept
   {
-    if (valid()) { GLCall(glUnmapNamedBuffer(m_bufferId)); }
+    if (m_bufferId != 0) { GLCall(glUnmapNamedBuffer(m_bufferId)); }
     m_bufferId = 0;
     m_view = {};
   }

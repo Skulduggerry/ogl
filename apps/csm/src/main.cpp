@@ -113,7 +113,7 @@ int main()
   // configure light FBO
   Texture2DArray lightDepthMaps{};
   lightDepthMaps.storage(
-    InternalFormat::DEPTH_COMPONENT32F, depthMapResolution, depthMapResolution, shadowCascadeLevels.size() + 1);
+    InternalImageFormat::DEPTH_COMPONENT32F, depthMapResolution, depthMapResolution, shadowCascadeLevels.size() + 1);
   lightDepthMaps.minFilter(TextureMinFilter::NEAREST);
   lightDepthMaps.magFilter(TextureMagFilter::NEAREST);
   lightDepthMaps.textureWrapS(TextureWrap::CLAMP_TO_BORDER);
@@ -363,28 +363,28 @@ Texture2D loadTexture(const std::string &path)
     return texture;
   }
 
-  Format format;
-  InternalFormat internal_format;
+  ImageFormat format;
+  InternalImageFormat internal_format;
   switch (channels) {
   case 1:
-    format = Format::RED;
-    internal_format = InternalFormat::R8;
+    format = ImageFormat::RED;
+    internal_format = InternalImageFormat::R8;
     break;
   case 2:
-    format = Format::RG;
-    internal_format = InternalFormat::RG8;
+    format = ImageFormat::RG;
+    internal_format = InternalImageFormat::RG8;
     break;
   case 3:
-    format = Format::RGB;
-    internal_format = InternalFormat::RGB8;
+    format = ImageFormat::RGB;
+    internal_format = InternalImageFormat::RGB8;
     break;
   case 4:
-    format = Format::RGBA;
-    internal_format = InternalFormat::RGBA8;
+    format = ImageFormat::RGBA;
+    internal_format = InternalImageFormat::RGBA8;
     break;
   default:
-    format = Format::RGB;
-    internal_format = InternalFormat::RGB8;
+    format = ImageFormat::RGB;
+    internal_format = InternalImageFormat::RGB8;
   }
 
   texture.storage(internal_format, width, height);
