@@ -2,7 +2,8 @@
 #define OGL_FRAMEBUFFER_HPP
 #include "Logging.hpp"
 #include "Renderbuffer.hpp"
-#include "texture_old/TextureBase.hpp"
+#include "texture/Texture2D.hpp"
+#include "texture/Texture2DArray.hpp"
 
 #include <glad/glad.h>
 #include <ranges>
@@ -71,7 +72,10 @@ public:
   void readBuffer(Attachment buffer) const;
 
   void attach(const Renderbuffer &renderbuffer, Attachment attachment) const;
-  void attach(const TextureBase &texture, Attachment attachment, GLint level = 0) const;
+
+  void attach(const Texture2D &texture, Attachment attachment, GLint level = 0) const;
+
+  void attach(const Texture2DArray &texture, Attachment attachment, GLint level = 0) const;
 
   [[nodiscard]] bool isComplete() const;
 };

@@ -34,6 +34,8 @@ public:
 
   void generateMipmap() const { m_texture.generateMipmap(); }
 
+  void borderColor(const glm::vec4 &color) const { m_texture.borderColor(color); }
+
   void minFilter(const TextureMinFilter filter) const { m_texture.minFilter(filter); }
 
   void magFilter(const TextureMagFilter filter) const { m_texture.magFilter(filter); }

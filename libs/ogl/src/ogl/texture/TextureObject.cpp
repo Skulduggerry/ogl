@@ -47,7 +47,7 @@ void TextureObject::bindTextureUnit(const GLuint unit) const { GLCall(glBindText
 
 void TextureObject::generateMipmap() const { GLCall(glGenerateTextureMipmap(m_id)); }
 
-void TextureObject::borderColor(const glm::vec4 color) const
+void TextureObject::borderColor(const glm::vec4 &color) const
 { GLCall(glTextureParameterfv(m_id, GL_TEXTURE_BORDER_COLOR, glm::value_ptr(color))); }
 
 void TextureObject::minFilter(const TextureMinFilter filter) const

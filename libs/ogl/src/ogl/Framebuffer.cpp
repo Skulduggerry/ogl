@@ -52,8 +52,11 @@ void Framebuffer::readBuffer(Attachment buffer) const
 void Framebuffer::attach(const Renderbuffer &renderbuffer, Attachment attachment) const
 { GLCall(glNamedFramebufferRenderbuffer(m_id, static_cast<GLenum>(attachment), GL_RENDERBUFFER, renderbuffer.m_id)); }
 
-void Framebuffer::attach(const TextureBase &texture, Attachment attachment, const GLint level) const
-{ GLCall(glNamedFramebufferTexture(m_id, static_cast<GLenum>(attachment), texture.m_id, level)); }
+void Framebuffer::attach(const Texture2D &texture, Attachment attachment, const GLint level) const
+{ GLCall(glNamedFramebufferTexture(m_id, static_cast<GLenum>(attachment), texture.getId(), level)); }
+
+void Framebuffer::attach(const Texture2DArray &texture, Attachment attachment, const GLint level) const
+{ GLCall(glNamedFramebufferTexture(m_id, static_cast<GLenum>(attachment), texture.getId(), level)); }
 
 bool Framebuffer::isComplete() const
 { return glCheckNamedFramebufferStatus(m_id, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE; }

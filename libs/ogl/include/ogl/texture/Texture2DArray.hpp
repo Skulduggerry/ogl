@@ -27,13 +27,15 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_texture.getId(); }
 
-  [[nodiscard]] GLuint getWidth() const noexcept { return m_width; }
+  [[nodiscard]] GLsizei getWidth() const noexcept { return m_width; }
 
-  [[nodiscard]] GLuint getHeight() const noexcept { return m_height; }
+  [[nodiscard]] GLsizei getHeight() const noexcept { return m_height; }
 
-  [[nodiscard]] GLuint getLayerCount() const noexcept { return m_layerCount; }
+  [[nodiscard]] GLsizei getLayerCount() const noexcept { return m_layerCount; }
 
   void bindTextureUnit(const GLuint unit) const { m_texture.bindTextureUnit(unit); }
+
+  void borderColor(const glm::vec4 &color) const { m_texture.borderColor(color); }
 
   void minFilter(const TextureMinFilter filter) const { m_texture.minFilter(filter); }
 

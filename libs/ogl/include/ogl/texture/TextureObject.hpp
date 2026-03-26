@@ -40,7 +40,7 @@ public:
 
   void generateMipmap() const;
 
-  void borderColor(glm::vec4 color) const;
+  void borderColor(const glm::vec4 &color) const;
 
   void minFilter(TextureMinFilter filter) const;
 
