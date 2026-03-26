@@ -5,9 +5,9 @@
 #include <glad/glad.h>
 
 #ifdef __GNUG__
-#define DEBUG_BREAK __builtin_trap
+#define DEBUG_BREAK() __builtin_trap()
 #elifdef WIN32
-#define DEBUG_BREAK __debugbreak
+#define DEBUG_BREAK() __debugbreak()
 #endif
 
 #ifdef DEVELOPER_BUILD

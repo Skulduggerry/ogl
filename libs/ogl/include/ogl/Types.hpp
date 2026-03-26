@@ -1,7 +1,6 @@
-#ifndef OGL_DATATYPE_HPP
-#define OGL_DATATYPE_HPP
+#ifndef OGL_TYPES_HPP
+#define OGL_TYPES_HPP
 
-#include <concepts>
 #include <glad/glad.h>
 
 enum struct ImageDataType : GLenum {
@@ -28,15 +27,7 @@ enum struct ImageDataType : GLenum {
   UNSIGNED_INT_2_10_10_10_REV = GL_UNSIGNED_INT_2_10_10_10_REV,
 };
 
-enum struct IndexType : GLenum {
-  // all index data types supported by OpenGL
-  // ========================================
-  UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
-  UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
-  UNSIGNED_INT = GL_UNSIGNED_INT,
-};
-
-enum struct BufferDataType : GLenum {
+enum struct AttributeType : GLenum {
   // all buffer data types supported by OpenGL
   // =========================================
   BYTE = GL_BYTE,
@@ -51,32 +42,14 @@ enum struct BufferDataType : GLenum {
   DOUBLE = GL_DOUBLE,
 };
 
-template<BufferDataType T> consteval GLuint getSizeOfType()
-{
-  if constexpr (T == BufferDataType::BYTE) {
-    return sizeof(GLbyte);
-  } else if constexpr (T == BufferDataType::UNSIGNED_BYTE) {
-    return sizeof(GLubyte);
-  } else if constexpr (T == BufferDataType::SHORT) {
-    return sizeof(GLshort);
-  } else if constexpr (T == BufferDataType::UNSIGNED_SHORT) {
-    return sizeof(GLushort);
-  } else if constexpr (T == BufferDataType::INT) {
-    return sizeof(GLint);
-  } else if constexpr (T == BufferDataType::UNSIGNED_INT) {
-    return sizeof(GLuint);
-  } else if constexpr (T == BufferDataType::FIXED) {
-    return sizeof(GLfixed);
-  } else if constexpr (T == BufferDataType::FLOAT) {
-    return sizeof(GLfloat);
-  } else if constexpr (T == BufferDataType::HALF_FLOAT) {
-    return sizeof(GLhalf);
-  } else if constexpr (T == BufferDataType::DOUBLE) {
-    return sizeof(GLdouble);
-  } else {
-    static_assert(false, "This type is not yet supported");
-    return 0;
-  }
-}
+GLuint getSizeOfType(AttributeType dataType);
+
+enum struct IndexType : GLenum {
+  // all index data types supported by OpenGL
+  // ========================================
+  UNSIGNED_BYTE = GL_UNSIGNED_BYTE,
+  UNSIGNED_SHORT = GL_UNSIGNED_SHORT,
+  UNSIGNED_INT = GL_UNSIGNED_INT,
+};
 
 #endif

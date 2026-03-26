@@ -9,13 +9,13 @@ class Renderbuffer
 {
   GLuint m_id;
 
-  InternalFormat m_format = InternalFormat::DEPTH_COMPONENT32F;
+  InternalImageFormat m_format = InternalImageFormat::DEPTH_COMPONENT32F;
   GLsizei m_width = 0;
   GLsizei m_height = 0;
 
 public:
   Renderbuffer();
-  Renderbuffer(InternalFormat format, GLsizei width, GLsizei height);
+  Renderbuffer(InternalImageFormat format, GLsizei width, GLsizei height);
   ~Renderbuffer();
   Renderbuffer(const Renderbuffer &other) = delete;
   Renderbuffer(Renderbuffer &&other) noexcept;
@@ -23,9 +23,9 @@ public:
   Renderbuffer &operator=(const Renderbuffer &other) = delete;
   Renderbuffer &operator=(Renderbuffer &&other) noexcept;
 
-  void storage(InternalFormat format, GLsizei width, GLsizei height);
+  void storage(InternalImageFormat format, GLsizei width, GLsizei height);
 
-  [[nodiscard]] InternalFormat getFormat() const { return m_format; }
+  [[nodiscard]] InternalImageFormat getFormat() const { return m_format; }
   [[nodiscard]] GLsizei getWidth() const { return m_width; }
   [[nodiscard]] GLsizei getHeight() const { return m_height; }
 

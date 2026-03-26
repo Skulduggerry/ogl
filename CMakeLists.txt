@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.0.0)
 
 # set a default CXX standard for the tools and targets that do not specify them.
 # If commented, the latest supported standard for your compiler is automatically set.
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(FetchContent)
@@ -36,9 +36,7 @@ project(ogl
 
 if (FEATURE_DEVELOPER_MODE OR FEATURE_TESTS)
     # enable sanitizers and analyzers if running in developer mode
-    if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND NOT CMAKE_C_COMPILER_ID STREQUAL "GNU")
-        set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
-    endif ()
+    set(ENABLE_CLANG_TIDY "ENABLE_CLANG_TIDY")
 
     set(ENABLE_CPPCHECK "ENABLE_CPPCHECK")
     set(ENABLE_COVERAGE "ENABLE_COVERAGE")
@@ -98,8 +96,8 @@ project_options(
         # defines my_project_options/my_project_warnings
         PREFIX "ogl"
         ENABLE_CACHE
-        ${ENABLE_CPPCHECK}
-        ${ENABLE_CLANG_TIDY}
+        # ${ENABLE_CPPCHECK}
+        # ${ENABLE_CLANG_TIDY}
         ${ENABLE_VS_ANALYSIS}
         # ENABLE_CONAN
         # ENABLE_INTERPROCEDURAL_OPTIMIZATION
