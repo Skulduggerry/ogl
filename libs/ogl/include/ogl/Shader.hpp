@@ -2,13 +2,10 @@
 #define OGL_SHADER_HPP
 #include "NoCreate.hpp"
 
-
 #include <format>
 #include <glad/glad.h>
 #include <map>
 #include <string>
-
-class Program;
 
 class Shader
 {

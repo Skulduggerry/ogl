@@ -2,14 +2,14 @@
 #include "ogl/Logging.hpp"
 #include <utility>
 
-GLuint createVertexArrayId()
+GLuint createVertexArray()
 {
   GLuint id = 0;
   GLCall(glCreateVertexArrays(1, &id));
   return id;
 }
 
-VertexArray::VertexArray() : m_id(createVertexArrayId()) {}
+VertexArray::VertexArray() : m_id(createVertexArray()) {}
 
 VertexArray::VertexArray(NoCreate_t) : m_id(0) {}
 

@@ -5,8 +5,6 @@
 
 #include <glad/glad.h>
 
-class Framebuffer;
-
 class Renderbuffer
 {
   GLuint m_id;

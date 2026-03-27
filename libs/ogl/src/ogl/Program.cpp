@@ -26,9 +26,9 @@ Program::Program(const std::string &vertexPath,
     return Shader{ information.path, information.type };
   }) | std::ranges::to<std::vector<Shader>>();
 
-  GLCall(glAttachShader(m_id, vertexShader.m_id));
-  GLCall(glAttachShader(m_id, fragmentShader.m_id));
-  for (const auto &shader : additionalShaders) { GLCall(glAttachShader(m_id, shader.m_id)); }
+  GLCall(glAttachShader(m_id, vertexShader.getId()));
+  GLCall(glAttachShader(m_id, fragmentShader.getId()));
+  for (const auto &shader : additionalShaders) { GLCall(glAttachShader(m_id, shader.getId())); }
 
   // link the program, check for errors
   GLCall(glLinkProgram(m_id));
@@ -45,9 +45,9 @@ Program::Program(const std::string &vertexPath,
     fmt::println(stderr, "{}", infoLog);
   }
 
-  GLCall(glDetachShader(m_id, vertexShader.m_id));
-  GLCall(glDetachShader(m_id, fragmentShader.m_id));
-  for (const auto &shader : additionalShaders) { GLCall(glDetachShader(m_id, shader.m_id)); }
+  GLCall(glDetachShader(m_id, vertexShader.getId()));
+  GLCall(glDetachShader(m_id, fragmentShader.getId()));
+  for (const auto &shader : additionalShaders) { GLCall(glDetachShader(m_id, shader.getId())); }
 }
 
 Program::Program(const std::string &computePath, const std::map<std::string, std::string> &replacements)
@@ -56,7 +56,7 @@ Program::Program(const std::string &computePath, const std::map<std::string, std
   // create shaders and attach to the program
   const Shader computeShader{ computePath, Shader::Type::COMPUTE, replacements };
 
-  GLCall(glAttachShader(m_id, computeShader.m_id));
+  GLCall(glAttachShader(m_id, computeShader.getId()));
 
   // link the program, check for errors
   GLCall(glLinkProgram(m_id));
@@ -73,7 +73,7 @@ Program::Program(const std::string &computePath, const std::map<std::string, std
     fmt::println(stderr, "{}", infoLog);
   }
 
-  GLCall(glDetachShader(m_id, computeShader.m_id));
+  GLCall(glDetachShader(m_id, computeShader.getId()));
 }
 
 Program::Program(NoCreate_t) : m_id(0) {}
