@@ -12,15 +12,14 @@ enum struct TextureTarget : GLenum {
   TEXTURE_2D_ARRAY = GL_TEXTURE_2D_ARRAY,
 };
 
-class TextureObject
+template<TextureTarget> class TextureObject
 {
   GLuint m_id;
-  TextureTarget m_target;
 
 public:
-  explicit TextureObject(TextureTarget target) noexcept;
+  explicit TextureObject() noexcept;
 
-  explicit TextureObject(TextureTarget target, NoCreate_t) noexcept;
+  explicit TextureObject(NoCreate_t) noexcept;
 
   ~TextureObject() noexcept;
 
@@ -34,7 +33,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_id; }
 
-  [[nodiscard]] TextureTarget getTarget() const noexcept { return m_target; }
+  [[nodiscard]] GLboolean isValid() const noexcept { return m_id != 0; }
 
   void bindTextureUnit(GLuint unit) const;
 
@@ -52,5 +51,8 @@ public:
 
   void wrapR(TextureWrap wrap) const;
 };
+
+template class TextureObject<TextureTarget::TEXTURE_2D>;
+template class TextureObject<TextureTarget::TEXTURE_2D_ARRAY>;
 
 #endif

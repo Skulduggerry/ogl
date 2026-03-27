@@ -6,6 +6,9 @@
 #include <glad/glad.h>
 
 constexpr GLsizei calculateMipLevels(const GLsizei width, const GLsizei height)
-{ return static_cast<GLsizei>(std::floor(std::log2(std::max(width, height)))) + 1; }
+{
+  ASSERT(width > 0 && height > 0);
+  return static_cast<GLsizei>(std::floor(std::log2(std::max(width, height)))) + 1;
+}
 
 #endif

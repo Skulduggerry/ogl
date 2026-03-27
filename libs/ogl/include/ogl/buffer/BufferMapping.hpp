@@ -38,7 +38,7 @@ public:
     if (this == &other) { return *this; }
 
     // release current mapping (unmap)
-    if (m_bufferId != 0) { GLCall(glUnmapNamedBuffer(m_bufferId)); }
+    if (isValid()) { GLCall(glUnmapNamedBuffer(m_bufferId)); }
 
     // steal
     m_bufferId = std::exchange(other.m_bufferId, 0);
@@ -47,24 +47,24 @@ public:
     return *this;
   }
 
-  ~BufferMapping() noexcept { reset(); }
+  ~BufferMapping() noexcept { ASSERT(reset()); }
 
-  void reset() noexcept
+  bool reset() noexcept
   {
-    if (m_bufferId != 0) { GLCall(glUnmapNamedBuffer(m_bufferId)); }
+    bool result = true;
+    if (isValid()) { GLCall(result = glUnmapNamedBuffer(m_bufferId)); }
     m_bufferId = 0;
     m_view = {};
+    return result;
   }
 
-  [[nodiscard]] bool valid() const noexcept { return m_bufferId != 0; }
+  [[nodiscard]] bool isValid() const noexcept { return m_bufferId != 0; }
 
   [[nodiscard]] std::span<T> span() const noexcept { return m_view; }
 
   [[nodiscard]] T *data() const noexcept { return m_view.data(); }
 
   [[nodiscard]] auto size() const noexcept { return m_view.size(); }
-
-  [[nodiscard]] auto sizeGL() const noexcept { return static_cast<GLsizeiptr>(m_view.size()); }
 
   T &operator[](size_t index) const noexcept { return m_view[index]; }
 
@@ -82,7 +82,7 @@ public:
 
   void flushAll() const
     requires(!std::is_const_v<T>)
-  { flushElements(0, sizeGL()); }
+  { flushElements(0, static_cast<GLsizeiptr>(size())); }
 
   template<typename U> friend auto toBytes(BufferMapping<U> &&oldMapping);
 

@@ -40,17 +40,17 @@ std::string mapReplace(std::string text, const std::map<std::string, std::string
     const std::smatch &match = *i;
 
     // Add the text before the match
-    result += text.substr(last_pos, match.position() - last_pos);
+    result += text.substr(last_pos, static_cast<size_t>(match.position()) - last_pos);
 
     // Find the replacement value (match[1] is the key inside the brackets)
     result += replacements.at(match[1].str());
 
-    last_pos = match.position() + match.length();
+    last_pos = static_cast<size_t>(match.position() + match.length());
   }
 
   // Add the remaining part of the string
-  result += text.substr(last_pos);
-  return result;
+  text = result + text.substr(last_pos);
+  return text;
 }
 
 GLuint createShader(Shader::Type type)
@@ -77,7 +77,7 @@ Shader::Shader(const std::string &path, const Type type, const std::map<std::str
     GLint length;
     GLCall(glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &length));
 
-    std::string infoLog(length, 0);
+    std::string infoLog(static_cast<size_t>(length), 0);
     GLCall(glGetShaderInfoLog(m_id, length, &length, infoLog.data()));
 
     fmt::println(stderr, "[Shader Error]: Failed to compile shader! {}", path);
@@ -85,7 +85,12 @@ Shader::Shader(const std::string &path, const Type type, const std::map<std::str
   }
 }
 
-Shader::~Shader() { GLCall(glDeleteShader(m_id)); }
+Shader::Shader(NoCreate_t) : m_id(0) {}
+
+Shader::~Shader()
+{
+  if (isValid()) { GLCall(glDeleteShader(m_id)); }
+}
 
 Shader::Shader(Shader &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}
 

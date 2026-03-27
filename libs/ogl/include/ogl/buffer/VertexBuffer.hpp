@@ -23,6 +23,8 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_storage.getId(); }
 
+  [[nodiscard]] GLboolean isValid() const noexcept { return m_storage.isValid(); }
+
   [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_storage.getByteSize(); }
 
   [[nodiscard]] GLsizeiptr getElementCount() const noexcept { return m_storage.getByteSize() / sizeof(T); }

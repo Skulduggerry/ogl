@@ -10,9 +10,7 @@ add_library(ogl
         "src/ogl/Types.cpp"
 
         "src/ogl/buffer/BufferStorage.cpp"
-        "src/ogl/buffer/IndexBuffer.cpp"
         "src/ogl/buffer/UniformBuffer.cpp"
-        "src/ogl/buffer/VertexBuffer.cpp"
         "src/ogl/buffer/VertexBufferLayout.cpp"
 
         "src/ogl/texture/TextureObject.cpp"
@@ -21,7 +19,7 @@ add_library(ogl
 )
 
 # link project_options/warnings
-target_link_libraries(ogl INTERFACE ogl_project_options ogl_project_warnings)
+target_link_libraries(ogl PRIVATE ogl_project_options ogl_project_warnings)
 
 # Includes
 target_include_interface_directories(ogl include)
@@ -29,8 +27,7 @@ target_include_interface_directories(ogl include)
 # Find dependencies:
 target_find_dependencies(ogl PRIVATE_CONFIG fmt)
 target_find_dependencies(ogl PUBLIC_CONFIG glm glad)
-set_target_properties(fmt::fmt PROPERTIES INTERFACE_COMPILE_OPTIONS
-        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CXX_COMPILER_ID:MSVC>>:/utf-8>)
+target_compile_options(ogl PRIVATE $<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
 
 # Link dependencies
 target_link_system_libraries(ogl PRIVATE fmt::fmt)

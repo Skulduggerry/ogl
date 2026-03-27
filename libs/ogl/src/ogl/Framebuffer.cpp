@@ -59,4 +59,7 @@ void Framebuffer::attach(const Texture2DArray &texture, Attachment attachment, c
 { GLCall(glNamedFramebufferTexture(m_id, static_cast<GLenum>(attachment), texture.getId(), level)); }
 
 bool Framebuffer::isComplete() const
-{ return glCheckNamedFramebufferStatus(m_id, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE; }
+{
+  GLCall(const bool result = glCheckNamedFramebufferStatus(m_id, GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+  return result;
+}

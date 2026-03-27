@@ -3,7 +3,7 @@
 #include "ogl/Logging.hpp"
 #include "ogl/texture/Helper.hpp"
 
-Texture2DArray::Texture2DArray(NoCreate_t) noexcept : m_texture(TextureTarget::TEXTURE_2D_ARRAY, NoCreate) {}
+Texture2DArray::Texture2DArray(NoCreate_t) noexcept : m_texture(NoCreate) {}
 
 void Texture2DArray::storage(const InternalImageFormat format,
   const GLsizei width,

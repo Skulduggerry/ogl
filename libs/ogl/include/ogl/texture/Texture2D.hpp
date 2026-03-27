@@ -8,8 +8,8 @@
 
 class Texture2D
 {
-  TextureObject m_texture{ TextureTarget::TEXTURE_2D };
-  GLsizei m_width = 0, m_height = 0;
+  TextureObject<TextureTarget::TEXTURE_2D> m_texture{};
+  GLsizei m_width = 0, m_height = 0, m_mipLevels = 0;
 
 public:
   Texture2D() noexcept = default;
@@ -26,9 +26,13 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_texture.getId(); }
 
+  [[nodiscard]] GLboolean isValid() const noexcept { return m_texture.isValid(); }
+
   [[nodiscard]] GLsizei getWidth() const noexcept { return m_width; }
 
   [[nodiscard]] GLsizei getHeight() const noexcept { return m_height; }
+
+  [[nodiscard]] GLsizei getMipLevels() const noexcept { return m_mipLevels; }
 
   void bindTextureUnit(const GLuint unit) const { m_texture.bindTextureUnit(unit); }
 
@@ -52,7 +56,7 @@ public:
 
   void storage(InternalImageFormat format, GLsizei width, GLsizei height);
 
-  void storage(GLsizei levels, InternalImageFormat format, GLsizei width, GLsizei height);
+  void storage(GLsizei mipLevels, InternalImageFormat format, GLsizei width, GLsizei height);
 
   void subImageBytes(GLint mipLevel,
     GLint xOffset,

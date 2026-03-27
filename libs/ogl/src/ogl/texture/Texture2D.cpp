@@ -3,19 +3,21 @@
 #include "ogl/Logging.hpp"
 #include "ogl/texture/Helper.hpp"
 
-Texture2D::Texture2D(NoCreate_t) : m_texture(TextureTarget::TEXTURE_2D, NoCreate) {}
+Texture2D::Texture2D(NoCreate_t) : m_texture(NoCreate) {}
 
 void Texture2D::storage(const InternalImageFormat format, const GLsizei width, const GLsizei height)
 { storage(calculateMipLevels(width, height), format, width, height); }
 
-void Texture2D::storage(const GLsizei levels,
+void Texture2D::storage(const GLsizei mipLevels,
   const InternalImageFormat format,
   const GLsizei width,
   const GLsizei height)
 {
   m_width = width;
   m_height = height;
-  GLCall(glTextureStorage2D(getId(), levels, static_cast<GLenum>(format), width, height));
+  m_mipLevels = mipLevels;
+
+  GLCall(glTextureStorage2D(getId(), mipLevels, static_cast<GLenum>(format), width, height));
 }
 
 void Texture2D::subImageBytes(const GLint mipLevel,

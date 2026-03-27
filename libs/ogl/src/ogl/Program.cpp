@@ -38,7 +38,7 @@ Program::Program(const std::string &vertexPath,
     GLint length;
     GLCall(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
 
-    std::string infoLog(length, 0);
+    std::string infoLog(static_cast<size_t>(length), 0);
     GLCall(glGetProgramInfoLog(m_id, length, &length, infoLog.data()));
 
     fmt::println(stderr, "[Program Error]: Failed to link program!");
@@ -66,7 +66,7 @@ Program::Program(const std::string &computePath, const std::map<std::string, std
     GLint length;
     GLCall(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
 
-    std::string infoLog(length, 0);
+    std::string infoLog(static_cast<size_t>(length), 0);
     GLCall(glGetProgramInfoLog(m_id, length, &length, infoLog.data()));
 
     fmt::println(stderr, "[Program Error]: Failed to link program!");
@@ -76,7 +76,12 @@ Program::Program(const std::string &computePath, const std::map<std::string, std
   GLCall(glDetachShader(m_id, computeShader.m_id));
 }
 
-Program::~Program() { GLCall(glDeleteProgram(m_id)); }
+Program::Program(NoCreate_t) : m_id(0) {}
+
+Program::~Program()
+{
+  if (isValid()) { GLCall(glDeleteProgram(m_id)); }
+}
 
 Program::Program(Program &&other) noexcept
   : m_id(std::exchange(other.m_id, 0)), m_uniformLocationCache(std::move(other.m_uniformLocationCache))

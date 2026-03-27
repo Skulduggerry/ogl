@@ -13,7 +13,7 @@ void UniformBuffer::allocateImmutableBytes(const GLsizeiptr byteCount, const std
 void UniformBuffer::allocateImmutableBytes(const std::span<const std::byte> bytes,
   const std::span<const BufferStorageFlag> flags)
 {
-  ASSERT(bytes.size_bytes() <= GlLimits::getInstance().maxUniformBlockSize);
+  ASSERT(bytes.size_bytes() <= static_cast<size_t>(GlLimits::getInstance().maxUniformBlockSize));
   m_storage.allocateImmutableBytes(bytes, flags);
 }
 
@@ -25,7 +25,7 @@ void UniformBuffer::allocateMutableBytes(const GLsizeiptr byteCount, const Buffe
 
 void UniformBuffer::allocateMutableBytes(const std::span<const std::byte> bytes, const BufferUsage bufferUsage)
 {
-  ASSERT(bytes.size_bytes() <= GlLimits::getInstance().maxUniformBlockSize);
+  ASSERT(bytes.size_bytes() <= static_cast<size_t>(GlLimits::getInstance().maxUniformBlockSize));
   m_storage.allocateMutableBytes(bytes, bufferUsage);
 }
 

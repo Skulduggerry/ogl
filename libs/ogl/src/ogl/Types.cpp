@@ -1,7 +1,9 @@
 #include "ogl/Types.hpp"
 #include "ogl/Logging.hpp"
 
-GLuint getSizeOfType(const AttributeType dataType)
+#include <utility>
+
+GLint getSizeOfType(const AttributeType dataType)
 {
   switch (dataType) {
   case AttributeType::BYTE:
@@ -25,6 +27,5 @@ GLuint getSizeOfType(const AttributeType dataType)
   case AttributeType::DOUBLE:
     return sizeof(GLdouble);
   }
-  ASSERT(false);
-  return 0;
+  std::unreachable();
 }

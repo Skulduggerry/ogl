@@ -30,6 +30,8 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_id; }
 
+  [[nodiscard]] GLboolean isValid() const noexcept { return m_id != 0; }
+
   [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_byteSize; }
 
   void allocateImmutableBytes(GLsizeiptr byteCount, std::span<const BufferStorageFlag> flags);

@@ -9,7 +9,7 @@
 
 class Texture2DArray
 {
-  TextureObject m_texture{ TextureTarget::TEXTURE_2D_ARRAY };
+  TextureObject<TextureTarget::TEXTURE_2D_ARRAY> m_texture{};
   GLsizei m_width = 0, m_height = 0, m_layerCount = 0;
 
 public:
@@ -26,6 +26,8 @@ public:
   Texture2DArray &operator=(Texture2DArray &&other) noexcept = default;
 
   [[nodiscard]] GLuint getId() const noexcept { return m_texture.getId(); }
+
+  [[nodiscard]] GLboolean isValid() const noexcept { return m_texture.isValid(); }
 
   [[nodiscard]] GLsizei getWidth() const noexcept { return m_width; }
 

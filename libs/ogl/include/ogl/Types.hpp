@@ -42,7 +42,7 @@ enum struct AttributeType : GLenum {
   DOUBLE = GL_DOUBLE,
 };
 
-GLuint getSizeOfType(AttributeType dataType);
+GLint getSizeOfType(AttributeType dataType);
 
 enum struct IndexType : GLenum {
   // all index data types supported by OpenGL

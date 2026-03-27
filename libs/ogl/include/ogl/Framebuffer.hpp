@@ -6,7 +6,6 @@
 #include "texture/Texture2DArray.hpp"
 
 #include <glad/glad.h>
-#include <ranges>
 
 enum struct Attachment : GLenum {
   NONE = GL_NONE,
@@ -63,10 +62,11 @@ public:
   Framebuffer &operator=(Framebuffer &&other) noexcept;
 
   void drawBuffer(Attachment buffer) const;
-  template<std::ranges::random_access_range R> void drawBuffers(const R &buffer) const
+
+  void drawBuffers(const std::span<const Attachment> buffers) const
   {
-    using namespace std::ranges;
-    GLCall(glNamedFramebufferDrawBuffers(m_id, size(buffer), reinterpret_cast<const GLenum *>(data(buffer))));
+    GLCall(glNamedFramebufferDrawBuffers(
+      m_id, static_cast<GLsizei>(buffers.size()), reinterpret_cast<const GLenum *>(buffers.data())));
   }
 
   void readBuffer(Attachment buffer) const;

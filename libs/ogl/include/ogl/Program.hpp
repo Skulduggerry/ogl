@@ -1,5 +1,6 @@
 #ifndef OGL_PROGRAM_HPP
 #define OGL_PROGRAM_HPP
+#include "NoCreate.hpp"
 #include "Shader.hpp"
 
 
@@ -14,7 +15,7 @@ class Program
   // the program id
   GLuint m_id;
   // used for optimization
-  mutable std::unordered_map<std::string, GLint> m_uniformLocationCache;
+  mutable std::unordered_map<std::string, GLint> m_uniformLocationCache{};
 
 public:
   struct ShaderSourceInfo
@@ -28,6 +29,7 @@ public:
     const std::vector<ShaderSourceInfo> &additional = {},
     const std::map<std::string, std::string> &replacements = {});
   explicit Program(const std::string &computePath, const std::map<std::string, std::string> &replacements = {});
+  explicit Program(NoCreate_t);
 
   ~Program();
   Program(const Program &other) = delete;
@@ -35,6 +37,10 @@ public:
 
   Program &operator=(const Program &other) = delete;
   Program &operator=(Program &&other) noexcept;
+
+  [[nodiscard]] GLuint getId() const noexcept { return m_id; }
+
+  [[nodiscard]] bool isValid() const noexcept { return m_id != 0; }
 
   void bind() const;
   static void unbind();
