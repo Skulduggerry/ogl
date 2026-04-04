@@ -1,14 +1,13 @@
 #ifndef OGL_HELPER_HPP
 #define OGL_HELPER_HPP
 
-#include <algorithm>
-#include <cmath>
-#include <glad/glad.h>
+#include <bit>
 
-constexpr GLsizei calculateMipLevels(const GLsizei width, const GLsizei height)
+constexpr int calculateMipLevels(const int width, const int height)
 {
   ASSERT(width > 0 && height > 0);
-  return static_cast<GLsizei>(std::floor(std::log2(std::max(width, height)))) + 1;
+  const auto max = static_cast<unsigned>(width > height ? width : height);
+  return std::bit_width(max);
 }
 
 #endif

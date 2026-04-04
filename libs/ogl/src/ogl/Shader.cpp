@@ -85,11 +85,9 @@ Shader::Shader(const std::string &path, const Type type, const std::map<std::str
   }
 }
 
-Shader::Shader(NoCreate_t) : m_id(0) {}
-
 Shader::~Shader()
 {
-  if (isValid()) { GLCall(glDeleteShader(m_id)); }
+  if (hasName()) { GLCall(glDeleteShader(m_id)); }
 }
 
 Shader::Shader(Shader &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}

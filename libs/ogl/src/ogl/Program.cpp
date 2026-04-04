@@ -76,11 +76,9 @@ Program::Program(const std::string &computePath, const std::map<std::string, std
   GLCall(glDetachShader(m_id, computeShader.getId()));
 }
 
-Program::Program(NoCreate_t) : m_id(0) {}
-
 Program::~Program()
 {
-  if (isValid()) { GLCall(glDeleteProgram(m_id)); }
+  if (hasName()) { GLCall(glDeleteProgram(m_id)); }
 }
 
 Program::Program(Program &&other) noexcept

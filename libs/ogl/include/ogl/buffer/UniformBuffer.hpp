@@ -9,8 +9,6 @@ class UniformBuffer
 public:
   UniformBuffer() noexcept = default;
 
-  explicit UniformBuffer(NoCreate_t) noexcept;
-
   UniformBuffer(const UniformBuffer &other) = delete;
 
   UniformBuffer(UniformBuffer &&other) noexcept = default;
@@ -21,7 +19,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_storage.getId(); }
 
-  [[nodiscard]] GLboolean isValid() const noexcept { return m_storage.isValid(); }
+  [[nodiscard]] bool hasName() const noexcept { return m_storage.hasName(); }
 
   [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_storage.getByteSize(); }
 

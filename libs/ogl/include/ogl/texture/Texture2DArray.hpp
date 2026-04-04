@@ -10,12 +10,11 @@
 class Texture2DArray
 {
   TextureObject<TextureTarget::TEXTURE_2D_ARRAY> m_texture{};
-  GLsizei m_width = 0, m_height = 0, m_layerCount = 0;
+  GLsizei m_width = 0, m_height = 0, m_layerCount = 0, m_mipLevels = 0;
+  bool m_allocated = false;
 
 public:
   Texture2DArray() noexcept = default;
-
-  explicit Texture2DArray(NoCreate_t) noexcept;
 
   Texture2DArray(const Texture2DArray &other) = delete;
 
@@ -27,7 +26,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_texture.getId(); }
 
-  [[nodiscard]] GLboolean isValid() const noexcept { return m_texture.isValid(); }
+  [[nodiscard]] bool hasName() const noexcept { return m_texture.hasName(); }
 
   [[nodiscard]] GLsizei getWidth() const noexcept { return m_width; }
 
@@ -35,26 +34,13 @@ public:
 
   [[nodiscard]] GLsizei getLayerCount() const noexcept { return m_layerCount; }
 
+  [[nodiscard]] GLsizei getMipLevels() const noexcept { return m_mipLevels; }
+
+  [[nodiscard]] bool isAllocated() const noexcept { return m_allocated; }
+
   void bindTextureUnit(const GLuint unit) const { m_texture.bindTextureUnit(unit); }
 
-  void borderColor(const glm::vec4 &color) const { m_texture.borderColor(color); }
-
-  void minFilter(const TextureMinFilter filter) const { m_texture.minFilter(filter); }
-
-  void magFilter(const TextureMagFilter filter) const { m_texture.magFilter(filter); }
-
-  void wrap(const TextureWrap wrap) const
-  {
-    wrapS(wrap);
-    wrapT(wrap);
-    wrapR(wrap);
-  }
-
-  void wrapS(const TextureWrap wrap) const { m_texture.wrapS(wrap); }
-
-  void wrapT(const TextureWrap wrap) const { m_texture.wrapT(wrap); }
-
-  void wrapR(const TextureWrap wrap) const { m_texture.wrapR(wrap); }
+  void generateMipmap() const;
 
   void storage(InternalImageFormat format, GLsizei width, GLsizei height, GLsizei layers);
 

@@ -38,7 +38,7 @@ public:
     if (this == &other) { return *this; }
 
     // release current mapping (unmap)
-    if (isValid()) { GLCall(glUnmapNamedBuffer(m_bufferId)); }
+    if (hasName()) { GLCall(glUnmapNamedBuffer(m_bufferId)); }
 
     // steal
     m_bufferId = std::exchange(other.m_bufferId, 0);
@@ -47,18 +47,18 @@ public:
     return *this;
   }
 
-  ~BufferMapping() noexcept { ASSERT(reset()); }
+  ~BufferMapping() { ASSERT(reset()); }
 
   bool reset() noexcept
   {
     bool result = true;
-    if (isValid()) { GLCall(result = glUnmapNamedBuffer(m_bufferId)); }
+    if (hasName()) { GLCall(result = glUnmapNamedBuffer(m_bufferId)); }
     m_bufferId = 0;
     m_view = {};
     return result;
   }
 
-  [[nodiscard]] bool isValid() const noexcept { return m_bufferId != 0; }
+  [[nodiscard]] bool hasName() const noexcept { return m_bufferId != 0; }
 
   [[nodiscard]] std::span<T> span() const noexcept { return m_view; }
 
@@ -84,12 +84,12 @@ public:
     requires(!std::is_const_v<T>)
   { flushElements(0, static_cast<GLsizeiptr>(size())); }
 
-  template<typename U> friend auto toBytes(BufferMapping<U> &&oldMapping);
+  template<typename U> friend auto asBytes(BufferMapping<U> &&oldMapping);
 
-  template<typename U, typename ByteT> friend BufferMapping<U> fromBytes(BufferMapping<ByteT> &&oldMapping);
+  template<typename U, typename ByteT> friend BufferMapping<U> as(BufferMapping<ByteT> &&oldMapping);
 };
 
-template<class T> auto toBytes(BufferMapping<T> &&oldMapping)
+template<class T> [[nodiscard]] auto asBytes(BufferMapping<T> &&oldMapping)
 {
   using ByteT = std::conditional_t<std::is_const_v<T>, const std::byte, std::byte>;
 
@@ -108,7 +108,7 @@ template<class T> auto toBytes(BufferMapping<T> &&oldMapping)
 
 template<typename U, typename ByteT>
   requires std::same_as<std::remove_const_t<ByteT>, std::byte> && std::is_trivially_copyable_v<std::remove_const_t<U>>
-BufferMapping<U> fromBytes(BufferMapping<ByteT> &&oldMapping)
+[[nodiscard]] BufferMapping<U> as(BufferMapping<ByteT> &&oldMapping)
 {
   if constexpr (std::is_const_v<ByteT>) {
     static_assert(std::is_const_v<U>, "Cannot create BufferMapping<U> from BufferMapping<const std::byte>");

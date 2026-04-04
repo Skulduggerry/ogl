@@ -11,11 +11,9 @@ GLuint createVertexArray()
 
 VertexArray::VertexArray() : m_id(createVertexArray()) {}
 
-VertexArray::VertexArray(NoCreate_t) : m_id(0) {}
-
 VertexArray::~VertexArray()
 {
-  if (isValid()) { GLCall(glDeleteVertexArrays(1, &m_id)); }
+  if (hasName()) { GLCall(glDeleteVertexArrays(1, &m_id)); }
 }
 
 VertexArray::VertexArray(VertexArray &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}

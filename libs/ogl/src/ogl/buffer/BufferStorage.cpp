@@ -13,11 +13,9 @@ static GLuint createBuffer()
 
 BufferStorage::BufferStorage() noexcept : m_id(createBuffer()) {}
 
-BufferStorage::BufferStorage(NoCreate_t) noexcept : m_id(0) {}
-
 BufferStorage::~BufferStorage() noexcept
 {
-  if (isValid()) { GLCall(glDeleteBuffers(1, &m_id)); }
+  if (hasName()) { GLCall(glDeleteBuffers(1, &m_id)); }
 }
 
 BufferStorage::BufferStorage(BufferStorage &&other) noexcept
@@ -29,7 +27,7 @@ BufferStorage &BufferStorage::operator=(BufferStorage &&other) noexcept
   if (this == &other) { return *this; }
 
   // release currently owned resource
-  if (isValid()) { GLCall(glDeleteBuffers(1, &m_id)); }
+  if (hasName()) { GLCall(glDeleteBuffers(1, &m_id)); }
 
   // steal
   m_id = std::exchange(other.m_id, 0);

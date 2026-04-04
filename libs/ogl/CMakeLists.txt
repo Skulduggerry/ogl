@@ -13,6 +13,7 @@ add_library(ogl
         "src/ogl/buffer/UniformBuffer.cpp"
         "src/ogl/buffer/VertexBufferLayout.cpp"
 
+        "src/ogl/texture/Sampler.cpp"
         "src/ogl/texture/TextureObject.cpp"
         "src/ogl/texture/Texture2D.cpp"
         "src/ogl/texture/Texture2DArray.cpp"

@@ -2,8 +2,6 @@
 
 #include "ogl/GlLimits.hpp"
 
-UniformBuffer::UniformBuffer(NoCreate_t) noexcept : m_storage(NoCreate) {}
-
 void UniformBuffer::allocateImmutableBytes(const GLsizeiptr byteCount, const std::span<const BufferStorageFlag> flags)
 {
   ASSERT(byteCount <= GlLimits::getInstance().maxUniformBlockSize);

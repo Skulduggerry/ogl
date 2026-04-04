@@ -17,8 +17,6 @@ template<IsIndexType T> class IndexBuffer
 public:
   IndexBuffer() noexcept = default;
 
-  explicit IndexBuffer(NoCreate_t) noexcept : m_storage(NoCreate) {}
-
   IndexBuffer(const IndexBuffer &other) = delete;
 
   IndexBuffer(IndexBuffer &&other) noexcept = default;
@@ -29,7 +27,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_storage.getId(); }
 
-  [[nodiscard]] GLboolean isValid() const noexcept { return m_storage.isValid(); }
+  [[nodiscard]] bool hasName() const noexcept { return m_storage.hasName(); }
 
   [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_storage.getByteSize(); }
 
@@ -91,18 +89,7 @@ public:
     m_storage.invalidateSubDataBytes(byteOffset, byteCount);
   }
 
-  [[nodiscard]] BufferMapping<T> map() const { return fromBytes<T>(m_storage.mapBytes()); }
-
-  [[nodiscard]] BufferMapping<T> mapWrite() const { return fromBytes<T>(m_storage.mapWriteBytes()); }
-
-  [[nodiscard]] BufferMapping<T> mapRange(const GLintptr elementOffset,
-    const GLsizeiptr elementCount,
-    const std::span<const BufferMappingFlag> flags) const
-  {
-    const GLintptr byteOffset = elementOffset * sizeof(T);
-    const GLsizeiptr byteCount = elementCount * sizeof(T);
-    return fromBytes<T>(m_storage.mapRangeBytes(byteOffset, byteCount, flags));
-  }
+  [[nodiscard]] BufferMapping<T> mapWrite() const { return as<T>(m_storage.mapWriteBytes()); }
 
   [[nodiscard]] BufferMapping<T> mapRangeWrite(const GLintptr elementOffset,
     const GLsizeiptr elementCount,
@@ -110,7 +97,7 @@ public:
   {
     const GLintptr byteOffset = elementOffset * sizeof(T);
     const GLsizeiptr byteCount = elementCount * sizeof(T);
-    return fromBytes<T>(m_storage.mapRangeWriteBytes(byteOffset, byteCount, flags));
+    return as<T>(m_storage.mapRangeWriteBytes(byteOffset, byteCount, flags));
   }
 };
 

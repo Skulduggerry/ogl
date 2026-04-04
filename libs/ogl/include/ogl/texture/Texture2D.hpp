@@ -10,11 +10,10 @@ class Texture2D
 {
   TextureObject<TextureTarget::TEXTURE_2D> m_texture{};
   GLsizei m_width = 0, m_height = 0, m_mipLevels = 0;
+  bool m_allocated = false;
 
 public:
   Texture2D() noexcept = default;
-
-  explicit Texture2D(NoCreate_t);
 
   Texture2D(const Texture2D &other) = delete;
 
@@ -26,7 +25,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_texture.getId(); }
 
-  [[nodiscard]] GLboolean isValid() const noexcept { return m_texture.isValid(); }
+  [[nodiscard]] bool hasName() const noexcept { return m_texture.hasName(); }
 
   [[nodiscard]] GLsizei getWidth() const noexcept { return m_width; }
 
@@ -34,25 +33,11 @@ public:
 
   [[nodiscard]] GLsizei getMipLevels() const noexcept { return m_mipLevels; }
 
+  [[nodiscard]] bool isAllocated() const noexcept { return m_allocated; }
+
   void bindTextureUnit(const GLuint unit) const { m_texture.bindTextureUnit(unit); }
 
-  void generateMipmap() const { m_texture.generateMipmap(); }
-
-  void borderColor(const glm::vec4 &color) const { m_texture.borderColor(color); }
-
-  void minFilter(const TextureMinFilter filter) const { m_texture.minFilter(filter); }
-
-  void magFilter(const TextureMagFilter filter) const { m_texture.magFilter(filter); }
-
-  void wrap(const TextureWrap wrap) const
-  {
-    wrapS(wrap);
-    wrapT(wrap);
-  }
-
-  void wrapS(const TextureWrap wrap) const { m_texture.wrapS(wrap); }
-
-  void wrapT(const TextureWrap wrap) const { m_texture.wrapT(wrap); }
+  void generateMipmap() const;
 
   void storage(InternalImageFormat format, GLsizei width, GLsizei height);
 

@@ -11,6 +11,7 @@
 #include <random>
 #define STB_IMAGE_IMPLEMENTATION
 #include "ogl/buffer/UniformBuffer.hpp"
+#include "ogl/texture/Sampler.hpp"
 #include "ogl/texture/Texture2D.hpp"
 #include "ogl/texture/Texture2DArray.hpp"
 
@@ -109,16 +110,22 @@ int main()
 
   // load textures
   const Texture2D woodTexture = loadTexture("textures/wood.png");
+  Sampler textureSampler{};
+  textureSampler.wrap(TextureWrap::REPEAT);
+  textureSampler.minFilter(TextureMinFilter::LINEAR_MIPMAP_LINEAR);
+  textureSampler.magFilter(TextureMagFilter::LINEAR);
 
   // configure light FBO
   Texture2DArray lightDepthMaps{};
   lightDepthMaps.storage(
     InternalImageFormat::DEPTH_COMPONENT32F, depthMapResolution, depthMapResolution, shadowCascadeLevels.size() + 1);
-  lightDepthMaps.minFilter(TextureMinFilter::NEAREST);
-  lightDepthMaps.magFilter(TextureMagFilter::NEAREST);
-  lightDepthMaps.wrapS(TextureWrap::CLAMP_TO_BORDER);
-  lightDepthMaps.wrapT(TextureWrap::CLAMP_TO_BORDER);
-  lightDepthMaps.borderColor({ 1.0f, 1.0f, 1.0f, 1.0f });
+
+  Sampler depthMapSampler{};
+  depthMapSampler.minFilter(TextureMinFilter::NEAREST);
+  depthMapSampler.magFilter(TextureMagFilter::NEAREST);
+  depthMapSampler.wrapS(TextureWrap::CLAMP_TO_BORDER);
+  depthMapSampler.wrapT(TextureWrap::CLAMP_TO_BORDER);
+  depthMapSampler.borderColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 
   const Framebuffer lightFBO{};
   lightFBO.attach(lightDepthMaps, Attachment::DEPTH, 0);
@@ -187,6 +194,7 @@ int main()
       debugDepthQuad.bind();
       debugDepthQuad.setInt("layer", debugLayer);
       lightDepthMaps.bindTextureUnit(0);
+      depthMapSampler.bindUnit(0);
       renderQuad();
 
     } else {
@@ -215,7 +223,9 @@ int main()
       }
 
       woodTexture.bindTextureUnit(0);
+      textureSampler.bindUnit(0);
       lightDepthMaps.bindTextureUnit(1);
+      depthMapSampler.bindUnit(1);
       renderScene(shader);
 
       if (showDebugCam) {
@@ -394,10 +404,6 @@ Texture2D loadTexture(const std::string &path)
   texture.subImageBytes(
     0, 0, 0, width, height, format, ImageDataType::UNSIGNED_BYTE, as_bytes(std::span{ data, byteCount }));
   texture.generateMipmap();
-
-  texture.wrap(TextureWrap::REPEAT);
-  texture.minFilter(TextureMinFilter::LINEAR_MIPMAP_LINEAR);
-  texture.magFilter(TextureMagFilter::LINEAR);
 
   stbi_image_free(data);
   return texture;

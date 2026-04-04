@@ -3,7 +3,6 @@
 
 #include "BufferEnums.hpp"
 #include "BufferMapping.hpp"
-#include "ogl/NoCreate.hpp"
 
 #include <glad/glad.h>
 #include <span>
@@ -15,8 +14,6 @@ class BufferStorage
 
 public:
   BufferStorage() noexcept;
-
-  explicit BufferStorage(NoCreate_t) noexcept;
 
   ~BufferStorage() noexcept;
 
@@ -30,7 +27,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_id; }
 
-  [[nodiscard]] GLboolean isValid() const noexcept { return m_id != 0; }
+  [[nodiscard]] bool hasName() const noexcept { return m_id != 0; }
 
   [[nodiscard]] GLsizeiptr getByteSize() const noexcept { return m_byteSize; }
 

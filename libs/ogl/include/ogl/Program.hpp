@@ -1,6 +1,5 @@
 #ifndef OGL_PROGRAM_HPP
 #define OGL_PROGRAM_HPP
-#include "NoCreate.hpp"
 #include "Shader.hpp"
 
 
@@ -29,7 +28,6 @@ public:
     const std::vector<ShaderSourceInfo> &additional = {},
     const std::map<std::string, std::string> &replacements = {});
   explicit Program(const std::string &computePath, const std::map<std::string, std::string> &replacements = {});
-  explicit Program(NoCreate_t);
 
   ~Program();
   Program(const Program &other) = delete;
@@ -40,7 +38,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_id; }
 
-  [[nodiscard]] bool isValid() const noexcept { return m_id != 0; }
+  [[nodiscard]] bool hasName() const noexcept { return m_id != 0; }
 
   void bind() const;
   static void unbind();

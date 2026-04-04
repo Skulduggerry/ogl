@@ -3,7 +3,11 @@
 #include "ogl/Logging.hpp"
 #include "ogl/texture/Helper.hpp"
 
-Texture2D::Texture2D(NoCreate_t) : m_texture(NoCreate) {}
+void Texture2D::generateMipmap() const
+{
+  ASSERT(isAllocated());
+  m_texture.generateMipmap();
+}
 
 void Texture2D::storage(const InternalImageFormat format, const GLsizei width, const GLsizei height)
 { storage(calculateMipLevels(width, height), format, width, height); }
@@ -13,9 +17,14 @@ void Texture2D::storage(const GLsizei mipLevels,
   const GLsizei width,
   const GLsizei height)
 {
+  ASSERT(width > 0 && height > 0);
+  ASSERT(mipLevels > 0);
+  ASSERT(mipLevels <= calculateMipLevels(width, height));
+
   m_width = width;
   m_height = height;
   m_mipLevels = mipLevels;
+  m_allocated = true;
 
   GLCall(glTextureStorage2D(getId(), mipLevels, static_cast<GLenum>(format), width, height));
 }
@@ -29,6 +38,17 @@ void Texture2D::subImageBytes(const GLint mipLevel,
   const ImageDataType type,
   const std::span<const std::byte> pixels) const
 {
+  ASSERT(isAllocated());
+
+  ASSERT(xOffset >= 0 && width > 0);
+  ASSERT(yOffset >= 0 && height > 0);
+  ASSERT(0 <= mipLevel && mipLevel < m_mipLevels);
+
+  const GLsizei levelWidth = std::max(1, m_width >> mipLevel);
+  const GLsizei levelHeight = std::max(1, m_height >> mipLevel);
+  ASSERT(xOffset + width <= levelWidth);
+  ASSERT(yOffset + height <= levelHeight);
+
   GLCall(glTextureSubImage2D(getId(),
     mipLevel,
     xOffset,

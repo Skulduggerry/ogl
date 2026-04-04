@@ -1,6 +1,5 @@
 #ifndef OGL_SHADER_HPP
 #define OGL_SHADER_HPP
-#include "NoCreate.hpp"
 
 #include <format>
 #include <glad/glad.h>
@@ -29,7 +28,6 @@ private:
 
 public:
   Shader(const std::string &path, Type type, const std::map<std::string, std::string> &replacements = {});
-  explicit Shader(NoCreate_t);
   ~Shader();
   Shader(const Shader &other) = delete;
   Shader(Shader &&other) noexcept;
@@ -39,7 +37,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_id; }
 
-  [[nodiscard]] bool isValid() const noexcept { return m_id != 0; }
+  [[nodiscard]] bool hasName() const noexcept { return m_id != 0; }
 
   // TODO: do compilation in method not in constructor
 };

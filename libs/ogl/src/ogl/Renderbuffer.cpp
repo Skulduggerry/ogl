@@ -15,11 +15,9 @@ Renderbuffer::Renderbuffer() : m_id(createRenderbuffer()) {}
 Renderbuffer::Renderbuffer(const InternalImageFormat format, const GLsizei width, const GLsizei height) : Renderbuffer{}
 { storage(format, width, height); }
 
-Renderbuffer::Renderbuffer(NoCreate_t) : m_id(0) {}
-
 Renderbuffer::~Renderbuffer()
 {
-  if (isValid()) { GLCall(glDeleteRenderbuffers(1, &m_id)); }
+  if (hasName()) { GLCall(glDeleteRenderbuffers(1, &m_id)); }
 }
 
 Renderbuffer::Renderbuffer(Renderbuffer &&other) noexcept

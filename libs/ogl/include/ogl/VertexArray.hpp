@@ -12,7 +12,6 @@ class VertexArray
 
 public:
   VertexArray();
-  explicit VertexArray(NoCreate_t);
   ~VertexArray();
   VertexArray(const VertexArray &other) = delete;
   VertexArray(VertexArray &&other) noexcept;
@@ -22,7 +21,7 @@ public:
 
   [[nodiscard]] GLuint getId() const noexcept { return m_id; }
 
-  [[nodiscard]] bool isValid() const noexcept { return m_id != 0; }
+  [[nodiscard]] bool hasName() const noexcept { return m_id != 0; }
 
   void bind() const;
   static void unbind();
