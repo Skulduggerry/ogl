@@ -127,7 +127,8 @@ project_options(
         GCC_WARNINGS "${GCC_WARNINGS}"
 )
 
-add_subdirectory(libs/ogl)
+add_subdirectory(libs/raii-gl)
+add_subdirectory(libs/GLKit)
 add_subdirectory(apps/csm)
 
 # set the startup project for the "play" button in MSVC

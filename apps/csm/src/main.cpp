@@ -1,22 +1,19 @@
-#include "ogl/Camera.hpp"
-#include "ogl/Framebuffer.hpp"
-#include "ogl/Logging.hpp"
-#include "ogl/Program.hpp"
-#include "ogl/Shader.hpp"
-#include "ogl/VertexArray.hpp"
+#include "GLKit/Camera.hpp"
+#include "raii-gl/Logging.hpp"
+#include "raii-gl/buffer/UniformBuffer.hpp"
+#include "raii-gl/render/Framebuffer.hpp"
+#include "raii-gl/render/Program.hpp"
+#include "raii-gl/render/VertexArray.hpp"
+#include "raii-gl/texture/Sampler.hpp"
+#include "raii-gl/texture/Texture2D.hpp"
+#include "raii-gl/texture/Texture2DArray.hpp"
 
 #include <GLFW/glfw3.h>
 #include <fmt/core.h>
+#include <glm/ext/matrix_clip_space.hpp>
 #include <memory>
 #include <random>
 #define STB_IMAGE_IMPLEMENTATION
-#include "ogl/buffer/UniformBuffer.hpp"
-#include "ogl/texture/Sampler.hpp"
-#include "ogl/texture/Texture2D.hpp"
-#include "ogl/texture/Texture2DArray.hpp"
-
-
-#include <glm/ext/matrix_clip_space.hpp>
 #include <stb_image.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
