@@ -100,13 +100,19 @@ int main()
   GLCall(glEnable(GL_DEPTH_TEST));
 
   // build and compile shaders
-  const Program shader{ RESOURCE_PATH "shaders/shader.vert", RESOURCE_PATH "shaders/shader.frag" };
-  const Program simpleDepthShader{ RESOURCE_PATH "shaders/shadow_mapping_depth.vert",
+  const Program shader =
+    Program::fromFile(RESOURCE_PATH "shaders/shader.vert", RESOURCE_PATH "shaders/shader.frag").value();
+
+  const Program simpleDepthShader = Program::fromFile(RESOURCE_PATH "shaders/shadow_mapping_depth.vert",
     RESOURCE_PATH "shaders/shadow_mapping_depth.frag",
-    { Program::ShaderSourceInfo{ RESOURCE_PATH "shaders/shadow_mapping_depth.geom", ShaderType::GEOMETRY } } };
-  const Program debugDepthQuad(RESOURCE_PATH "shaders/debug_quad.vert", RESOURCE_PATH "shaders/debug_quad.frag");
-  const Program debugCascadeShader(
-    RESOURCE_PATH "shaders/debug_cascade.vert", RESOURCE_PATH "shaders/debug_cascade.frag");
+    { ShaderSourceInfo{ RESOURCE_PATH "shaders/shadow_mapping_depth.geom",
+      ShaderType::GEOMETRY } }).value();
+
+  const Program debugDepthQuad =
+    Program::fromFile(RESOURCE_PATH "shaders/debug_quad.vert", RESOURCE_PATH "shaders/debug_quad.frag").value();
+
+  const Program debugCascadeShader =
+    Program::fromFile(RESOURCE_PATH "shaders/debug_cascade.vert", RESOURCE_PATH "shaders/debug_cascade.frag").value();
 
   // load textures
   const Texture2D woodTexture = loadTexture("textures/wood.png");

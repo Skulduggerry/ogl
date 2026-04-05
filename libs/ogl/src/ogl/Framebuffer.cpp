@@ -3,7 +3,7 @@
 
 #include <utility>
 
-GLuint createFramebuffer()
+static GLuint createFramebuffer()
 {
   GLuint id = 0;
   GLCall(glCreateFramebuffers(1, &id));

@@ -1,10 +1,11 @@
 #ifndef OGL_SHADER_HPP
 #define OGL_SHADER_HPP
 
-#include <format>
+#include "ogl/StringViewHash.hpp"
+
 #include <glad/glad.h>
-#include <map>
 #include <string>
+#include <unordered_map>
 
 enum struct ShaderType : GLenum {
   // the two basic types of shaders we always need
@@ -34,7 +35,7 @@ struct ShaderCompileResult
   std::string log;
 };
 
-using Replacements = std::map<std::string, std::string, std::less<>>;
+using Replacements = std::unordered_map<std::string, std::string, SvHash, SvEq>;
 
 class Shader
 {

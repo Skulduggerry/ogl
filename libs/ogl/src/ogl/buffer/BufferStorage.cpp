@@ -1,7 +1,6 @@
 #include "ogl/buffer/BufferStorage.hpp"
 #include "ogl/Logging.hpp"
 
-#include <algorithm>
 #include <numeric>
 #include <string_view>
 

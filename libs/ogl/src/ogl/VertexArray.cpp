@@ -2,7 +2,7 @@
 #include "ogl/Logging.hpp"
 #include <utility>
 
-GLuint createVertexArray()
+static GLuint createVertexArray()
 {
   GLuint id = 0;
   GLCall(glCreateVertexArrays(1, &id));
