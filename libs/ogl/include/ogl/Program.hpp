@@ -20,7 +20,7 @@ public:
   struct ShaderSourceInfo
   {
     std::string path;
-    Shader::Type type;
+    ShaderType type;
   };
 
   Program(const std::string &vertexPath,

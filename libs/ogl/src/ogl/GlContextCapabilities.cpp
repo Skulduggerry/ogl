@@ -13,7 +13,7 @@ static std::vector<std::string> getExtensions()
   GLCall(glGetIntegerv(GL_NUM_EXTENSIONS, &n));
 
   std::vector<std::string> extensions{};
-  extensions.reserve(static_cast<size_t>(n));
+  extensions.reserve(static_cast<std::size_t>(n));
 
   for (GLint i = 0; i < n; ++i) {
     GLCall(const GLubyte *s = glGetStringi(GL_EXTENSIONS, static_cast<GLuint>(i)));

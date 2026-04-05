@@ -69,4 +69,4 @@ void Sampler::maxLod(const float v) const { GLCall(glSamplerParameterf(m_id, GL_
 void Sampler::lodBias(const float v) const { GLCall(glSamplerParameterf(m_id, GL_TEXTURE_LOD_BIAS, v)); }
 
 void Sampler::debugLabel(const std::string_view name) const
-{ GLCall(glObjectLabel(GL_SAMPLER, m_id, name.size(), name.data())); }
+{ GLCall(glObjectLabel(GL_SAMPLER, m_id, static_cast<GLsizei>(name.size()), name.data())); }

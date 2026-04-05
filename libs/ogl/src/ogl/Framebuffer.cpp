@@ -28,6 +28,7 @@ Framebuffer &Framebuffer::operator=(Framebuffer &&other) noexcept
 
   // steal
   m_id = std::exchange(other.m_id, 0);
+
   return *this;
 }
 
@@ -45,15 +46,15 @@ void Framebuffer::drawBuffer(Attachment buffer) const
 
 void Framebuffer::drawBuffers(const std::span<const Attachment> buffers) const
 {
-  if (constexpr size_t StackN = 8; buffers.size() <= StackN) {
+  if (constexpr std::size_t StackN = 8; buffers.size() <= StackN) {
     std::array<GLenum, StackN> tmp{};
-    for (size_t i = 0; i < buffers.size(); ++i) tmp[i] = static_cast<GLenum>(buffers[i]);
+    for (std::size_t i = 0; i < buffers.size(); ++i) tmp[i] = static_cast<GLenum>(buffers[i]);
     GLCall(glNamedFramebufferDrawBuffers(m_id, static_cast<GLsizei>(buffers.size()), tmp.data()));
     return;
   }
 
   std::vector<GLenum> tmp(buffers.size());
-  for (size_t i = 0; i < buffers.size(); ++i) tmp[i] = static_cast<GLenum>(buffers[i]);
+  for (std::size_t i = 0; i < buffers.size(); ++i) tmp[i] = static_cast<GLenum>(buffers[i]);
   GLCall(glNamedFramebufferDrawBuffers(m_id, static_cast<GLsizei>(tmp.size()), tmp.data()));
 }
 
@@ -93,4 +94,4 @@ void Framebuffer::bindDefault(const FramebufferTarget target)
 { GLCall(glBindFramebuffer(static_cast<GLenum>(target), 0)); }
 
 void Framebuffer::debugLabel(const std::string_view name) const
-{ GLCall(glObjectLabel(GL_FRAMEBUFFER, m_id, name.size(), name.data())); }
+{ GLCall(glObjectLabel(GL_FRAMEBUFFER, m_id, static_cast<GLsizei>(name.size()), name.data())); }

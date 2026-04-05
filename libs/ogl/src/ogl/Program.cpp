@@ -13,67 +13,68 @@ GLuint createProgram()
   return id;
 }
 
-Program::Program(const std::string &vertexPath,
-  const std::string &fragmentPath,
-  const std::vector<ShaderSourceInfo> &additional,
-  const std::map<std::string, std::string> &replacements)
+Program::Program([[maybe_unused]] const std::string &vertexPath,
+  [[maybe_unused]] const std::string &fragmentPath,
+  [[maybe_unused]] const std::vector<ShaderSourceInfo> &additional,
+  [[maybe_unused]] const std::map<std::string, std::string> &replacements)
   : m_id(createProgram())
 {
-  // create shaders and attach to the program
-  const Shader vertexShader{ vertexPath, Shader::Type::VERTEX, replacements };
-  const Shader fragmentShader{ fragmentPath, Shader::Type::FRAGMENT, replacements };
-  const std::vector<Shader> additionalShaders = additional | std::views::transform([](const auto &information) {
-    return Shader{ information.path, information.type };
-  }) | std::ranges::to<std::vector<Shader>>();
-
-  GLCall(glAttachShader(m_id, vertexShader.getId()));
-  GLCall(glAttachShader(m_id, fragmentShader.getId()));
-  for (const auto &shader : additionalShaders) { GLCall(glAttachShader(m_id, shader.getId())); }
-
-  // link the program, check for errors
-  GLCall(glLinkProgram(m_id));
-  GLint result;
-  GLCall(glGetProgramiv(m_id, GL_LINK_STATUS, &result));
-  if (GL_FALSE == result) {
-    GLint length;
-    GLCall(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
-
-    std::string infoLog(static_cast<size_t>(length), 0);
-    GLCall(glGetProgramInfoLog(m_id, length, &length, infoLog.data()));
-
-    fmt::println(stderr, "[Program Error]: Failed to link program!");
-    fmt::println(stderr, "{}", infoLog);
-  }
-
-  GLCall(glDetachShader(m_id, vertexShader.getId()));
-  GLCall(glDetachShader(m_id, fragmentShader.getId()));
-  for (const auto &shader : additionalShaders) { GLCall(glDetachShader(m_id, shader.getId())); }
+  // // create shaders and attach to the program
+  // const Shader vertexShader{ vertexPath, ShaderType::VERTEX, replacements };
+  // const Shader fragmentShader{ fragmentPath, ShaderType::FRAGMENT, replacements };
+  // const std::vector<Shader> additionalShaders = additional | std::views::transform([](const auto &information) {
+  //   return Shader{ information.path, information.type };
+  // }) | std::ranges::to<std::vector<Shader>>();
+  //
+  // GLCall(glAttachShader(m_id, vertexShader.getId()));
+  // GLCall(glAttachShader(m_id, fragmentShader.getId()));
+  // for (const auto &shader : additionalShaders) { GLCall(glAttachShader(m_id, shader.getId())); }
+  //
+  // // link the program, check for errors
+  // GLCall(glLinkProgram(m_id));
+  // GLint result;
+  // GLCall(glGetProgramiv(m_id, GL_LINK_STATUS, &result));
+  // if (GL_FALSE == result) {
+  //   GLint length;
+  //   GLCall(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
+  //
+  //   std::string infoLog(static_cast<std::size_t>(length), 0);
+  //   GLCall(glGetProgramInfoLog(m_id, length, &length, infoLog.data()));
+  //
+  //   fmt::println(stderr, "[Program Error]: Failed to link program!");
+  //   fmt::println(stderr, "{}", infoLog);
+  // }
+  //
+  // GLCall(glDetachShader(m_id, vertexShader.getId()));
+  // GLCall(glDetachShader(m_id, fragmentShader.getId()));
+  // for (const auto &shader : additionalShaders) { GLCall(glDetachShader(m_id, shader.getId())); }
 }
 
-Program::Program(const std::string &computePath, const std::map<std::string, std::string> &replacements)
+Program::Program([[maybe_unused]] const std::string &computePath,
+  [[maybe_unused]] const std::map<std::string, std::string> &replacements)
   : m_id(createProgram())
 {
-  // create shaders and attach to the program
-  const Shader computeShader{ computePath, Shader::Type::COMPUTE, replacements };
-
-  GLCall(glAttachShader(m_id, computeShader.getId()));
-
-  // link the program, check for errors
-  GLCall(glLinkProgram(m_id));
-  GLint result;
-  GLCall(glGetProgramiv(m_id, GL_LINK_STATUS, &result));
-  if (GL_FALSE == result) {
-    GLint length;
-    GLCall(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
-
-    std::string infoLog(static_cast<size_t>(length), 0);
-    GLCall(glGetProgramInfoLog(m_id, length, &length, infoLog.data()));
-
-    fmt::println(stderr, "[Program Error]: Failed to link program!");
-    fmt::println(stderr, "{}", infoLog);
-  }
-
-  GLCall(glDetachShader(m_id, computeShader.getId()));
+  // // create shaders and attach to the program
+  // const Shader computeShader{ computePath, Shader::Type::COMPUTE, replacements };
+  //
+  // GLCall(glAttachShader(m_id, computeShader.getId()));
+  //
+  // // link the program, check for errors
+  // GLCall(glLinkProgram(m_id));
+  // GLint result;
+  // GLCall(glGetProgramiv(m_id, GL_LINK_STATUS, &result));
+  // if (GL_FALSE == result) {
+  //   GLint length;
+  //   GLCall(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &length));
+  //
+  //   std::string infoLog(static_cast<std::size_t>(length), 0);
+  //   GLCall(glGetProgramInfoLog(m_id, length, &length, infoLog.data()));
+  //
+  //   fmt::println(stderr, "[Program Error]: Failed to link program!");
+  //   fmt::println(stderr, "{}", infoLog);
+  // }
+  //
+  // GLCall(glDetachShader(m_id, computeShader.getId()));
 }
 
 Program::~Program()

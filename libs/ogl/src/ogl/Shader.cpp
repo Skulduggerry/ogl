@@ -1,71 +1,127 @@
 #include "ogl/Shader.hpp"
 #include "ogl/Logging.hpp"
 
-#include <fmt/base.h>
+#include <fmt/format.h>
+#include <cctype>
+#include <filesystem>
 #include <fstream>
-#include <regex>
-#include <sstream>
+#include <optional>
 #include <utility>
 
-std::string readFile(const std::string &path)
+static void trim(std::string_view &view)
 {
-  std::ifstream shaderFile{ path, std::ios::in };
-
-  if (!shaderFile.is_open()) {
-    fmt::println(stderr, "[Shader Error]: Could not read file {}.", path);
-    return "";
-  }
-
-  std::stringstream buffer{};
-  buffer << shaderFile.rdbuf();
-  return buffer.str();
+  while (!view.empty() && std::isspace(static_cast<unsigned char>(view.front()))) view.remove_prefix(1);
+  while (!view.empty() && std::isspace(static_cast<unsigned char>(view.back()))) view.remove_suffix(1);
 }
 
-std::string mapReplace(std::string text, const std::map<std::string, std::string> &replacements)
+static std::optional<std::string> readFile(std::filesystem::path path)
 {
-  if (replacements.empty()) return text;
+  std::ifstream file{ path, std::ios::in | std::ios::binary };
+  if (!file.is_open()) { return std::nullopt; }
 
-  const std::string pattern_str =
-    "\\{\\{\\s*("
-    + (replacements | std::views::keys | std::views::join_with(std::string{ "|" }) | std::ranges::to<std::string>())
-    + ")\\s*\\}\\}";
-  const std::regex pattern(pattern_str);
+  file.seekg(0, std::ios::end);
+  const std::streamsize size = file.tellg();
+  if (size < 0) return std::nullopt;
+  file.seekg(0, std::ios::beg);
 
-  std::string result{};
-  const auto words_begin = std::sregex_iterator(text.begin(), text.end(), pattern);
-  const auto words_end = std::sregex_iterator();
+  std::string contents(static_cast<std::size_t>(size), '\0');
+  if (!file.read(contents.data(), size)) return std::nullopt;
 
-  size_t last_pos = 0;
-  for (std::sregex_iterator i = words_begin; i != words_end; ++i) {
-    const std::smatch &match = *i;
-
-    // Add the text before the match
-    result += text.substr(last_pos, static_cast<size_t>(match.position()) - last_pos);
-
-    // Find the replacement value (match[1] is the key inside the brackets)
-    result += replacements.at(match[1].str());
-
-    last_pos = static_cast<size_t>(match.position() + match.length());
-  }
-
-  // Add the remaining part of the string
-  text = result + text.substr(last_pos);
-  return text;
+  return contents;
 }
 
-GLuint createShader(Shader::Type type)
+static std::string mapReplace(std::string_view text, const Replacements &replacements)
+{
+  std::string out{};
+  out.reserve(text.size());
+
+  if (replacements.empty()) {
+    out = text;
+    return out;
+  }
+
+  std::size_t i = 0;
+  while (i < text.size()) {
+    // find next {{
+    const std::size_t open = text.find("{{", i);
+    if (open == std::string_view::npos) {
+      out.append(text.substr(i));
+      break;
+    }
+
+    // copy everything before {{
+    out.append(text.substr(i, open - i));
+
+    // find closing }}
+    const std::size_t close = text.find("}}", open + 2);
+    if (close == std::string_view::npos) {
+      // no closing braces -> treat as literal
+      out.append(text.substr(open));
+      break;
+    }
+
+    std::string_view key = text.substr(open + 2, close - (open + 2));
+    trim(key);
+
+    // replace if found or keep original token
+    if (auto it = replacements.find(key); it != replacements.end()) {
+      out.append(it->second);
+    } else {
+      out.append(text.substr(open, (close + 2) - open));
+    }
+
+    i = close + 2;
+  }
+
+  return out;
+}
+
+static GLuint createShader(ShaderType type)
 {
   GLCall(const GLuint id = glCreateShader(static_cast<GLenum>(type)));
   return id;
 }
 
-Shader::Shader(const std::string &path, const Type type, const std::map<std::string, std::string> &replacements)
-  : m_id(createShader(type))
-{
-  std::string code = readFile(path);
-  code = mapReplace(code, replacements);
+Shader::Shader(const ShaderType type) : m_id(createShader(type)), m_type(type) {}
 
-  const char *src = code.c_str();
+Shader::~Shader()
+{
+  if (hasName()) { GLCall(glDeleteShader(m_id)); }
+}
+
+Shader::Shader(Shader &&other) noexcept
+  : m_id(std::exchange(other.m_id, 0)), m_type(other.m_type), m_compiled(std::exchange(other.m_compiled, false))
+{}
+
+Shader &Shader::operator=(Shader &&other) noexcept
+{
+  if (this == &other) { return *this; }
+
+  // release currently owned resource
+  if (hasName()) { GLCall(glDeleteShader(m_id)); }
+
+  // steal
+  m_id = std::exchange(other.m_id, 0);
+  m_type = other.m_type;
+  m_compiled = std::exchange(other.m_compiled, false);
+
+  return *this;
+}
+
+ShaderSource Shader::loadSource(const std::string_view path, const Replacements &replacements)
+{
+  const auto absPath = std::filesystem::absolute(std::filesystem::path{ path });
+
+  const std::optional<std::string> file = readFile(absPath);
+  if (!file.has_value()) {
+    return { false, absPath.string(), {}, fmt::format("Unable to load file at: {}", absPath.c_str()) };
+  }
+  return { true, absPath.string(), mapReplace(std::string_view{ *file }, replacements), {} };
+}
+
+ShaderCompileResult Shader::compile(const std::string_view code)
+{
+  const char *src = code.data();
   const auto size = static_cast<GLint>(code.size());
 
   GLCall(glShaderSource(m_id, 1, &src, &size));
@@ -77,30 +133,16 @@ Shader::Shader(const std::string &path, const Type type, const std::map<std::str
     GLint length;
     GLCall(glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &length));
 
-    std::string infoLog(static_cast<size_t>(length), 0);
+    std::string infoLog(static_cast<std::size_t>(length), '\0');
     GLCall(glGetShaderInfoLog(m_id, length, &length, infoLog.data()));
 
-    fmt::println(stderr, "[Shader Error]: Failed to compile shader! {}", path);
-    fmt::println(stderr, "{}", infoLog);
+    m_compiled = false;
+    return { false, infoLog };
   }
+
+  m_compiled = true;
+  return { true, std::string{} };
 }
 
-Shader::~Shader()
-{
-  if (hasName()) { GLCall(glDeleteShader(m_id)); }
-}
-
-Shader::Shader(Shader &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}
-
-Shader &Shader::operator=(Shader &&other) noexcept
-{
-  if (this == &other) { return *this; }
-
-  // release currently owned resource
-  if (hasName()) { GLCall(glDeleteShader(m_id)); }
-
-  // steal
-  m_id = std::exchange(other.m_id, 0);
-
-  return *this;
-}
+void Shader::debugLabel(const std::string_view name) const
+{ GLCall(glObjectLabel(GL_SHADER, m_id, static_cast<GLsizei>(name.size()), name.data())); }

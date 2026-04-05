@@ -103,7 +103,7 @@ int main()
   const Program shader{ RESOURCE_PATH "shaders/shader.vert", RESOURCE_PATH "shaders/shader.frag" };
   const Program simpleDepthShader{ RESOURCE_PATH "shaders/shadow_mapping_depth.vert",
     RESOURCE_PATH "shaders/shadow_mapping_depth.frag",
-    { Program::ShaderSourceInfo{ RESOURCE_PATH "shaders/shadow_mapping_depth.geom", Shader::Type::GEOMETRY } } };
+    { Program::ShaderSourceInfo{ RESOURCE_PATH "shaders/shadow_mapping_depth.geom", ShaderType::GEOMETRY } } };
   const Program debugDepthQuad(RESOURCE_PATH "shaders/debug_quad.vert", RESOURCE_PATH "shaders/debug_quad.frag");
   const Program debugCascadeShader(
     RESOURCE_PATH "shaders/debug_cascade.vert", RESOURCE_PATH "shaders/debug_cascade.frag");

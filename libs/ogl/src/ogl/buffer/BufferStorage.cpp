@@ -107,19 +107,19 @@ void BufferStorage::invalidateSubDataBytes(const GLintptr byteOffset, const GLsi
 BufferMapping<std::byte> BufferStorage::mapBytes() const
 {
   GLCall(void *ptr = glMapNamedBuffer(m_id, GL_READ_WRITE));
-  return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<size_t>(m_byteSize) };
+  return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<std::size_t>(m_byteSize) };
 }
 
 BufferMapping<const std::byte> BufferStorage::mapReadBytes() const
 {
   GLCall(const void *ptr = glMapNamedBuffer(m_id, GL_READ_ONLY));
-  return BufferMapping{ m_id, static_cast<const std::byte *>(ptr), static_cast<size_t>(m_byteSize) };
+  return BufferMapping{ m_id, static_cast<const std::byte *>(ptr), static_cast<std::size_t>(m_byteSize) };
 }
 
 BufferMapping<std::byte> BufferStorage::mapWriteBytes() const
 {
   GLCall(void *ptr = glMapNamedBuffer(m_id, GL_WRITE_ONLY));
-  return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<size_t>(m_byteSize) };
+  return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<std::size_t>(m_byteSize) };
 }
 
 BufferMapping<std::byte> BufferStorage::mapRangeBytes(const GLintptr byteOffset,
@@ -130,7 +130,7 @@ BufferMapping<std::byte> BufferStorage::mapRangeBytes(const GLintptr byteOffset,
 
   GLbitfield const bitfield = toBitfield(flags) | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT;
   GLCall(void *ptr = glMapNamedBufferRange(m_id, byteOffset, byteCount, bitfield));
-  return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<size_t>(byteCount) };
+  return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<std::size_t>(byteCount) };
 }
 
 BufferMapping<const std::byte> BufferStorage::mapRangeReadBytes(const GLintptr byteOffset,
@@ -141,7 +141,7 @@ BufferMapping<const std::byte> BufferStorage::mapRangeReadBytes(const GLintptr b
 
   GLbitfield const bitfield = toBitfield(flags) | GL_MAP_READ_BIT;
   GLCall(const void *ptr = glMapNamedBufferRange(m_id, byteOffset, byteCount, bitfield));
-  return BufferMapping{ m_id, static_cast<const std::byte *>(ptr), static_cast<size_t>(byteCount) };
+  return BufferMapping{ m_id, static_cast<const std::byte *>(ptr), static_cast<std::size_t>(byteCount) };
 }
 
 BufferMapping<std::byte> BufferStorage::mapRangeWriteBytes(const GLintptr byteOffset,
@@ -152,8 +152,8 @@ BufferMapping<std::byte> BufferStorage::mapRangeWriteBytes(const GLintptr byteOf
 
   GLbitfield const bitfield = toBitfield(flags) | GL_MAP_WRITE_BIT;
   GLCall(void *ptr = glMapNamedBufferRange(m_id, byteOffset, byteCount, bitfield));
-  return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<size_t>(byteCount) };
+  return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<std::size_t>(byteCount) };
 }
 
 void BufferStorage::debugLabel(const std::string_view name) const
-{ GLCall(glObjectLabel(GL_BUFFER, m_id, name.size(), name.data())); }
+{ GLCall(glObjectLabel(GL_BUFFER, m_id, static_cast<GLsizei>(name.size()), name.data())); }

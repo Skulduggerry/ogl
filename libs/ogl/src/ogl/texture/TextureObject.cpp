@@ -43,4 +43,4 @@ template<TextureTarget TARGET> void TextureObject<TARGET>::generateMipmap() cons
 { GLCall(glGenerateTextureMipmap(m_id)); }
 
 template<TextureTarget TARGET> void TextureObject<TARGET>::debugLabel(const std::string_view name) const
-{ GLCall(glObjectLabel(GL_TEXTURE, m_id, name.size(), name.data())); }
+{ GLCall(glObjectLabel(GL_TEXTURE, m_id, static_cast<GLsizei>(name.size()), name.data())); }

@@ -35,7 +35,7 @@ Renderbuffer &Renderbuffer::operator=(Renderbuffer &&other) noexcept
 
   // steal
   m_id = std::exchange(other.m_id, 0);
-  m_internalFormat = std::exchange(other.m_internalFormat, InternalImageFormat::RGBA8);
+  m_internalFormat = other.m_internalFormat;
   m_width = std::exchange(other.m_width, 0);
   m_height = std::exchange(other.m_height, 0);
 
@@ -55,4 +55,6 @@ void Renderbuffer::storage(const InternalImageFormat internalFormat, const GLsiz
 }
 
 void Renderbuffer::debugLabel(const std::string_view name) const
-{ GLCall(glObjectLabel(GL_RENDERER, m_id, name.size(), name.data())); }
+{
+  GLCall(glObjectLabel(GL_RENDERER, m_id, static_cast<GLsizei>(name.size()), name.data()));
+}

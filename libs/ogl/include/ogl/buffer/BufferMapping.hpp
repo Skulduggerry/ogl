@@ -22,7 +22,7 @@ public:
 
   BufferMapping() noexcept = default;
 
-  BufferMapping(const GLuint bufferId, T *ptr, const size_t count) noexcept : m_bufferId(bufferId), m_view(ptr, count)
+  BufferMapping(const GLuint bufferId, T *ptr, const std::size_t count) noexcept : m_bufferId(bufferId), m_view(ptr, count)
   {}
 
   BufferMapping(const BufferMapping &other) = delete;
@@ -66,7 +66,7 @@ public:
 
   [[nodiscard]] auto size() const noexcept { return m_view.size(); }
 
-  T &operator[](size_t index) const noexcept { return m_view[index]; }
+  T &operator[](std::size_t index) const noexcept { return m_view[index]; }
 
   [[nodiscard]] auto begin() const noexcept { return m_view.begin(); }
 
@@ -94,7 +94,7 @@ template<class T> [[nodiscard]] auto asBytes(BufferMapping<T> &&oldMapping)
   using ByteT = std::conditional_t<std::is_const_v<T>, const std::byte, std::byte>;
 
   auto *ptr = reinterpret_cast<ByteT *>(oldMapping.data());
-  const size_t byteCount = oldMapping.m_view.size_bytes();
+  const std::size_t byteCount = oldMapping.m_view.size_bytes();
 
   // reinterpret pointer with correct constness
   BufferMapping<ByteT> newMapping{ oldMapping.m_bufferId, ptr, byteCount };
@@ -116,13 +116,13 @@ template<typename U, typename ByteT>
 
   using BaseU = std::remove_const_t<U>;
 
-  const size_t totalBytes = oldMapping.m_view.size_bytes();
+  const std::size_t totalBytes = oldMapping.m_view.size_bytes();
   ASSERT(totalBytes % sizeof(BaseU) == 0);
 
   const auto addr = reinterpret_cast<std::uintptr_t>(oldMapping.data());
   ASSERT(addr % alignof(BaseU) == 0);
 
-  const size_t count = totalBytes / sizeof(BaseU);
+  const std::size_t count = totalBytes / sizeof(BaseU);
   auto *ptr = reinterpret_cast<U *>(oldMapping.data());
 
   BufferMapping<U> newMapping{ oldMapping.m_bufferId, ptr, count };
