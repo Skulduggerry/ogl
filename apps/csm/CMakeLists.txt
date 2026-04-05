@@ -12,7 +12,7 @@ set_target_properties(fmt::fmt PROPERTIES INTERFACE_COMPILE_OPTIONS
 # Link dependencies
 target_link_system_libraries(csm PRIVATE fmt::fmt glfw)
 target_include_directories(csm PRIVATE ${Stb_INCLUDE_DIR})
-target_link_libraries(csm PRIVATE GLKit)
+target_link_libraries(csm PRIVATE glkit)
 
 # set compile definitions
 target_compile_definitions(csm PRIVATE RESOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/")

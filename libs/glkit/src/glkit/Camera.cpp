@@ -1,4 +1,4 @@
-#include "../../include/GLKit/Camera.hpp"
+#include "glkit/Camera.hpp"
 
 Camera::Camera(glm::vec3 position, glm::vec3 worldUp, float yaw, float pitch)
   : m_position(position), m_worldUp(worldUp), m_yaw(yaw), m_pitch(pitch)

@@ -1,4 +1,4 @@
-#include "GLKit/Camera.hpp"
+#include "glkit/Camera.hpp"
 #include "raii-gl/Logging.hpp"
 #include "raii-gl/buffer/UniformBuffer.hpp"
 #include "raii-gl/render/Framebuffer.hpp"

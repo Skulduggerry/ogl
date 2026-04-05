@@ -128,7 +128,7 @@ project_options(
 )
 
 add_subdirectory(libs/raii-gl)
-add_subdirectory(libs/GLKit)
+add_subdirectory(libs/glkit)
 add_subdirectory(apps/csm)
 
 # set the startup project for the "play" button in MSVC
