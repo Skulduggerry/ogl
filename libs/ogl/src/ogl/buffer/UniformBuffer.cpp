@@ -1,29 +1,29 @@
 #include "ogl/buffer/UniformBuffer.hpp"
 
-#include "ogl/GlLimits.hpp"
+#include "ogl/GlContextCapabilities.hpp"
 
 void UniformBuffer::allocateImmutableBytes(const GLsizeiptr byteCount, const std::span<const BufferStorageFlag> flags)
 {
-  ASSERT(byteCount <= GlLimits::getInstance().maxUniformBlockSize);
+  ASSERT(byteCount <= GlContextCapabilities::getInstance().maxUniformBlockSize);
   m_storage.allocateImmutableBytes(byteCount, flags);
 }
 
 void UniformBuffer::allocateImmutableBytes(const std::span<const std::byte> bytes,
   const std::span<const BufferStorageFlag> flags)
 {
-  ASSERT(bytes.size_bytes() <= static_cast<size_t>(GlLimits::getInstance().maxUniformBlockSize));
+  ASSERT(bytes.size_bytes() <= static_cast<size_t>(GlContextCapabilities::getInstance().maxUniformBlockSize));
   m_storage.allocateImmutableBytes(bytes, flags);
 }
 
 void UniformBuffer::allocateMutableBytes(const GLsizeiptr byteCount, const BufferUsage bufferUsage)
 {
-  ASSERT(byteCount <= GlLimits::getInstance().maxUniformBlockSize);
+  ASSERT(byteCount <= GlContextCapabilities::getInstance().maxUniformBlockSize);
   m_storage.allocateMutableBytes(byteCount, bufferUsage);
 }
 
 void UniformBuffer::allocateMutableBytes(const std::span<const std::byte> bytes, const BufferUsage bufferUsage)
 {
-  ASSERT(bytes.size_bytes() <= static_cast<size_t>(GlLimits::getInstance().maxUniformBlockSize));
+  ASSERT(bytes.size_bytes() <= static_cast<size_t>(GlContextCapabilities::getInstance().maxUniformBlockSize));
   m_storage.allocateMutableBytes(bytes, bufferUsage);
 }
 
@@ -54,7 +54,7 @@ void UniformBuffer::bindBase(const GLuint bindingIndex) const
 void UniformBuffer::bindRange(const GLuint bindingIndex, const GLintptr byteOffset, const GLsizeiptr byteCount) const
 {
   ASSERT(byteOffset + byteCount <= m_storage.getByteSize());
-  ASSERT(byteOffset % GlLimits::getInstance().uboOffsetAlignment == 0);
+  ASSERT(byteOffset % GlContextCapabilities::getInstance().uboOffsetAlignment == 0);
 
   GLCall(glBindBufferRange(GL_UNIFORM_BUFFER, bindingIndex, m_storage.getId(), byteOffset, byteCount));
 }

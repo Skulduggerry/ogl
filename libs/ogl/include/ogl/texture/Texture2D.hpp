@@ -42,9 +42,9 @@ public:
 
   void generateMipmap() const;
 
-  void storage(InternalImageFormat format, GLsizei width, GLsizei height);
+  void storage(InternalImageFormat internalFormat, GLsizei width, GLsizei height);
 
-  void storage(GLsizei mipLevels, InternalImageFormat format, GLsizei width, GLsizei height);
+  void storage(GLsizei mipLevels, InternalImageFormat internalFormat, GLsizei width, GLsizei height);
 
   void subImageBytes(GLint mipLevel,
     GLint xOffset,

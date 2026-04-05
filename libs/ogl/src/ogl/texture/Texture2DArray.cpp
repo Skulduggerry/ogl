@@ -14,14 +14,14 @@ void Texture2DArray::generateMipmap() const
   m_texture.generateMipmap();
 }
 
-void Texture2DArray::storage(const InternalImageFormat format,
+void Texture2DArray::storage(const InternalImageFormat internalFormat,
   const GLsizei width,
   const GLsizei height,
   const GLsizei layers)
-{ storage(calculateMipLevels(width, height), format, width, height, layers); }
+{ storage(calculateMipLevels(width, height), internalFormat, width, height, layers); }
 
 void Texture2DArray::storage(const GLsizei mipLevels,
-  const InternalImageFormat format,
+  const InternalImageFormat internalFormat,
   const GLsizei width,
   const GLsizei height,
   const GLsizei layerCount)
@@ -36,7 +36,7 @@ void Texture2DArray::storage(const GLsizei mipLevels,
   m_mipLevels = mipLevels;
   m_allocated = true;
 
-  GLCall(glTextureStorage3D(getId(), mipLevels, static_cast<GLenum>(format), width, height, layerCount));
+  GLCall(glTextureStorage3D(getId(), mipLevels, static_cast<GLenum>(internalFormat), width, height, layerCount));
 }
 
 void Texture2DArray::subImageBytes(const GLint mipLevel,

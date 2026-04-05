@@ -6,7 +6,7 @@ add_library(ogl
         "src/ogl/Shader.cpp"
         "src/ogl/VertexArray.cpp"
 
-        "src/ogl/GlLimits.cpp"
+        "src/ogl/GlContextCapabilities.cpp"
         "src/ogl/Types.cpp"
 
         "src/ogl/buffer/BufferStorage.cpp"

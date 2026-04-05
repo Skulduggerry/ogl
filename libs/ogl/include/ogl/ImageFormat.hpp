@@ -1,5 +1,6 @@
-#ifndef OGL_INTERNALFORMATS_HPP
-#define OGL_INTERNALFORMATS_HPP
+#ifndef OGL_INTERNALFORMAT_HPP
+#define OGL_INTERNALFORMAT_HPP
+
 #include <glad/glad.h>
 
 enum struct ImageFormat : GLenum {
@@ -35,7 +36,7 @@ enum struct InternalImageFormat : GLenum {
   RGB8_SNORM = GL_RGB8_SNORM,
   RGB10 = GL_RGB10,
   RGB12 = GL_RGB12,
-  RGB16_NORM = GL_RGB16_SNORM,
+  RGB16_SNORM = GL_RGB16_SNORM,
 
   RGBA2 = GL_RGBA2,
   RGBA4 = GL_RGBA4,
