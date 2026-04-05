@@ -49,7 +49,8 @@ public:
 
   void storage(InternalImageFormat internalFormat, GLsizei width, GLsizei height, GLsizei layers);
 
-  void storage(GLsizei mipLevels, InternalImageFormat internalFormat, GLsizei width, GLsizei height, GLsizei layerCount);
+  void
+    storage(GLsizei mipLevels, InternalImageFormat internalFormat, GLsizei width, GLsizei height, GLsizei layerCount);
 
   void subImageBytes(GLint mipLevel,
     GLint xOffset,
@@ -61,6 +62,8 @@ public:
     ImageFormat format,
     ImageDataType type,
     std::span<const std::byte> pixels) const;
+
+  void debugLabel(const std::string_view name) const { m_texture.debugLabel(name); }
 };
 
 #endif

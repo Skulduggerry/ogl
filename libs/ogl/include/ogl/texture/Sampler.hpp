@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <glm/vec4.hpp>
+#include <string_view>
 
 class Sampler
 {
@@ -40,6 +41,8 @@ public:
   void minLod(float v) const;
   void maxLod(float v) const;
   void lodBias(float v) const;
+
+  void debugLabel(std::string_view name) const;
 };
 
 #endif

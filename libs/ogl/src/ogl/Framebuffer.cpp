@@ -91,3 +91,6 @@ void Framebuffer::bind(const FramebufferTarget target) const
 
 void Framebuffer::bindDefault(const FramebufferTarget target)
 { GLCall(glBindFramebuffer(static_cast<GLenum>(target), 0)); }
+
+void Framebuffer::debugLabel(const std::string_view name) const
+{ GLCall(glObjectLabel(GL_FRAMEBUFFER, m_id, name.size(), name.data())); }

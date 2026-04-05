@@ -54,6 +54,8 @@ public:
     ImageFormat format,
     ImageDataType type,
     std::span<const std::byte> pixels) const;
+
+  void debugLabel(const std::string_view name) const { m_texture.debugLabel(name); }
 };
 
 #endif

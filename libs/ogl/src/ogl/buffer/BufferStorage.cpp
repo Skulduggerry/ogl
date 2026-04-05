@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <numeric>
+#include <string_view>
 
 static GLuint createBuffer()
 {
@@ -153,3 +154,6 @@ BufferMapping<std::byte> BufferStorage::mapRangeWriteBytes(const GLintptr byteOf
   GLCall(void *ptr = glMapNamedBufferRange(m_id, byteOffset, byteCount, bitfield));
   return BufferMapping{ m_id, static_cast<std::byte *>(ptr), static_cast<size_t>(byteCount) };
 }
+
+void BufferStorage::debugLabel(const std::string_view name) const
+{ GLCall(glObjectLabel(GL_BUFFER, m_id, name.size(), name.data())); }

@@ -6,6 +6,7 @@
 
 #include <glad/glad.h>
 #include <span>
+#include <string_view>
 
 class BufferStorage
 {
@@ -66,6 +67,8 @@ public:
 
   [[nodiscard]] BufferMapping<std::byte>
     mapRangeWriteBytes(GLintptr byteOffset, GLsizeiptr byteCount, std::span<const BufferMappingFlag> flags) const;
+
+  void debugLabel(std::string_view name) const;
 };
 
 #endif

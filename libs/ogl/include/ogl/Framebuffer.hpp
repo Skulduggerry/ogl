@@ -71,6 +71,8 @@ public:
   void bind(FramebufferTarget target = FramebufferTarget::FRAMEBUFFER) const;
 
   static void bindDefault(FramebufferTarget target = FramebufferTarget::FRAMEBUFFER);
+
+  void debugLabel(std::string_view name) const;
 };
 
 #endif

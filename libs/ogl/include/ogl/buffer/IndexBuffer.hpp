@@ -99,6 +99,8 @@ public:
     const GLsizeiptr byteCount = elementCount * sizeof(T);
     return as<T>(m_storage.mapRangeWriteBytes(byteOffset, byteCount, flags));
   }
+
+  void debugLabel(const std::string_view name) const { m_storage.debugLabel(name); }
 };
 
 #endif

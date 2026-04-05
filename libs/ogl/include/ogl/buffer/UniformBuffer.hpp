@@ -64,6 +64,8 @@ public:
   void bindBase(GLuint bindingIndex) const;
 
   void bindRange(GLuint bindingIndex, GLintptr byteOffset, GLsizeiptr byteCount) const;
+
+  void debugLabel(const std::string_view name) const { m_storage.debugLabel(name); }
 };
 
 #endif

@@ -3,14 +3,16 @@
 #include "ImageFormat.hpp"
 
 #include <glad/glad.h>
+#include <string_view>
 
 class Renderbuffer
 {
   GLuint m_id;
 
-  InternalImageFormat m_internalFormat = InternalImageFormat::DEPTH_COMPONENT32F;
+  InternalImageFormat m_internalFormat = InternalImageFormat::RGBA8;
   GLsizei m_width = 0;
   GLsizei m_height = 0;
+  bool m_allocated = false;
 
 public:
   Renderbuffer();
@@ -26,11 +28,15 @@ public:
 
   [[nodiscard]] bool hasName() const noexcept { return m_id != 0; }
 
+  [[nodiscard]] bool isAllocated() const noexcept { return m_allocated; }
+
   void storage(InternalImageFormat internalFormat, GLsizei width, GLsizei height);
 
   [[nodiscard]] InternalImageFormat getInternalFormat() const { return m_internalFormat; }
   [[nodiscard]] GLsizei getWidth() const { return m_width; }
   [[nodiscard]] GLsizei getHeight() const { return m_height; }
+
+  void debugLabel(std::string_view name) const;
 };
 
 #endif

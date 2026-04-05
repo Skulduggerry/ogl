@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <glm/vec4.hpp>
+#include <string_view>
 
 enum struct TextureTarget : GLenum {
   TEXTURE_2D = GL_TEXTURE_2D,
@@ -35,6 +36,8 @@ public:
   void bindTextureUnit(GLuint unit) const;
 
   void generateMipmap() const;
+
+  void debugLabel(std::string_view name) const;
 };
 
 template class TextureObject<TextureTarget::TEXTURE_2D>;
