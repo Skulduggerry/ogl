@@ -31,7 +31,7 @@ Renderbuffer &Renderbuffer::operator=(Renderbuffer &&other) noexcept
   if (this == &other) { return *this; }
 
   // release currently owned resource
-  if (hasName()) { GLCall(glDeleteFramebuffers(1, &m_id)); }
+  if (hasName()) { GLCall(glDeleteRenderbuffers(1, &m_id)); }
 
   // steal
   m_id = std::exchange(other.m_id, 0);

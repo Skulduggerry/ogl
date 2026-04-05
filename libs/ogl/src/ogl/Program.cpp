@@ -88,9 +88,13 @@ Program::Program(Program &&other) noexcept
 Program &Program::operator=(Program &&other) noexcept
 {
   if (this == &other) { return *this; }
-  using std::swap;
-  swap(m_id, other.m_id);
-  swap(m_uniformLocationCache, other.m_uniformLocationCache);
+
+  // release currently owned resource
+  if (hasName()) { GLCall(glDeleteProgram(m_id)); }
+
+  // steal
+  m_id = std::exchange(other.m_id, 0);
+
   return *this;
 }
 

@@ -21,8 +21,13 @@ VertexArray::VertexArray(VertexArray &&other) noexcept : m_id(std::exchange(othe
 VertexArray &VertexArray::operator=(VertexArray &&other) noexcept
 {
   if (this == &other) { return *this; }
-  using std::swap;
-  swap(m_id, other.m_id);
+
+  // release currently owned resource
+  if (hasName()) { GLCall(glDeleteVertexArrays(1, &m_id)); }
+
+  // steal
+  m_id = std::exchange(other.m_id, 0);
+
   return *this;
 }
 

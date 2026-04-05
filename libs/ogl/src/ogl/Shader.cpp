@@ -95,7 +95,12 @@ Shader::Shader(Shader &&other) noexcept : m_id(std::exchange(other.m_id, 0)) {}
 Shader &Shader::operator=(Shader &&other) noexcept
 {
   if (this == &other) { return *this; }
-  using std::swap;
-  swap(m_id, other.m_id);
+
+  // release currently owned resource
+  if (hasName()) { GLCall(glDeleteShader(m_id)); }
+
+  // steal
+  m_id = std::exchange(other.m_id, 0);
+
   return *this;
 }
