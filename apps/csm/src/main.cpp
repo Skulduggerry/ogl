@@ -128,7 +128,7 @@ int main()
   depthMapSampler.borderColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 
   const Framebuffer lightFBO{};
-  lightFBO.attach(lightDepthMaps, Attachment::DEPTH, 0);
+  lightFBO.attach(lightDepthMaps.asLayeredAttachment(), Attachment::DEPTH);
   lightFBO.drawBuffer(Attachment::NONE);
   lightFBO.readBuffer(Attachment::NONE);
   if (!lightFBO.isComplete()) {
@@ -182,7 +182,7 @@ int main()
     GLCall(glCullFace(GL_FRONT));
     renderScene(simpleDepthShader);
     GLCall(glCullFace(GL_BACK));
-    DefaultFramebuffer::getInstance().bind();
+    Framebuffer::bindDefault();
 
     // 2. render the scene as normal using the generated depth/shadow map
     if (showQuad) {

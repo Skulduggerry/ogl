@@ -1,5 +1,6 @@
 #ifndef OGL_TEXTURE2D_HPP
 #define OGL_TEXTURE2D_HPP
+#include "TextureAttachment.hpp"
 #include "TextureObject.hpp"
 #include "ogl/ImageFormat.hpp"
 #include "ogl/Types.hpp"
@@ -34,6 +35,8 @@ public:
   [[nodiscard]] GLsizei getMipLevels() const noexcept { return m_mipLevels; }
 
   [[nodiscard]] bool isAllocated() const noexcept { return m_allocated; }
+
+  [[nodiscard]] TextureLevelAttachment asAttachment(const GLint mipLevel = 0) const { return { getId(), mipLevel }; }
 
   void bindTextureUnit(const GLuint unit) const { m_texture.bindTextureUnit(unit); }
 

@@ -3,6 +3,11 @@
 #include "ogl/Logging.hpp"
 #include "ogl/texture/Helper.hpp"
 
+TextureLayerAttachment Texture2DArray::asLayerAttachment(const GLint level, const GLint layer) const
+{ return { getId(), level, layer }; }
+
+TextureLevelAttachment Texture2DArray::asLayeredAttachment(const GLint level) const { return { getId(), level }; }
+
 void Texture2DArray::generateMipmap() const
 {
   ASSERT(isAllocated());

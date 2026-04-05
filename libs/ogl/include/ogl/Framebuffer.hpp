@@ -18,66 +18,59 @@ enum struct Attachment : GLenum {
   DEPTH_STENCIL = GL_DEPTH_STENCIL_ATTACHMENT,
 };
 
-class FramebufferBase
+enum struct FramebufferTarget : GLenum {
+  DRAW_FRAMEBUFFER = GL_DRAW_FRAMEBUFFER,
+  READ_FRAMEBUFFER = GL_READ_FRAMEBUFFER,
+  FRAMEBUFFER = GL_FRAMEBUFFER,
+};
+
+enum struct FramebufferStatus : GLenum {
+  FRAMEBUFFER_COMPLETE = GL_FRAMEBUFFER_COMPLETE,
+  FRAMEBUFFER_UNDEFINED = GL_FRAMEBUFFER_UNDEFINED,
+  FRAMEBUFFER_INCOMPLETE_ATTACHMENT = GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+  FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT = GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT,
+  FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER = GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER,
+  FRAMEBUFFER_INCOMPLETE_READ_BUFFER = GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER,
+  FRAMEBUFFER_UNSUPPORTED = GL_FRAMEBUFFER_UNSUPPORTED,
+  FRAMEBUFFER_INCOMPLETE_MULTISAMPLE = GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE,
+  FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS = GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS,
+};
+
+class Framebuffer
 {
-protected:
   GLuint m_id;
 
-  // don't allow construction of this base class
-  explicit FramebufferBase(GLuint id);
-
-public:
-  // Base class needs virtual destructor
-  virtual ~FramebufferBase() = default;
-
-  // prevent slicing and direct instantiation
-  FramebufferBase(const FramebufferBase &other) = delete;
-  FramebufferBase(FramebufferBase &&other) = delete;
-  FramebufferBase &operator=(const FramebufferBase &other) = delete;
-  FramebufferBase &operator=(FramebufferBase &&other) = delete;
-
-  // bind the framebuffer to the GL_FRAMEBUFFER target
-  void bind() const;
-};
-
-class DefaultFramebuffer final : public FramebufferBase
-{
-  // don't allow creation of this class
-  DefaultFramebuffer();
-  ~DefaultFramebuffer() override = default;
-
-public:
-  static DefaultFramebuffer &getInstance();
-};
-
-class Framebuffer final : public FramebufferBase
-{
 public:
   Framebuffer();
-  ~Framebuffer() override;
+  ~Framebuffer();
   Framebuffer(const Framebuffer &other) = delete;
   Framebuffer(Framebuffer &&other) noexcept;
-
   Framebuffer &operator=(const Framebuffer &other) = delete;
   Framebuffer &operator=(Framebuffer &&other) noexcept;
 
+  [[nodiscard]] FramebufferStatus getStatus(FramebufferTarget target = FramebufferTarget::FRAMEBUFFER) const;
+
+  [[nodiscard]] bool isComplete(FramebufferTarget target = FramebufferTarget::FRAMEBUFFER) const;
+
+  [[nodiscard]] bool hasName() const noexcept { return m_id != 0; }
+
   void drawBuffer(Attachment buffer) const;
 
-  void drawBuffers(const std::span<const Attachment> buffers) const
-  {
-    GLCall(glNamedFramebufferDrawBuffers(
-      m_id, static_cast<GLsizei>(buffers.size()), reinterpret_cast<const GLenum *>(buffers.data())));
-  }
+  void drawBuffers(std::span<const Attachment> buffers) const;
 
   void readBuffer(Attachment buffer) const;
 
   void attach(const Renderbuffer &renderbuffer, Attachment attachment) const;
 
-  void attach(const Texture2D &texture, Attachment attachment, GLint level = 0) const;
+  void attach(const TextureLevelAttachment &info, Attachment attachment) const;
 
-  void attach(const Texture2DArray &texture, Attachment attachment, GLint level = 0) const;
+  void attach(const TextureLayerAttachment &info, Attachment attachment) const;
 
-  [[nodiscard]] bool isComplete() const;
+  void detach(Attachment attachment) const;
+
+  void bind(FramebufferTarget target = FramebufferTarget::FRAMEBUFFER) const;
+
+  static void bindDefault(FramebufferTarget target = FramebufferTarget::FRAMEBUFFER);
 };
 
 #endif

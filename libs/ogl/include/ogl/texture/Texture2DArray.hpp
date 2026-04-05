@@ -1,6 +1,7 @@
 #ifndef OGL_TEXTURE2DARRAY_HPP
 #define OGL_TEXTURE2DARRAY_HPP
 
+#include "TextureAttachment.hpp"
 #include "TextureObject.hpp"
 #include "ogl/ImageFormat.hpp"
 #include "ogl/Types.hpp"
@@ -37,6 +38,10 @@ public:
   [[nodiscard]] GLsizei getMipLevels() const noexcept { return m_mipLevels; }
 
   [[nodiscard]] bool isAllocated() const noexcept { return m_allocated; }
+
+  [[nodiscard]] TextureLayerAttachment asLayerAttachment(GLint level, GLint layer) const;
+
+  [[nodiscard]] TextureLevelAttachment asLayeredAttachment(GLint level = 0) const;
 
   void bindTextureUnit(const GLuint unit) const { m_texture.bindTextureUnit(unit); }
 
