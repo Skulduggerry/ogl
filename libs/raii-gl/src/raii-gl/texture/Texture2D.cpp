@@ -43,8 +43,8 @@ void Texture2D::subImageBytes(const GLint mipLevel,
   ASSERT(yOffset >= 0 && height > 0);
   ASSERT(0 <= mipLevel && mipLevel < m_mipLevels);
 
-  const GLsizei levelWidth = std::max(1, m_width >> mipLevel);
-  const GLsizei levelHeight = std::max(1, m_height >> mipLevel);
+  [[maybe_unused]] const GLsizei levelWidth = std::max(1, m_width >> mipLevel);
+  [[maybe_unused]] const GLsizei levelHeight = std::max(1, m_height >> mipLevel);
   ASSERT(xOffset + width <= levelWidth);
   ASSERT(yOffset + height <= levelHeight);
 

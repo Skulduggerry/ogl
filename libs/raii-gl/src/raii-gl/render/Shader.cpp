@@ -7,12 +7,6 @@
 #include <optional>
 #include <utility>
 
-static void trim(std::string_view &view)
-{
-  while (!view.empty() && std::isspace(static_cast<unsigned char>(view.front()))) view.remove_prefix(1);
-  while (!view.empty() && std::isspace(static_cast<unsigned char>(view.back()))) view.remove_suffix(1);
-}
-
 static std::optional<std::string> readFile(std::filesystem::path path)
 {
   std::ifstream file{ path, std::ios::in | std::ios::binary };
@@ -27,6 +21,12 @@ static std::optional<std::string> readFile(std::filesystem::path path)
   if (!file.read(contents.data(), size)) return std::nullopt;
 
   return contents;
+}
+
+static void trim(std::string_view &view)
+{
+  while (!view.empty() && std::isspace(static_cast<unsigned char>(view.front()))) view.remove_prefix(1);
+  while (!view.empty() && std::isspace(static_cast<unsigned char>(view.back()))) view.remove_suffix(1);
 }
 
 static std::string mapReplace(std::string_view text, const Replacements &replacements)
