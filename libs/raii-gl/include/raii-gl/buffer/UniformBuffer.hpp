@@ -2,6 +2,7 @@
 #define OGL_UNIFORMBUFFER_HPP
 
 #include "BufferStorage.hpp"
+#include "raii-gl/detail/TypeTraits.hpp"
 
 class UniformBuffer
 {
@@ -23,17 +24,7 @@ public:
   void allocateMutableBytes(GLsizeiptr byteCount, BufferUsage bufferUsage);
   void allocateMutableBytes(std::span<const std::byte> bytes, BufferUsage bufferUsage);
 
-  template<typename T>
-    requires std::is_trivially_copyable_v<T>
-  void set(GLintptr byteOffset, const T &value) const
-  {
-    const auto bytes = std::as_bytes(std::span{ &value, 1 });
-    subDataBytes(byteOffset, bytes);
-  }
-
-  template<typename T>
-    requires std::is_trivially_copyable_v<T>
-  void setArray(const GLintptr byteOffset, std::span<const T> data) const
+  template<GpuValue T> void setArray(const GLintptr byteOffset, std::span<const T> data) const
   { subDataBytes(byteOffset, std::as_bytes(data)); }
 
   void subDataBytes(GLintptr byteOffset, std::span<const std::byte> bytes) const;

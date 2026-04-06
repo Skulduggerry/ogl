@@ -2,6 +2,7 @@
 #define OGL_BUFFERMAPPING_HPP
 
 #include "raii-gl/Logging.hpp"
+#include "raii-gl/detail/TypeTraits.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -10,9 +11,7 @@
 #include <type_traits>
 #include <utility>
 
-template<typename T>
-  requires std::is_trivially_copyable_v<std::remove_const_t<T>>
-class BufferMapping
+template<GpuValue T> class BufferMapping
 {
   GLuint m_bufferId = 0;
   std::span<T> m_view{};
@@ -60,7 +59,8 @@ public:
   [[nodiscard]] std::span<T> span() const noexcept { return m_view; }
   [[nodiscard]] T *data() const noexcept { return m_view.data(); }
   [[nodiscard]] auto size() const noexcept { return m_view.size(); }
-  T &operator[](std::size_t index) const noexcept { return m_view[index]; }
+  [[nodiscard]] auto size_bytes() const noexcept { return m_view.size_bytes(); }
+  std::span<T>::reference operator[](std::size_t index) const noexcept { return m_view[index]; }
   [[nodiscard]] auto begin() const noexcept { return m_view.begin(); }
   [[nodiscard]] auto end() const noexcept { return m_view.end(); }
 
@@ -98,8 +98,8 @@ template<class T> [[nodiscard]] auto asBytes(BufferMapping<T> &&oldMapping)
   return newMapping;
 }
 
-template<typename U, typename ByteT>
-  requires std::same_as<std::remove_const_t<ByteT>, std::byte> && std::is_trivially_copyable_v<std::remove_const_t<U>>
+template<GpuValue U, typename ByteT>
+  requires std::same_as<std::remove_const_t<ByteT>, std::byte>
 [[nodiscard]] BufferMapping<U> as(BufferMapping<ByteT> &&oldMapping)
 {
   if constexpr (std::is_const_v<ByteT>) {

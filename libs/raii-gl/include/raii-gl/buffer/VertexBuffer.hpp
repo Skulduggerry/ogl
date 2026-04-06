@@ -2,10 +2,9 @@
 #define OGL_VERTEXBUFFER_HPP
 
 #include "BufferStorage.hpp"
+#include "raii-gl/detail/TypeTraits.hpp"
 
-template<typename T>
-  requires std::is_trivially_copyable_v<T>
-class VertexBuffer
+template<GpuValue T> class VertexBuffer
 {
   BufferStorage m_storage;
 
