@@ -4,7 +4,7 @@
 static std::string getString(const GLenum name)
 {
   GLCall(const GLubyte *s = glGetString(name));
-  return s ? reinterpret_cast<const char *>(s) : std::string{};
+  return s ? std::string{ reinterpret_cast<const char *>(s) } : std::string{};
 }
 
 static std::vector<std::string> getExtensions()
