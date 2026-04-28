@@ -1,6 +1,8 @@
 #include "raii-gl/render/Program.hpp"
 #include "raii-gl/Logging.hpp"
 
+#include <array>
+#include <fmt/format.h>
 #include <glm/gtc/type_ptr.hpp>
 #include <utility>
 
@@ -55,25 +57,60 @@ static std::string getProgramInfoLog(const GLuint program)
   return log;
 }
 
-ProgramLinkResult Program::link(const std::span<const Shader *const> shaders)
+std::expected<void, Program::LinkError> Program::link(const std::span<const Shader> shaders)
 {
   m_uniformLocationCache.clear();
   m_uniformBlockIndexCache.clear();
 
   if (shaders.empty()) {
     m_linked = false;
-    return { false, "No shaders provided to Program::link()!" };
+    return std::unexpected{ LinkError{ "No shaders provided to Program::link()!" } };
+  }
+
+  for (const Shader &shader : shaders) {
+    if (!shader.isCompiled()) {
+      m_linked = false;
+      return std::unexpected{ LinkError{ "Attempt to link program with an uncompiled shader!" } };
+    }
+  }
+
+  for (const Shader &shader : shaders) { GLCall(glAttachShader(m_id, shader.getId())); }
+
+  GLCall(glLinkProgram(m_id));
+
+  for (const Shader &shader : shaders) { GLCall(glDetachShader(m_id, shader.getId())); }
+
+  GLint ok = GL_FALSE;
+  GLCall(glGetProgramiv(m_id, GL_LINK_STATUS, &ok));
+
+  if (ok != GL_TRUE) {
+    m_linked = false;
+    return std::unexpected{ LinkError{ getProgramInfoLog(m_id) } };
+  }
+
+  m_linked = true;
+  return {};
+}
+
+std::expected<void, Program::LinkError> Program::link(const std::span<const Shader *const> shaders)
+{
+  m_uniformLocationCache.clear();
+  m_uniformBlockIndexCache.clear();
+
+  if (shaders.empty()) {
+    m_linked = false;
+    return std::unexpected{ LinkError{ "No shaders provided to Program::link()!" } };
   }
 
   for (const Shader *shader : shaders) {
     if (!shader || !shader->hasName()) {
       m_linked = false;
-      return { false, "Null/invalid shader passed to Program::link()!" };
+      return std::unexpected{ LinkError{ "Null/invalid shader passed to Program::link()!" } };
     }
 
     if (!shader->isCompiled()) {
       m_linked = false;
-      return { false, "Attempt to link program with an uncompiled shader." };
+      return std::unexpected{ LinkError{ "Attempt to link program with an uncompiled shader!" } };
     }
   }
 
@@ -88,20 +125,20 @@ ProgramLinkResult Program::link(const std::span<const Shader *const> shaders)
 
   if (ok != GL_TRUE) {
     m_linked = false;
-    return { false, getProgramInfoLog(m_id) };
+    return std::unexpected{ LinkError{ getProgramInfoLog(m_id) } };
   }
 
   m_linked = true;
-  return { true, {} };
+  return {};
 }
 
-ProgramLinkResult Program::link(const Shader &vertex, const Shader &fragment)
+std::expected<void, Program::LinkError> Program::link(const Shader &vertex, const Shader &fragment)
 {
   std::array arr = { &vertex, &fragment };
   return link(arr);
 }
 
-ProgramLinkResult Program::link(const Shader &compute)
+std::expected<void, Program::LinkError> Program::link(const Shader &compute)
 {
   std::array arr = { &compute };
   return link(arr);
@@ -268,28 +305,26 @@ void Program::uniformBlockBinding(const std::string_view uniformBlockName, const
   }
 }
 
-void Program::debugLabel(std::string_view name) const
+void Program::debugLabel(const std::string_view name) const
 { GLCall(glObjectLabel(GL_PROGRAM, m_id, static_cast<GLsizei>(name.size()), name.data())); }
 
-static std::optional<Shader>
+static std::expected<Shader, Program::BuildError>
   loadShader(const std::string_view path, const ShaderType type, const Replacements &replacements)
 {
-  ShaderSource source = Shader::loadSource(path, replacements);
-  if (!source.ok) {
-    fmt::println(stderr, "[Program Error] {}", source.log);
-    return std::nullopt;
-  }
+  auto shaderSource = Shader::loadSource(path, replacements);
+  if (!shaderSource.has_value()) { return std::unexpected{ Program::BuildError{ shaderSource.error() } }; }
 
+  auto &[_, code] = shaderSource.value();
   Shader shader{ type };
-  if (auto [ok, log] = shader.compile(source.code); !ok) {
-    fmt::println(stderr, "[Program Error] {}", log);
-    return std::nullopt;
+
+  if (auto compileResult = shader.compile(code); !compileResult.has_value()) {
+    return std::unexpected{ Program::BuildError{ compileResult.error() } };
   }
 
   return shader;
 }
 
-std::optional<Program> Program::fromFile(const std::string &vertexPath,
+std::expected<Program, Program::BuildError> Program::fromFile(const std::string &vertexPath,
   const std::string &fragmentPath,
   const std::span<const ShaderSourceInfo> additional,
   const Replacements &replacements)
@@ -297,40 +332,37 @@ std::optional<Program> Program::fromFile(const std::string &vertexPath,
   std::vector<Shader> shaders{};
   shaders.reserve(2 + additional.size());
 
-  std::optional<Shader> vertexShader = loadShader(vertexPath, ShaderType::VERTEX, replacements);
-  if (!vertexShader.has_value()) return std::nullopt;
+  auto vertexShader = loadShader(vertexPath, ShaderType::VERTEX, replacements);
+  if (!vertexShader.has_value()) { return std::unexpected{ vertexShader.error() }; }
   shaders.emplace_back(std::move(*vertexShader));
 
-  std::optional<Shader> fragmentShader = loadShader(fragmentPath, ShaderType::FRAGMENT, replacements);
-  if (!fragmentShader.has_value()) return std::nullopt;
+  auto fragmentShader = loadShader(fragmentPath, ShaderType::FRAGMENT, replacements);
+  if (!fragmentShader.has_value()) { return std::unexpected{ fragmentShader.error() }; }
   shaders.emplace_back(std::move(*fragmentShader));
 
   for (const auto &[path, type] : additional) {
-    std::optional<Shader> shader = loadShader(path, type, replacements);
-    if (!shader.has_value()) return std::nullopt;
+    auto shader = loadShader(path, type, replacements);
+    if (!shader.has_value()) { return std::unexpected{ shader.error() }; }
     shaders.emplace_back(std::move(*shader));
   }
 
-  std::vector<Shader const *> ptrs(shaders.size());
-  for (std::size_t i = 0; i < shaders.size(); ++i) { ptrs[i] = &shaders[i]; }
-
   Program program{};
-  if (auto [ok, log] = program.link(ptrs); !ok) {
-    fmt::println(stderr, "[Program Error] {}", log);
-    return std::nullopt;
+  if (auto linkResult = program.link(shaders); !linkResult.has_value()) {
+    return std::unexpected{ BuildError{ linkResult.error() } };
   }
+
   return program;
 }
 
-std::optional<Program> Program::fromFile(const std::string &computePath, const Replacements &replacements)
+std::expected<Program, Program::BuildError> Program::fromFile(const std::string &computePath,
+  const Replacements &replacements)
 {
-  const std::optional<Shader> vertexShader = loadShader(computePath, ShaderType::COMPUTE, replacements);
-  if (!vertexShader.has_value()) return std::nullopt;
+  const auto computeShader = loadShader(computePath, ShaderType::COMPUTE, replacements);
+  if (!computeShader.has_value()) return std::unexpected{ BuildError{ computeShader.error() } };
 
   Program program{};
-  if (auto [ok, log] = program.link(vertexShader.value()); !ok) {
-    fmt::println(stderr, "[Program Error] {}", log);
-    return std::nullopt;
+  if (auto linkResult = program.link(computeShader.value()); !linkResult.has_value()) {
+    return std::unexpected{ BuildError{ linkResult.error() } };
   }
   return program;
 }
@@ -346,9 +378,11 @@ GLuint Program::getUniformBlockIndex(const std::string_view uniformBlockName) co
   const std::string name{ uniformBlockName };
   GLCall(const GLuint index = glGetUniformBlockIndex(m_id, name.c_str()));
 
+#ifdef DEVELOPER_BUILD
   if (index == GL_INVALID_INDEX) {
     fmt::println(stderr, "Warning: uniform block index '{}' does not exist!", uniformBlockName);
   }
+#endif
 
   m_uniformBlockIndexCache.insert({ name, index });
   return index;
@@ -365,7 +399,9 @@ GLint Program::getUniformLocation(const std::string_view uniformName) const
   const std::string name{ uniformName };
   GLCall(GLint location = glGetUniformLocation(m_id, name.c_str()));
 
+#ifdef DEVELOPER_BUILD
   if (-1 == location) { fmt::println(stderr, "Warning: uniform '{}' does not exist!", uniformName); }
+#endif
 
   m_uniformLocationCache.insert({ name, location });
   return location;

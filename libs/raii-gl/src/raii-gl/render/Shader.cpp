@@ -107,18 +107,19 @@ Shader &Shader::operator=(Shader &&other) noexcept
   return *this;
 }
 
-ShaderSource Shader::loadSource(const std::string_view path, const Replacements &replacements)
+std::expected<Shader::Source, Shader::LoadError> Shader::loadSource(const std::string_view path,
+  const Replacements &replacements)
 {
   const auto absPath = std::filesystem::absolute(std::filesystem::path{ path });
-
   const std::optional<std::string> file = readFile(absPath);
   if (!file.has_value()) {
-    return { false, absPath.string(), {}, fmt::format("Unable to load file at: {}", absPath.c_str()) };
+    return std::unexpected{ LoadError{
+      absPath.string(), fmt::format("Unable to load file at: {}", absPath.string()) } };
   }
-  return { true, absPath.string(), mapReplace(std::string_view{ *file }, replacements), {} };
+  return Source{ absPath.string(), mapReplace(std::string_view{ *file }, replacements) };
 }
 
-ShaderCompileResult Shader::compile(const std::string_view code)
+std::expected<void, Shader::CompileError> Shader::compile(const std::string_view code)
 {
   const char *src = code.data();
   const auto size = static_cast<GLint>(code.size());
@@ -136,11 +137,11 @@ ShaderCompileResult Shader::compile(const std::string_view code)
     GLCall(glGetShaderInfoLog(m_id, length, &length, infoLog.data()));
 
     m_compiled = false;
-    return { false, infoLog };
+    return std::unexpected{ CompileError{ m_type, infoLog } };
   }
 
   m_compiled = true;
-  return { true, std::string{} };
+  return {};
 }
 
 void Shader::debugLabel(const std::string_view name) const

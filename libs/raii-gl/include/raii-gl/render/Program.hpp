@@ -4,16 +4,11 @@
 #include "Shader.hpp"
 #include "raii-gl/detail/StringViewHash.hpp"
 
+#include <expected>
 #include <glm/matrix.hpp>
-#include <optional>
 #include <span>
 #include <string>
-
-struct ProgramLinkResult
-{
-  bool ok;
-  std::string log;
-};
+#include <variant>
 
 struct ShaderSourceInfo
 {
@@ -30,6 +25,11 @@ class Program
   mutable std::unordered_map<std::string, GLuint, SvHash, SvEq> m_uniformBlockIndexCache{};
 
 public:
+  struct LinkError
+  {
+    std::string log;
+  };
+
   Program();
   ~Program();
   Program(const Program &other) = delete;
@@ -44,9 +44,10 @@ public:
   void bind() const;
   static void unbind();
 
-  [[nodiscard]] ProgramLinkResult link(std::span<const Shader *const> shaders);
-  [[nodiscard]] ProgramLinkResult link(const Shader &vertex, const Shader &fragment);
-  [[nodiscard]] ProgramLinkResult link(const Shader &compute);
+  [[nodiscard]] std::expected<void, LinkError> link(std::span<const Shader> shaders);
+  [[nodiscard]] std::expected<void, LinkError> link(std::span<const Shader *const> shaders);
+  [[nodiscard]] std::expected<void, LinkError> link(const Shader &vertex, const Shader &fragment);
+  [[nodiscard]] std::expected<void, LinkError> link(const Shader &compute);
 
   void setBool(std::string_view name, GLboolean value) const;
   void setInt(std::string_view name, GLint value) const;
@@ -80,12 +81,13 @@ public:
 
   void debugLabel(std::string_view name) const;
 
-  [[nodiscard]] static std::optional<Program> fromFile(const std::string &vertexPath,
+  using BuildError = std::variant<Shader::LoadError, Shader::CompileError, LinkError>;
+  [[nodiscard]] static std::expected<Program, BuildError> fromFile(const std::string &vertexPath,
     const std::string &fragmentPath,
     std::span<const ShaderSourceInfo> additional = {},
     const Replacements &replacements = {});
 
-  [[nodiscard]] static std::optional<Program> fromFile(const std::string &computePath,
+  [[nodiscard]] static std::expected<Program, BuildError> fromFile(const std::string &computePath,
     const Replacements &replacements = {});
 
 private:

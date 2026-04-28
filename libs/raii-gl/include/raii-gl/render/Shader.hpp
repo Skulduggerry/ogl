@@ -3,6 +3,7 @@
 
 #include "raii-gl/detail/StringViewHash.hpp"
 
+#include <expected>
 #include <glad/glad.h>
 #include <string>
 #include <unordered_map>
@@ -21,20 +22,6 @@ enum struct ShaderType : GLenum {
   COMPUTE = GL_COMPUTE_SHADER,
 };
 
-struct ShaderSource
-{
-  bool ok;
-  std::string path;
-  std::string code;
-  std::string log;
-};
-
-struct ShaderCompileResult
-{
-  bool ok;
-  std::string log;
-};
-
 using Replacements = std::unordered_map<std::string, std::string, SvHash, SvEq>;
 
 class Shader
@@ -44,6 +31,24 @@ class Shader
   bool m_compiled = false;
 
 public:
+  struct Source
+  {
+    std::string path;
+    std::string code;
+  };
+
+  struct LoadError
+  {
+    std::string path;
+    std::string log;
+  };
+
+  struct CompileError
+  {
+    ShaderType type;
+    std::string log;
+  };
+
   explicit Shader(ShaderType type);
   ~Shader();
   Shader(const Shader &other) = delete;
@@ -56,8 +61,9 @@ public:
   [[nodiscard]] bool hasName() const noexcept { return m_id != 0; }
   [[nodiscard]] bool isCompiled() const noexcept { return m_compiled; }
 
-  [[nodiscard]] static ShaderSource loadSource(std::string_view path, const Replacements &replacements);
-  [[nodiscard]] ShaderCompileResult compile(std::string_view code);
+  [[nodiscard]] static std::expected<Source, LoadError> loadSource(std::string_view path,
+    const Replacements &replacements);
+  [[nodiscard]] std::expected<void, CompileError> compile(std::string_view code);
 
   void debugLabel(std::string_view name) const;
 };

@@ -102,7 +102,7 @@ int main()
 
   const Program simpleDepthShader = Program::fromFile(RESOURCE_PATH "shaders/shadow_mapping_depth.vert",
     RESOURCE_PATH "shaders/shadow_mapping_depth.frag",
-    { ShaderSourceInfo{ RESOURCE_PATH "shaders/shadow_mapping_depth.geom",
+    std::array{ ShaderSourceInfo{ RESOURCE_PATH "shaders/shadow_mapping_depth.geom",
       ShaderType::GEOMETRY } }).value();
 
   const Program debugDepthQuad =
